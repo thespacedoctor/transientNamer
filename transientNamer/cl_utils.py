@@ -1,10 +1,7 @@
 #!/usr/local/bin/python
 # encoding: utf-8
 """
-cl_utils.py
-===========
-:Summary:
-    The CL tools for transientNamer
+*The CL tools for transientNamer*
 
 :Author:
     David Young
@@ -12,19 +9,15 @@ cl_utils.py
 :Date Created:
     March 11, 2016
 
-:dryx syntax:
-    - ``_someObject`` = a 'private' object that should only be changed for debugging
-
-:Notes:
-    - If you have any questions requiring this script/module please email me: davidrobertyoung@gmail.com
-
-:Tasks:
+.. todo::
+    
     @review: when complete pull all general functions and classes into dryxPython
 
 Usage:
-    transientNamer [-s <pathToSettingsFile>]
+    transientNamer <name> <ra> <dec> <discoveryMag> <discoveryFilter> <discoveryMJD> [-s <pathToSettingsFile>]
 
     -h, --help            show this help message
+    -v, --version         show version
     -s, --settings        the settings file
 """
 ################# GLOBAL IMPORTS ####################
@@ -36,6 +29,7 @@ import glob
 import pickle
 from docopt import docopt
 from fundamentals import tools, times
+from transientNamer.namer import namer
 # from ..__init__ import *
 
 
@@ -45,14 +39,14 @@ def tab_complete(text, state):
 
 def main(arguments=None):
     """
-    The main function used when ``cl_utils.py`` is run as a single script from the cl, or when installed as a cl command
+    *The main function used when ``cl_utils.py`` is run as a single script from the cl, or when installed as a cl command*
     """
     # setup the command-line util settings
     su = tools(
         arguments=arguments,
         docString=__doc__,
         logLevel="DEBUG",
-        options_first=False,
+        options_first=True,
         projectName="transientNamer",
         tunnel=False
     )
@@ -84,33 +78,16 @@ def main(arguments=None):
         '--- STARTING TO RUN THE cl_utils.py AT %s' %
         (startTime,))
 
-    # set options interactively if user requests
-    if "interactiveFlag" in locals() and interactiveFlag:
-
-        # load previous settings
-        moduleDirectory = os.path.dirname(__file__) + "/resources"
-        pathToPickleFile = "%(moduleDirectory)s/previousSettings.p" % locals()
-        try:
-            with open(pathToPickleFile):
-                pass
-            previousSettingsExist = True
-        except:
-            previousSettingsExist = False
-        previousSettings = {}
-        if previousSettingsExist:
-            previousSettings = pickle.load(open(pathToPickleFile, "rb"))
-
-        # x-raw-input
-        # x-boolean-raw-input
-        # x-raw-input-with-default-value-from-previous-settings
-
-        # save the most recently used requests
-        pickleMeObjects = []
-        pickleMe = {}
-        theseLocals = locals()
-        for k in pickleMeObjects:
-            pickleMe[k] = theseLocals[k]
-        pickle.dump(pickleMe, open(pathToPickleFile, "wb"))
+    namer(
+        log=log,
+        ra=ra,
+        dec=dec,
+        name=name,
+        discoveryMJD=float(discoveryMJD),
+        discoveryMag=float(discoveryMag),
+        discoveryFilter=discoveryFilter,
+        settings=settings
+    ).get()
 
     # CALL FUNCTIONS/OBJECTS
 

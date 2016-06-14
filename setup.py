@@ -20,7 +20,7 @@ setup(name="transientNamer",
           'Programming Language :: Python :: 2.7',
           'Topic :: Utilities',
       ],
-      keywords=[transients],
+      keywords=['transients'],
       url='https://github.com/thespacedoctor/transientNamer',
       download_url='https://github.com/thespacedoctor/transientNamer/archive/v%(__version__)s.zip' % locals(
       ),
@@ -28,13 +28,16 @@ setup(name="transientNamer",
       author_email='davidrobertyoung@gmail.com',
       license='MIT',
       packages=['transientNamer'],
+      include_package_data=True,
       install_requires=[
           'pyyaml',
-          'fundamentals'
+          'fundamentals',
+          'requests',
+          'mechanize'
       ],
       test_suite='nose.collector',
       tests_require=['nose', 'nose-cover3'],
-      # entry_points={
-      #     'console_scripts': ['transientNamer=transientNamer.cl_utils:main'],
-      # },
+      entry_points={
+          'console_scripts': ['transientNamer=transientNamer.cl_utils:main'],
+      },
       zip_safe=False)
