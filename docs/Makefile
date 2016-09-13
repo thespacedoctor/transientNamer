@@ -6,6 +6,12 @@ SPHINXOPTS    =
 SPHINXBUILD   = sphinx-build
 PAPER         =
 BUILDDIR      = build
+SOURCEDIR     = source
+ASDIR         = source/_autosummary
+APIDIR        = source/_api
+INDIR         = source/_includes
+READMERST = ../README.rst
+READMEMD = ../README.md
 
 # Internal variables.
 PAPEROPT_a4     = -D latex_paper_size=a4
@@ -42,6 +48,26 @@ clean:
 	-rm -rf $(BUILDDIR)/*
 
 html:
+	
+	@cat $(INDIR)/description.rst > $(READMERST)
+	@echo "" >> $(READMERST)
+	@cat $(INDIR)/usage.rst >> $(READMERST)
+	@echo "" >> $(READMERST)
+	@cat $(INDIR)/documentation.rst >> $(READMERST)
+	@echo "" >> $(READMERST)
+	@cat $(INDIR)/installation.rst >> $(READMERST)
+	@echo "" >> $(READMERST)
+	@cat $(INDIR)/development.rst >> $(READMERST)
+	@echo "" >> $(READMERST)
+	@cat $(INDIR)/issues.rst >> $(READMERST)
+	@echo "" >> $(READMERST)
+	@cat $(INDIR)/license.rst >> $(READMERST)
+	@echo "" >> $(READMERST)
+
+	pandoc --from=rst --to=markdown_mmd --output=$(READMEMD) $(READMERST)
+
+	rm -rf $(BUILDDIR)/html/todo.html
+	rm -rf $(ASDIR)
 	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
 	@echo
 	@echo "Build finished. The HTML pages are in $(BUILDDIR)/html."
@@ -77,17 +103,17 @@ qthelp:
 	@echo
 	@echo "Build finished; now you can run "qcollectiongenerator" with the" \
 	      ".qhcp project file in $(BUILDDIR)/qthelp, like this:"
-	@echo "# qcollectiongenerator $(BUILDDIR)/qthelp/fundamentals.qhcp"
+	@echo "# qcollectiongenerator $(BUILDDIR)/qthelp/transientNamer.qhcp"
 	@echo "To view the help file:"
-	@echo "# assistant -collectionFile $(BUILDDIR)/qthelp/fundamentals.qhc"
+	@echo "# assistant -collectionFile $(BUILDDIR)/qthelp/transientNamer.qhc"
 
 devhelp:
 	$(SPHINXBUILD) -b devhelp $(ALLSPHINXOPTS) $(BUILDDIR)/devhelp
 	@echo
 	@echo "Build finished."
 	@echo "To view the help file:"
-	@echo "# mkdir -p $$HOME/.local/share/devhelp/fundamentals"
-	@echo "# ln -s $(BUILDDIR)/devhelp $$HOME/.local/share/devhelp/fundamentals"
+	@echo "# mkdir -p $$HOME/.local/share/devhelp/transientNamer"
+	@echo "# ln -s $(BUILDDIR)/devhelp $$HOME/.local/share/devhelp/transientNamer"
 	@echo "# devhelp"
 
 epub:
@@ -153,7 +179,8 @@ doctest:
 	      "results in $(BUILDDIR)/doctest/output.txt."
 
 buildapi:
-	sphinx-apidoc -fMeET --full -o source/_api ../ ../setup.py ../transientNamer/__version__.py
+	rm -rf $(APIDIR)
+	sphinx-apidoc -fMeET --full -o source/_api ../ ../setup.py ../transientNamer/__version__.py ../*/tests* ../*/*/tests* ../*/*/*/tests* ../*/*/*/*/tests*
 	@echo "Auto-generation of API documentation finished. " \
 		"The generated files are in '_api/'"
 

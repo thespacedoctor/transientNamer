@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 import os
 
 moduleDirectory = os.path.dirname(os.path.realpath(__file__))
@@ -6,13 +6,29 @@ exec(open(moduleDirectory + "/transientNamer/__version__.py").read())
 
 
 def readme():
-    with open(moduleDirectory + '/README.md') as f:
+    with open(moduleDirectory + '/README.rst') as f:
         return f.read()
 
+install_requires = [
+    'pyyaml',
+    'transientNamer',
+    'fundamentals'
+]
+
+# READ THE DOCS SERVERS
+exists = os.path.exists("/home/docs/")
+if exists:
+    c_exclude_list = ['healpy', 'astropy',
+                      'numpy', 'sherlock', 'wcsaxes', 'HMpTy', 'ligo-gracedb']
+    for e in c_exclude_list:
+        try:
+            install_requires.remove(e)
+        except:
+            pass
 
 setup(name="transientNamer",
       version=__version__,
-      description="A tool to automate the process of add transients to the Transient Name Server",
+      description="Command-line tools for working with and interacting with the Transient Naming Server",
       long_description=readme(),
       classifiers=[
           'Development Status :: 4 - Beta',
@@ -20,21 +36,16 @@ setup(name="transientNamer",
           'Programming Language :: Python :: 2.7',
           'Topic :: Utilities',
       ],
-      keywords=['transients'],
+      keywords=['transients, tools, astronomy'],
       url='https://github.com/thespacedoctor/transientNamer',
       download_url='https://github.com/thespacedoctor/transientNamer/archive/v%(__version__)s.zip' % locals(
       ),
       author='David Young',
       author_email='davidrobertyoung@gmail.com',
       license='MIT',
-      packages=['transientNamer'],
+      packages=find_packages(),
       include_package_data=True,
-      install_requires=[
-          'pyyaml',
-          'fundamentals',
-          'requests',
-          'mechanize'
-      ],
+      install_requires=install_requires,
       test_suite='nose.collector',
       tests_require=['nose', 'nose-cover3'],
       entry_points={
