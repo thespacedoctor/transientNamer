@@ -86,18 +86,6 @@ def main(arguments=None):
         '--- STARTING TO RUN THE cl_utils.py AT %s' %
         (startTime,))
 
-    # if add:
-    #     namer(
-    #         log=log,
-    #         ra=ra,
-    #         dec=dec,
-    #         name=name,
-    #         discoveryMJD=float(discoveryMJD),
-    #         discoveryMag=float(discoveryMag),
-    #         discoveryFilter=discoveryFilter,
-    #         settings=settings
-    #     ).get()
-
     if search or new:
         if ra:
             tns = transientNamer.search(
