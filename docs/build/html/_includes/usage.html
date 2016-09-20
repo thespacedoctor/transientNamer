@@ -98,7 +98,11 @@
 <li class="toctree-l1"><a class="reference internal" href="index.html#tutorial">Tutorial</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Documentation</span></p>
-<ul class="simple">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../autosummary.html">Subpackages</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../autosummary.html#modules">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../autosummary.html#classes">Classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../autosummary.html#functions">Functions</a></li>
 </ul>
 
             
@@ -145,11 +149,32 @@
             
   <div class="section" id="usage">
 <h1>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">  ∞</a></h1>
-<div class="highlight-bash"><div class="highlight"><pre><span></span>transientNamer &lt;name&gt; &lt;ra&gt; &lt;dec&gt; &lt;discoveryMag&gt; &lt;discoveryFilter&gt; &lt;discoveryMJD&gt; <span class="o">[</span>-s &lt;pathToSettingsFile&gt;<span class="o">]</span>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>Documentation <span class="k">for</span> transientNamer can be found here: http://transientNamer.readthedocs.org/en/stable
 
--h, --help            show this <span class="nb">help</span> message
--v, --version         show version
--s, --settings        the settings file
+Usage:
+    transientNamer <span class="o">[</span>-c<span class="o">]</span> search &lt;ra&gt; &lt;dec&gt; &lt;arcsecRadius&gt; <span class="o">[</span>&lt;render&gt; <span class="p">|</span> mysql &lt;tableNamePrefix&gt;<span class="o">]</span> <span class="o">[</span>-o directory<span class="o">]</span>
+    transientNamer <span class="o">[</span>-c<span class="o">]</span> search &lt;name&gt; <span class="o">[</span>&lt;render&gt; <span class="p">|</span> mysql &lt;tableNamePrefix&gt;<span class="o">]</span> <span class="o">[</span>-o directory<span class="o">]</span>
+    transientNamer <span class="o">[</span>-c<span class="o">]</span> new &lt;discInLastDays&gt; <span class="o">[</span>&lt;render&gt; <span class="p">|</span> mysql &lt;tableNamePrefix&gt;<span class="o">]</span> <span class="o">[</span>-o directory<span class="o">]</span>
+
+Commands:
+    search                search the TNS and <span class="k">return</span> the results
+    new                   list newly discovered TNS objects
+
+Arguments:
+    ra
+    dec
+    arcsecRadius
+    name                  the name of the object the search <span class="k">for</span> <span class="o">(</span>TNS or survey name<span class="o">)</span>
+    render                output format <span class="k">for</span> results. Options include json, csv, table, markdown, yaml
+    tableNamePrefix       the prefix <span class="k">for</span> the tables to write the mysql insert statements <span class="k">for</span>
+    dirPath               path to the directory to save the output to
+
+Options:
+    -h, --help                           show this <span class="nb">help</span> message
+    -v, --version                        show version
+    -s, --settings                       the settings file
+    -c, --withComments                   <span class="k">return</span> TNS comments in result sets
+    -o directory --output<span class="o">=</span>directory      output to files in the directory path
 </pre></div>
 </div>
 </div>

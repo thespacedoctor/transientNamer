@@ -99,7 +99,11 @@
 <li class="toctree-l1"><a class="reference internal" href="../../_includes/index.html#tutorial">Tutorial</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Documentation</span></p>
-<ul class="simple">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../autosummary.html">Subpackages</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../autosummary.html#modules">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../autosummary.html#classes">Classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../autosummary.html#functions">Functions</a></li>
 </ul>
 
             
@@ -155,49 +159,87 @@
 
 <span class="sd">:Date Created:</span>
 <span class="sd">    March 11, 2016</span>
-
-<span class="sd">.. todo::</span>
-<span class="sd">    </span>
-<span class="sd">    @review: when complete pull all general functions and classes into dryxPython</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="c1">################# GLOBAL IMPORTS ####################</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">requests</span>
+<span class="n">requests</span><span class="o">.</span><span class="n">packages</span><span class="o">.</span><span class="n">urllib3</span><span class="o">.</span><span class="n">disable_warnings</span><span class="p">()</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">collections</span>
+<span class="kn">from</span> <span class="nn">operator</span> <span class="kn">import</span> <span class="n">itemgetter</span>
 <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;TERM&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;vt100&#39;</span>
 <span class="kn">from</span> <span class="nn">fundamentals</span> <span class="kn">import</span> <span class="n">tools</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">date</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">timedelta</span>
+<span class="kn">from</span> <span class="nn">fundamentals.files</span> <span class="kn">import</span> <span class="n">list_of_dictionaries_to_mysql_inserts</span>
+<span class="kn">from</span> <span class="nn">fundamentals.renderer</span> <span class="kn">import</span> <span class="n">list_of_dictionaries</span>
+<span class="kn">from</span> <span class="nn">astrocalc.coords</span> <span class="kn">import</span> <span class="n">unit_conversion</span>
 
 
-<div class="viewcode-block" id="search"><a class="viewcode-back" href="../../_api/transientNamer.search.html#transientNamer.search.search">[docs]</a><span class="k">class</span> <span class="nc">search</span><span class="p">():</span>
+<div class="viewcode-block" id="search"><a class="viewcode-back" href="../../_autosummary/transientNamer.search.html#transientNamer.search.search">[docs]</a><span class="k">class</span> <span class="nc">search</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    *The worker class for the search module*</span>
+<span class="sd">    *The worker class for the transient namer search module*</span>
 
 <span class="sd">    **Key Arguments:**</span>
 <span class="sd">        - ``log`` -- logger</span>
 <span class="sd">        - ``settings`` -- the settings dictionary</span>
 <span class="sd">        - ``ra`` -- RA of the location being checked</span>
 <span class="sd">        - ``dec`` -- DEC of the location being searched</span>
-<span class="sd">         - ``radiusArcsec`` - the radius of the conesearch to perform against the TNS. Default * 5 arcsec*</span>
+<span class="sd">        - ``radiusArcsec`` - the radius of the conesearch to perform against the TNS</span>
+<span class="sd">        - ``name`` -- name of the object to search the TNS for</span>
+<span class="sd">        - ``discInLastDays`` -- search the TNS for transient discovered in the last X days</span>
+<span class="sd">        - ``comments`` -- print the comments from the TNS, note these can be long making table outputs somewhat unreadable. Default *False*</span>
 
-<span class="sd">    .. todo::</span>
 
-<span class="sd">        - @review: when complete, clean search class</span>
-<span class="sd">        - @review: when complete add logging</span>
-<span class="sd">        - @review: when complete, decide whether to abstract class to another module</span>
+<span class="sd">    **Usage:**</span>
+
+<span class="sd">        To initiate a search object to search the TNS via an object name (either TNS or survey names accepted):</span>
+
+<span class="sd">        .. code-block:: python</span>
+
+<span class="sd">            from transientNamer import search</span>
+<span class="sd">            tns = search(</span>
+<span class="sd">                log=log,</span>
+<span class="sd">                name=&quot;Gaia16bbi&quot;</span>
+<span class="sd">            )</span>
+
+<span class="sd">        or for a conesearch use something similar to:</span>
+
+<span class="sd">        .. code-block:: python</span>
+
+<span class="sd">            from transientNamer import search</span>
+<span class="sd">            tns = search(</span>
+<span class="sd">                log=log,</span>
+<span class="sd">                ra=&quot;06:50:36.74&quot;,</span>
+<span class="sd">                dec=&quot;+31:06:44.7&quot;,</span>
+<span class="sd">                radiusArcsec=5</span>
+<span class="sd">            )</span>
+
+<span class="sd">        Note the search method can accept coordinates in sexagesimal or decimal defree formats.</span>
+
+<span class="sd">        To list all new objects discovered in the last three weeks, then use:</span>
+
+<span class="sd">        .. code-block:: python</span>
+
+<span class="sd">            from transientNamer import search</span>
+<span class="sd">            tns = search(</span>
+<span class="sd">                log=log,</span>
+<span class="sd">                discInLastDays=21</span>
+<span class="sd">            )</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Initialisation</span>
-    <span class="c1"># 1. @flagged: what are the unique attrributes for each object? Add them</span>
-    <span class="c1"># to __init__</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
+<div class="viewcode-block" id="search.__init__"><a class="viewcode-back" href="../../_autosummary/transientNamer.search.html#transientNamer.search.search.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">,</span>
             <span class="n">log</span><span class="p">,</span>
-            <span class="n">ra</span><span class="p">,</span>
-            <span class="n">dec</span><span class="p">,</span>
-            <span class="n">radiusArcsec</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+            <span class="n">ra</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+            <span class="n">dec</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+            <span class="n">radiusArcsec</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+            <span class="n">discInLastDays</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
             <span class="n">settings</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
-
-
+            <span class="n">comments</span><span class="o">=</span><span class="bp">False</span>
     <span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">log</span> <span class="o">=</span> <span class="n">log</span>
         <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;instansiating a new &#39;search&#39; object&quot;</span><span class="p">)</span>
@@ -205,134 +247,1068 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">ra</span> <span class="o">=</span> <span class="n">ra</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dec</span> <span class="o">=</span> <span class="n">dec</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">radiusArcsec</span> <span class="o">=</span> <span class="n">radiusArcsec</span>
-        <span class="c1"># xt-self-arg-tmpx</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">comments</span> <span class="o">=</span> <span class="n">comments</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">internal_name</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">discInLastDays</span> <span class="o">=</span> <span class="n">discInLastDays</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">page</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">batchSize</span> <span class="o">=</span> <span class="mi">1000</span>
 
-        <span class="c1"># 2. @flagged: what are the default attrributes each object could have? Add them to variable attribute set here</span>
-        <span class="c1"># Variable Data Atrributes</span>
+        <span class="c1"># CREATE THE TIME-RANGE WINDOW TO SEARCH TNS</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">discInLastDays</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">start</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">end</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">discInLastDays</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">discInLastDays</span><span class="p">)</span>
+            <span class="n">td</span> <span class="o">=</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">end</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span> <span class="o">+</span> <span class="n">td</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">end</span> <span class="o">=</span> <span class="n">end</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">td</span> <span class="o">=</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="n">discInLastDays</span><span class="p">)</span>
+            <span class="n">start</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span> <span class="o">-</span> <span class="n">td</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">start</span> <span class="o">=</span> <span class="n">start</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span>
 
-        <span class="c1"># 3. @flagged: what variable attrributes need overriden in any baseclass(es) used</span>
-        <span class="c1"># Override Variable Data Atrributes</span>
+        <span class="c1"># DETERMINE IF WE HAVE A TNS OR INTERAL SURVEY NAME</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
+            <span class="n">matchObject</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="s1">r&#39;^((SN|AT) ?)?(\d{4}\w{1,6})&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">matchObject</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">matchObject</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">internal_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
 
-        <span class="c1"># Initial Actions</span>
+        <span class="c1"># DO THE SEARCH OF THE TNS AND COMPILE THE RESULTS INTO SEPARATE RESULT</span>
+        <span class="c1"># SETS</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sourceResultsList</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">photResultsList</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">specResultsList</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">relatedFilesResultsList</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_query_tns</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sourceResults</span> <span class="o">=</span> <span class="n">list_of_dictionaries</span><span class="p">(</span>
+            <span class="n">log</span><span class="o">=</span><span class="n">log</span><span class="p">,</span>
+            <span class="n">listOfDictionaries</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">sourceResultsList</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">photResults</span> <span class="o">=</span> <span class="n">list_of_dictionaries</span><span class="p">(</span>
+            <span class="n">log</span><span class="o">=</span><span class="n">log</span><span class="p">,</span>
+            <span class="n">listOfDictionaries</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">photResultsList</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">specResults</span> <span class="o">=</span> <span class="n">list_of_dictionaries</span><span class="p">(</span>
+            <span class="n">log</span><span class="o">=</span><span class="n">log</span><span class="p">,</span>
+            <span class="n">listOfDictionaries</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">specResultsList</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">relatedFilesResults</span> <span class="o">=</span> <span class="n">list_of_dictionaries</span><span class="p">(</span>
+            <span class="n">log</span><span class="o">=</span><span class="n">log</span><span class="p">,</span>
+            <span class="n">listOfDictionaries</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">relatedFilesResultsList</span>
+        <span class="p">)</span>
 
-        <span class="k">return</span> <span class="bp">None</span>
+        <span class="k">return</span> <span class="bp">None</span></div>
 
-    <span class="c1"># 4. @flagged: what actions does each object have to be able to perform? Add them here</span>
-    <span class="c1"># Method Attributes</span>
-<div class="viewcode-block" id="search.get"><a class="viewcode-back" href="../../_api/transientNamer.search.html#transientNamer.search.search.get">[docs]</a>    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        *get the search object*</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">sources</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;*The results of the search returned as a python list of dictionaries*</span>
+
+<span class="sd">        **Usage:**</span>
+
+<span class="sd">            .. code-block:: python</span>
+
+<span class="sd">                sources = tns.sources</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">sourceResultsList</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">sourceResultsList</span><span class="p">[:]</span> <span class="o">=</span> <span class="p">[</span><span class="nb">dict</span><span class="p">(</span><span class="n">l</span><span class="p">)</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sourceResultsList</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">sourceResultsList</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">spectra</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;*The associated source spectral data*</span>
+
+<span class="sd">        **Usage:**</span>
+
+<span class="sd">            .. code-block:: python </span>
+
+<span class="sd">                sourceSpectra = tns.spectra</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">specResultsList</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">specResultsList</span><span class="p">[:]</span> <span class="o">=</span> <span class="p">[</span><span class="nb">dict</span><span class="p">(</span><span class="n">l</span><span class="p">)</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">specResultsList</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">specResultsList</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">files</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;*The associated source files*</span>
+
+<span class="sd">        **Usage:**</span>
+
+<span class="sd">            .. code-block:: python </span>
+
+<span class="sd">                sourceFiles = tns.files</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">relatedFilesResultsList</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">relatedFilesResultsList</span><span class="p">[:]</span> <span class="o">=</span> <span class="p">[</span><span class="nb">dict</span><span class="p">(</span><span class="n">l</span><span class="p">)</span>
+                                      <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">relatedFilesResultsList</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">relatedFilesResultsList</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">photometry</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;*The associated source photometry*</span>
+
+<span class="sd">        **Usage:**</span>
+
+<span class="sd">            .. code-block:: python </span>
+
+<span class="sd">                sourcePhotometry = tns.photometry</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">photResultsList</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">photResultsList</span><span class="p">[:]</span> <span class="o">=</span> <span class="p">[</span><span class="nb">dict</span><span class="p">(</span><span class="n">l</span><span class="p">)</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">photResultsList</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">photResultsList</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">url</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;*The generated URL used for searching of the TNS*</span>
+
+<span class="sd">        **Usage:**</span>
+
+<span class="sd">            .. code-block:: python</span>
+
+<span class="sd">                searchURL = tns.url</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_searchURL</span>
+
+<div class="viewcode-block" id="search.csv"><a class="viewcode-back" href="../../_api/transientNamer.search.html#transientNamer.search.search.csv">[docs]</a>    <span class="k">def</span> <span class="nf">csv</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">dirPath</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;*Render the results in csv format*</span>
+
+<span class="sd">        **Key Arguments:**</span>
+<span class="sd">            - ``dirPath`` -- the path to the directory to save the rendered results to. Default *None*</span>
 
 <span class="sd">        **Return:**</span>
-<span class="sd">            - ``search``</span>
+<span class="sd">            - `csvSources` -- the top-level transient data</span>
+<span class="sd">            - `csvPhot` -- all photometry associated with the transients</span>
+<span class="sd">            - `csvSpec` -- all spectral data associated with the transients</span>
+<span class="sd">            - `csvFiles`  -- all files associated with the matched transients found on the tns</span>
 
-<span class="sd">        .. todo::</span>
+<span class="sd">        **Usage:**</span>
 
-<span class="sd">            - @review: when complete, clean get method</span>
-<span class="sd">            - @review: when complete add logging</span>
+<span class="sd">            To render the results in csv format:</span>
+
+<span class="sd">            .. code-block:: python</span>
+
+<span class="sd">                csvSources, csvPhot, csvSpec, csvFiles  = tns.csv()</span>
+<span class="sd">                print csvSources</span>
+
+<span class="sd">            .. code-block:: text</span>
+
+<span class="sd">                TNSId,TNSName,discoveryName,discSurvey,raSex,decSex,raDeg,decDeg,transRedshift,specType,discMag,discMagFilter,discDate,objectUrl,hostName,hostRedshift,separationArcsec,separationNorthArcsec,separationEastArcsec</span>
+<span class="sd">                2016asf,SN2016asf,ASASSN-16cs,ASAS-SN,06:50:36.73,+31:06:45.36,102.6530,31.1126,0.021,SN Ia,17.1,V-Johnson,2016-03-06 08:09:36,http://wis-tns.weizmann.ac.il/object/2016asf,KUG 0647+311,,0.66,0.65,-0.13</span>
+
+<span class="sd">            You can save the results to file by passing in a directory path within which to save the files to. The four flavours of data (sources, photometry, spectra and files) are saved to separate files but all data can be assoicated with its transient source using the transient&#39;s unique `TNSId`.</span>
+
+<span class="sd">            .. code-block:: python</span>
+
+<span class="sd">                tns.csv(&quot;~/tns&quot;)</span>
+
+<span class="sd">            .. image:: https://i.imgur.com/BwwqMBg.png</span>
+<span class="sd">                :width: 800px</span>
+<span class="sd">                :alt: csv output</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">dirPath</span><span class="p">:</span>
+            <span class="n">p</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_file_prefix</span><span class="p">()</span>
+            <span class="n">csvSources</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sourceResults</span><span class="o">.</span><span class="n">csv</span><span class="p">(</span>
+                <span class="n">filepath</span><span class="o">=</span><span class="n">dirPath</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">p</span> <span class="o">+</span> <span class="s2">&quot;sources.csv&quot;</span><span class="p">)</span>
+            <span class="n">csvPhot</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">photResults</span><span class="o">.</span><span class="n">csv</span><span class="p">(</span>
+                <span class="n">filepath</span><span class="o">=</span><span class="n">dirPath</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">p</span> <span class="o">+</span> <span class="s2">&quot;phot.csv&quot;</span><span class="p">)</span>
+            <span class="n">csvSpec</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">specResults</span><span class="o">.</span><span class="n">csv</span><span class="p">(</span>
+                <span class="n">filepath</span><span class="o">=</span><span class="n">dirPath</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">p</span> <span class="o">+</span> <span class="s2">&quot;spec.csv&quot;</span><span class="p">)</span>
+            <span class="n">csvFiles</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">relatedFilesResults</span><span class="o">.</span><span class="n">csv</span><span class="p">(</span>
+                <span class="n">filepath</span><span class="o">=</span><span class="n">dirPath</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">p</span> <span class="o">+</span> <span class="s2">&quot;relatedFiles.csv&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">csvSources</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sourceResults</span><span class="o">.</span><span class="n">csv</span><span class="p">()</span>
+            <span class="n">csvPhot</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">photResults</span><span class="o">.</span><span class="n">csv</span><span class="p">()</span>
+            <span class="n">csvSpec</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">specResults</span><span class="o">.</span><span class="n">csv</span><span class="p">()</span>
+            <span class="n">csvFiles</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">relatedFilesResults</span><span class="o">.</span><span class="n">csv</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">csvSources</span><span class="p">,</span> <span class="n">csvPhot</span><span class="p">,</span> <span class="n">csvSpec</span><span class="p">,</span> <span class="n">csvFiles</span></div>
+
+<div class="viewcode-block" id="search.json"><a class="viewcode-back" href="../../_api/transientNamer.search.html#transientNamer.search.search.json">[docs]</a>    <span class="k">def</span> <span class="nf">json</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">dirPath</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;*Render the results in json format*</span>
+
+<span class="sd">        **Key Arguments:**</span>
+<span class="sd">            - ``dirPath`` -- the path to the directory to save the rendered results to. Default *None*</span>
+
+<span class="sd">        **Return:**</span>
+<span class="sd">            - `jsonSources` -- the top-level transient data</span>
+<span class="sd">            - `jsonPhot` -- all photometry associated with the transients</span>
+<span class="sd">            - `jsonSpec` -- all spectral data associated with the transients</span>
+<span class="sd">            - `jsonFiles`  -- all files associated with the matched transients found on the tns</span>
+
+<span class="sd">        **Usage:**</span>
+
+<span class="sd">            To render the results in json format:</span>
+
+<span class="sd">            .. code-block:: python</span>
+
+<span class="sd">                jsonSources, jsonPhot, jsonSpec, jsonFiles  = tns.json()</span>
+<span class="sd">                print jsonSources</span>
+
+<span class="sd">            .. code-block:: text</span>
+
+<span class="sd">                [</span>
+<span class="sd">                    {</span>
+<span class="sd">                        &quot;TNSId&quot;: &quot;2016asf&quot;,</span>
+<span class="sd">                        &quot;TNSName&quot;: &quot;SN2016asf&quot;,</span>
+<span class="sd">                        &quot;decDeg&quot;: 31.1126,</span>
+<span class="sd">                        &quot;decSex&quot;: &quot;+31:06:45.36&quot;,</span>
+<span class="sd">                        &quot;discDate&quot;: &quot;2016-03-06 08:09:36&quot;,</span>
+<span class="sd">                        &quot;discMag&quot;: &quot;17.1&quot;,</span>
+<span class="sd">                        &quot;discMagFilter&quot;: &quot;V-Johnson&quot;,</span>
+<span class="sd">                        &quot;discSurvey&quot;: &quot;ASAS-SN&quot;,</span>
+<span class="sd">                        &quot;discoveryName&quot;: &quot;ASASSN-16cs&quot;,</span>
+<span class="sd">                        &quot;hostName&quot;: &quot;KUG 0647+311&quot;,</span>
+<span class="sd">                        &quot;hostRedshift&quot;: null,</span>
+<span class="sd">                        &quot;objectUrl&quot;: &quot;http://wis-tns.weizmann.ac.il/object/2016asf&quot;,</span>
+<span class="sd">                        &quot;raDeg&quot;: 102.65304166666667,</span>
+<span class="sd">                        &quot;raSex&quot;: &quot;06:50:36.73&quot;,</span>
+<span class="sd">                        &quot;separationArcsec&quot;: &quot;0.66&quot;,</span>
+<span class="sd">                        &quot;separationEastArcsec&quot;: &quot;-0.13&quot;,</span>
+<span class="sd">                        &quot;separationNorthArcsec&quot;: &quot;0.65&quot;,</span>
+<span class="sd">                        &quot;specType&quot;: &quot;SN Ia&quot;,</span>
+<span class="sd">                        &quot;transRedshift&quot;: &quot;0.021&quot;</span>
+<span class="sd">                    }</span>
+<span class="sd">                ]</span>
+
+<span class="sd">            You can save the results to file by passing in a directory path within which to save the files to. The four flavours of data (sources, photometry, spectra and files) are saved to separate files but all data can be assoicated with its transient source using the transient&#39;s unique `TNSId`.</span>
+
+<span class="sd">            .. code-block:: python</span>
+
+<span class="sd">                tns.json(&quot;~/tns&quot;)</span>
+
+<span class="sd">            .. image:: https://i.imgur.com/wAHqARI.png</span>
+<span class="sd">                :width: 800px</span>
+<span class="sd">                :alt: json output</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">dirPath</span><span class="p">:</span>
+            <span class="n">p</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_file_prefix</span><span class="p">()</span>
+            <span class="n">jsonSources</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sourceResults</span><span class="o">.</span><span class="n">json</span><span class="p">(</span>
+                <span class="n">filepath</span><span class="o">=</span><span class="n">dirPath</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">p</span> <span class="o">+</span> <span class="s2">&quot;sources.json&quot;</span><span class="p">)</span>
+            <span class="n">jsonPhot</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">photResults</span><span class="o">.</span><span class="n">json</span><span class="p">(</span>
+                <span class="n">filepath</span><span class="o">=</span><span class="n">dirPath</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">p</span> <span class="o">+</span> <span class="s2">&quot;phot.json&quot;</span><span class="p">)</span>
+            <span class="n">jsonSpec</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">specResults</span><span class="o">.</span><span class="n">json</span><span class="p">(</span>
+                <span class="n">filepath</span><span class="o">=</span><span class="n">dirPath</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">p</span> <span class="o">+</span> <span class="s2">&quot;spec.json&quot;</span><span class="p">)</span>
+            <span class="n">jsonFiles</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">relatedFilesResults</span><span class="o">.</span><span class="n">json</span><span class="p">(</span>
+                <span class="n">filepath</span><span class="o">=</span><span class="n">dirPath</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">p</span> <span class="o">+</span> <span class="s2">&quot;relatedFiles.json&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">jsonSources</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sourceResults</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+            <span class="n">jsonPhot</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">photResults</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+            <span class="n">jsonSpec</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">specResults</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+            <span class="n">jsonFiles</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">relatedFilesResults</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">jsonSources</span><span class="p">,</span> <span class="n">jsonPhot</span><span class="p">,</span> <span class="n">jsonSpec</span><span class="p">,</span> <span class="n">jsonFiles</span></div>
+
+<div class="viewcode-block" id="search.yaml"><a class="viewcode-back" href="../../_api/transientNamer.search.html#transientNamer.search.search.yaml">[docs]</a>    <span class="k">def</span> <span class="nf">yaml</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">dirPath</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;*Render the results in yaml format*</span>
+
+<span class="sd">        **Key Arguments:**</span>
+<span class="sd">            - ``dirPath`` -- the path to the directory to save the rendered results to. Default *None*</span>
+
+<span class="sd">        **Return:**</span>
+<span class="sd">            - `yamlSources` -- the top-level transient data</span>
+<span class="sd">            - `yamlPhot` -- all photometry associated with the transients</span>
+<span class="sd">            - `yamlSpec` -- all spectral data associated with the transients</span>
+<span class="sd">            - `yamlFiles`  -- all files associated with the matched transients found on the tns</span>
+
+<span class="sd">        **Usage:**</span>
+
+<span class="sd">            To render the results in yaml format:</span>
+
+<span class="sd">            .. code-block:: python</span>
+
+<span class="sd">                yamlSources, yamlPhot, yamlSpec, yamlFiles  = tns.yaml()</span>
+<span class="sd">                print yamlSources</span>
+
+<span class="sd">            .. code-block:: text</span>
+
+<span class="sd">                - TNSId: 2016asf</span>
+<span class="sd">                  TNSName: SN2016asf</span>
+<span class="sd">                  decDeg: 31.1126</span>
+<span class="sd">                  decSex: &#39;+31:06:45.36&#39;</span>
+<span class="sd">                  discDate: &#39;2016-03-06 08:09:36&#39;</span>
+<span class="sd">                  discMag: &#39;17.1&#39;</span>
+<span class="sd">                  discMagFilter: V-Johnson</span>
+<span class="sd">                  discSurvey: ASAS-SN</span>
+<span class="sd">                  discoveryName: ASASSN-16cs</span>
+<span class="sd">                  hostName: KUG 0647+311</span>
+<span class="sd">                  hostRedshift: null</span>
+<span class="sd">                  objectUrl: http://wis-tns.weizmann.ac.il/object/2016asf</span>
+<span class="sd">                  raDeg: 102.65304166666667</span>
+<span class="sd">                  raSex: &#39;06:50:36.73&#39;</span>
+<span class="sd">                  separationArcsec: &#39;0.66&#39;</span>
+<span class="sd">                  separationEastArcsec: &#39;-0.13&#39;</span>
+<span class="sd">                  separationNorthArcsec: &#39;0.65&#39;</span>
+<span class="sd">                  specType: SN Ia</span>
+<span class="sd">                  transRedshift: &#39;0.021&#39;</span>
+
+<span class="sd">            You can save the results to file by passing in a directory path within which to save the files to. The four flavours of data (sources, photometry, spectra and files) are saved to separate files but all data can be assoicated with its transient source using the transient&#39;s unique `TNSId`.</span>
+
+<span class="sd">            .. code-block:: python</span>
+
+<span class="sd">                tns.yaml(&quot;~/tns&quot;)</span>
+
+<span class="sd">            .. image:: https://i.imgur.com/ZpJIC6p.png</span>
+<span class="sd">                :width: 800px</span>
+<span class="sd">                :alt: yaml output</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">dirPath</span><span class="p">:</span>
+            <span class="n">p</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_file_prefix</span><span class="p">()</span>
+            <span class="n">yamlSources</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sourceResults</span><span class="o">.</span><span class="n">yaml</span><span class="p">(</span>
+                <span class="n">filepath</span><span class="o">=</span><span class="n">dirPath</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">p</span> <span class="o">+</span> <span class="s2">&quot;sources.yaml&quot;</span><span class="p">)</span>
+            <span class="n">yamlPhot</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">photResults</span><span class="o">.</span><span class="n">yaml</span><span class="p">(</span>
+                <span class="n">filepath</span><span class="o">=</span><span class="n">dirPath</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">p</span> <span class="o">+</span> <span class="s2">&quot;phot.yaml&quot;</span><span class="p">)</span>
+            <span class="n">yamlSpec</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">specResults</span><span class="o">.</span><span class="n">yaml</span><span class="p">(</span>
+                <span class="n">filepath</span><span class="o">=</span><span class="n">dirPath</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">p</span> <span class="o">+</span> <span class="s2">&quot;spec.yaml&quot;</span><span class="p">)</span>
+            <span class="n">yamlFiles</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">relatedFilesResults</span><span class="o">.</span><span class="n">yaml</span><span class="p">(</span>
+                <span class="n">filepath</span><span class="o">=</span><span class="n">dirPath</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">p</span> <span class="o">+</span> <span class="s2">&quot;relatedFiles.yaml&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">yamlSources</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sourceResults</span><span class="o">.</span><span class="n">yaml</span><span class="p">()</span>
+            <span class="n">yamlPhot</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">photResults</span><span class="o">.</span><span class="n">yaml</span><span class="p">()</span>
+            <span class="n">yamlSpec</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">specResults</span><span class="o">.</span><span class="n">yaml</span><span class="p">()</span>
+            <span class="n">yamlFiles</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">relatedFilesResults</span><span class="o">.</span><span class="n">yaml</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">yamlSources</span><span class="p">,</span> <span class="n">yamlPhot</span><span class="p">,</span> <span class="n">yamlSpec</span><span class="p">,</span> <span class="n">yamlFiles</span></div>
+
+<div class="viewcode-block" id="search.markdown"><a class="viewcode-back" href="../../_api/transientNamer.search.html#transientNamer.search.search.markdown">[docs]</a>    <span class="k">def</span> <span class="nf">markdown</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">dirPath</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;*Render the results in markdown format*</span>
+
+<span class="sd">        **Key Arguments:**</span>
+<span class="sd">            - ``dirPath`` -- the path to the directory to save the rendered results to. Default *None*</span>
+
+<span class="sd">        **Return:**</span>
+<span class="sd">            - `markdownSources` -- the top-level transient data</span>
+<span class="sd">            - `markdownPhot` -- all photometry associated with the transients</span>
+<span class="sd">            - `markdownSpec` -- all spectral data associated with the transients</span>
+<span class="sd">            - `markdownFiles`  -- all files associated with the matched transients found on the tns</span>
+
+<span class="sd">        **Usage:**</span>
+
+<span class="sd">            To render the results in markdown table format:</span>
+
+<span class="sd">            .. code-block:: python</span>
+
+<span class="sd">                markdownSources, markdownPhot, markdownSpec, markdownFiles  = tns.markdown()</span>
+<span class="sd">                print markdownSources</span>
+
+<span class="sd">            .. code-block:: text</span>
+
+<span class="sd">                | TNSId    | TNSName    | discoveryName  | discSurvey  | raSex        | decSex        | raDeg     | decDeg   | transRedshift  | specType  | discMag  | discMagFilter  | discDate             | objectUrl                                     | hostName      | hostRedshift  | separationArcsec  | separationNorthArcsec  | separationEastArcsec  |</span>
+<span class="sd">                |:---------|:-----------|:---------------|:------------|:-------------|:--------------|:----------|:---------|:---------------|:----------|:---------|:---------------|:---------------------|:----------------------------------------------|:--------------|:--------------|:------------------|:-----------------------|:----------------------|</span>
+<span class="sd">                | 2016asf  | SN2016asf  | ASASSN-16cs    | ASAS-SN     | 06:50:36.73  | +31:06:45.36  | 102.6530  | 31.1126  | 0.021          | SN Ia     | 17.1     | V-Johnson      | 2016-03-06 08:09:36  | http://wis-tns.weizmann.ac.il/object/2016asf  | KUG 0647+311  |               | 0.66              | 0.65                   | -0.13                 |</span>
+
+<span class="sd">            You can save the results to file by passing in a directory path within which to save the files to. The four flavours of data (sources, photometry, spectra and files) are saved to separate files but all data can be assoicated with its transient source using the transient&#39;s unique `TNSId`.</span>
+
+<span class="sd">            .. code-block:: python</span>
+
+<span class="sd">                tns.markdown(&quot;~/tns&quot;)</span>
+
+<span class="sd">            .. image:: https://i.imgur.com/AYLBQoJ.png</span>
+<span class="sd">                :width: 800px</span>
+<span class="sd">                :alt: markdown output</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">dirPath</span><span class="p">:</span>
+            <span class="n">p</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_file_prefix</span><span class="p">()</span>
+            <span class="n">markdownSources</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sourceResults</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span>
+                <span class="n">filepath</span><span class="o">=</span><span class="n">dirPath</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">p</span> <span class="o">+</span> <span class="s2">&quot;sources.md&quot;</span><span class="p">)</span>
+            <span class="n">markdownPhot</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">photResults</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span>
+                <span class="n">filepath</span><span class="o">=</span><span class="n">dirPath</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">p</span> <span class="o">+</span> <span class="s2">&quot;phot.md&quot;</span><span class="p">)</span>
+            <span class="n">markdownSpec</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">specResults</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span>
+                <span class="n">filepath</span><span class="o">=</span><span class="n">dirPath</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">p</span> <span class="o">+</span> <span class="s2">&quot;spec.md&quot;</span><span class="p">)</span>
+            <span class="n">markdownFiles</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">relatedFilesResults</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span>
+                <span class="n">filepath</span><span class="o">=</span><span class="n">dirPath</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">p</span> <span class="o">+</span> <span class="s2">&quot;relatedFiles.md&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">markdownSources</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sourceResults</span><span class="o">.</span><span class="n">markdown</span><span class="p">()</span>
+            <span class="n">markdownPhot</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">photResults</span><span class="o">.</span><span class="n">markdown</span><span class="p">()</span>
+            <span class="n">markdownSpec</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">specResults</span><span class="o">.</span><span class="n">markdown</span><span class="p">()</span>
+            <span class="n">markdownFiles</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">relatedFilesResults</span><span class="o">.</span><span class="n">markdown</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">markdownSources</span><span class="p">,</span> <span class="n">markdownPhot</span><span class="p">,</span> <span class="n">markdownSpec</span><span class="p">,</span> <span class="n">markdownFiles</span></div>
+
+<div class="viewcode-block" id="search.table"><a class="viewcode-back" href="../../_api/transientNamer.search.html#transientNamer.search.search.table">[docs]</a>    <span class="k">def</span> <span class="nf">table</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">dirPath</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;*Render the results as an ascii table*</span>
+
+<span class="sd">        **Key Arguments:**</span>
+<span class="sd">            - ``dirPath`` -- the path to the directory to save the rendered results to. Default *None*</span>
+
+<span class="sd">        **Return:**</span>
+<span class="sd">            - `tableSources` -- the top-level transient data</span>
+<span class="sd">            - `tablePhot` -- all photometry associated with the transients</span>
+<span class="sd">            - `tableSpec` -- all spectral data associated with the transients</span>
+<span class="sd">            - `tableFiles`  -- all files associated with the matched transients found on the tns</span>
+
+<span class="sd">        **Usage:**</span>
+
+<span class="sd">            To render the results in ascii table format:</span>
+
+<span class="sd">            .. code-block:: python</span>
+
+<span class="sd">                tableSources, tablePhot, tableSpec, tableFiles  = tns.table()</span>
+<span class="sd">                print tableSources</span>
+
+<span class="sd">            .. code-block:: text</span>
+
+<span class="sd">                +----------+------------+----------------+-------------+--------------+---------------+-----------+----------+----------------+-----------+----------+----------------+----------------------+-----------------------------------------------+---------------+---------------+-------------------+------------------------+-----------------------+</span>
+<span class="sd">                | TNSId    | TNSName    | discoveryName  | discSurvey  | raSex        | decSex        | raDeg     | decDeg   | transRedshift  | specType  | discMag  | discMagFilter  | discDate             | objectUrl                                     | hostName      | hostRedshift  | separationArcsec  | separationNorthArcsec  | separationEastArcsec  |</span>
+<span class="sd">                +----------+------------+----------------+-------------+--------------+---------------+-----------+----------+----------------+-----------+----------+----------------+----------------------+-----------------------------------------------+---------------+---------------+-------------------+------------------------+-----------------------+</span>
+<span class="sd">                | 2016asf  | SN2016asf  | ASASSN-16cs    | ASAS-SN     | 06:50:36.73  | +31:06:45.36  | 102.6530  | 31.1126  | 0.021          | SN Ia     | 17.1     | V-Johnson      | 2016-03-06 08:09:36  | http://wis-tns.weizmann.ac.il/object/2016asf  | KUG 0647+311  |               | 0.66              | 0.65                   | -0.13                 |</span>
+<span class="sd">                +----------+------------+----------------+-------------+--------------+---------------+-----------+----------+----------------+-----------+----------+----------------+----------------------+-----------------------------------------------+---------------+---------------+-------------------+------------------------+-----------------------+</span>
+
+<span class="sd">            You can save the results to file by passing in a directory path within which to save the files to. The four flavours of data (sources, photometry, spectra and files) are saved to separate files but all data can be assoicated with its transient source using the transient&#39;s unique `TNSId`.</span>
+
+<span class="sd">            .. code-block:: python</span>
+
+<span class="sd">                tns.table(&quot;~/tns&quot;)</span>
+
+<span class="sd">            .. image:: https://i.imgur.com/m09M0ho.png</span>
+<span class="sd">                :width: 800px</span>
+<span class="sd">                :alt: ascii files</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">dirPath</span><span class="p">:</span>
+            <span class="n">p</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_file_prefix</span><span class="p">()</span>
+            <span class="n">tableSources</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sourceResults</span><span class="o">.</span><span class="n">table</span><span class="p">(</span>
+                <span class="n">filepath</span><span class="o">=</span><span class="n">dirPath</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">p</span> <span class="o">+</span> <span class="s2">&quot;sources.ascii&quot;</span><span class="p">)</span>
+            <span class="n">tablePhot</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">photResults</span><span class="o">.</span><span class="n">table</span><span class="p">(</span>
+                <span class="n">filepath</span><span class="o">=</span><span class="n">dirPath</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">p</span> <span class="o">+</span> <span class="s2">&quot;phot.ascii&quot;</span><span class="p">)</span>
+            <span class="n">tableSpec</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">specResults</span><span class="o">.</span><span class="n">table</span><span class="p">(</span>
+                <span class="n">filepath</span><span class="o">=</span><span class="n">dirPath</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">p</span> <span class="o">+</span> <span class="s2">&quot;spec.ascii&quot;</span><span class="p">)</span>
+            <span class="n">tableFiles</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">relatedFilesResults</span><span class="o">.</span><span class="n">table</span><span class="p">(</span>
+                <span class="n">filepath</span><span class="o">=</span><span class="n">dirPath</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">p</span> <span class="o">+</span> <span class="s2">&quot;relatedFiles.ascii&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">tableSources</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sourceResults</span><span class="o">.</span><span class="n">table</span><span class="p">()</span>
+            <span class="n">tablePhot</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">photResults</span><span class="o">.</span><span class="n">table</span><span class="p">()</span>
+            <span class="n">tableSpec</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">specResults</span><span class="o">.</span><span class="n">table</span><span class="p">()</span>
+            <span class="n">tableFiles</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">relatedFilesResults</span><span class="o">.</span><span class="n">table</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">tableSources</span><span class="p">,</span> <span class="n">tablePhot</span><span class="p">,</span> <span class="n">tableSpec</span><span class="p">,</span> <span class="n">tableFiles</span></div>
+
+<div class="viewcode-block" id="search.mysql"><a class="viewcode-back" href="../../_api/transientNamer.search.html#transientNamer.search.search.mysql">[docs]</a>    <span class="k">def</span> <span class="nf">mysql</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">tableNamePrefix</span><span class="o">=</span><span class="s2">&quot;TNS&quot;</span><span class="p">,</span>
+            <span class="n">dirPath</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;*Render the results as MySQL Insert statements*</span>
+
+<span class="sd">        **Key Arguments:**</span>
+<span class="sd">            - ``tableNamePrefix`` -- the prefix for the database table names to assign the insert statements to. Default *TNS*.</span>
+<span class="sd">            - ``dirPath`` -- the path to the directory to save the rendered results to. Default *None*</span>
+
+<span class="sd">        **Return:**</span>
+<span class="sd">            - `mysqlSources` -- the top-level transient data</span>
+<span class="sd">            - `mysqlPhot` -- all photometry associated with the transients</span>
+<span class="sd">            - `mysqlSpec` -- all spectral data associated with the transients</span>
+<span class="sd">            - `mysqlFiles`  -- all files associated with the matched transients found on the tns</span>
+
+<span class="sd">        **Usage:**</span>
+
+<span class="sd">            To render the results in mysql insert format:</span>
+
+<span class="sd">            .. code-block:: python</span>
+
+<span class="sd">                mysqlSources, mysqlPhot, mysqlSpec, mysqlFiles  = tns.mysql(&quot;TNS&quot;)</span>
+<span class="sd">                print mysqlSources</span>
+
+<span class="sd">            .. code-block:: text</span>
+
+<span class="sd">                INSERT INTO `TNS_transients` (TNSId,TNSName,dateCreated,decDeg,decSex,discDate,discMag,discMagFilter,discSurvey,discoveryName,hostName,hostRedshift,objectUrl,raDeg,raSex,separationArcsec,separationEastArcsec,separationNorthArcsec,specType,transRedshift) VALUES (&quot;2016asf&quot; ,&quot;SN2016asf&quot; ,&quot;2016-09-20T11:22:13&quot; ,&quot;31.1126&quot; ,&quot;+31:06:45.36&quot; ,&quot;2016-03-06 08:09:36&quot; ,&quot;17.1&quot; ,&quot;V-Johnson&quot; ,&quot;ASAS-SN&quot; ,&quot;ASASSN-16cs&quot; ,&quot;KUG 0647+311&quot; ,null ,&quot;http://wis-tns.weizmann.ac.il/object/2016asf&quot; ,&quot;102.653041667&quot; ,&quot;06:50:36.73&quot; ,&quot;0.66&quot; ,&quot;-0.13&quot; ,&quot;0.65&quot; ,&quot;SN Ia&quot; ,&quot;0.021&quot;)  ON DUPLICATE KEY UPDATE  TNSId=&quot;2016asf&quot;, TNSName=&quot;SN2016asf&quot;, dateCreated=&quot;2016-09-20T11:22:13&quot;, decDeg=&quot;31.1126&quot;, decSex=&quot;+31:06:45.36&quot;, discDate=&quot;2016-03-06 08:09:36&quot;, discMag=&quot;17.1&quot;, discMagFilter=&quot;V-Johnson&quot;, discSurvey=&quot;ASAS-SN&quot;, discoveryName=&quot;ASASSN-16cs&quot;, hostName=&quot;KUG 0647+311&quot;, hostRedshift=null, objectUrl=&quot;http://wis-tns.weizmann.ac.il/object/2016asf&quot;, raDeg=&quot;102.653041667&quot;, raSex=&quot;06:50:36.73&quot;, separationArcsec=&quot;0.66&quot;, separationEastArcsec=&quot;-0.13&quot;, separationNorthArcsec=&quot;0.65&quot;, specType=&quot;SN Ia&quot;, transRedshift=&quot;0.021&quot;, updated=1, dateLastModified=NOW() ;</span>
+
+<span class="sd">            You can save the results to file by passing in a directory path within which to save the files to. The four flavours of data (sources, photometry, spectra and files) are saved to separate files but all data can be assoicated with its transient source using the transient&#39;s unique `TNSId`.</span>
+
+<span class="sd">            .. code-block:: python</span>
+
+<span class="sd">                tns.mysql(&quot;TNS&quot;, &quot;~/tns&quot;)</span>
+
+<span class="sd">            .. image:: https://i.imgur.com/CozySPW.png</span>
+<span class="sd">                :width: 800px</span>
+<span class="sd">                :alt: mysql output</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">dirPath</span><span class="p">:</span>
+            <span class="n">p</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_file_prefix</span><span class="p">()</span>
+            <span class="n">mysqlSources</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sourceResults</span><span class="o">.</span><span class="n">mysql</span><span class="p">(</span>
+                <span class="n">tableNamePrefix</span> <span class="o">+</span> <span class="s2">&quot;_transients&quot;</span><span class="p">,</span> <span class="n">filepath</span><span class="o">=</span><span class="n">dirPath</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">p</span> <span class="o">+</span> <span class="s2">&quot;sources.mysql&quot;</span><span class="p">)</span>
+            <span class="n">mysqlPhot</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">photResults</span><span class="o">.</span><span class="n">mysql</span><span class="p">(</span>
+                <span class="n">tableNamePrefix</span> <span class="o">+</span> <span class="s2">&quot;_photometry&quot;</span><span class="p">,</span> <span class="n">filepath</span><span class="o">=</span><span class="n">dirPath</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">p</span> <span class="o">+</span> <span class="s2">&quot;phot.mysql&quot;</span><span class="p">)</span>
+            <span class="n">mysqlSpec</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">specResults</span><span class="o">.</span><span class="n">mysql</span><span class="p">(</span>
+                <span class="n">tableNamePrefix</span> <span class="o">+</span> <span class="s2">&quot;_spectra&quot;</span><span class="p">,</span> <span class="n">filepath</span><span class="o">=</span><span class="n">dirPath</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">p</span> <span class="o">+</span> <span class="s2">&quot;spec.mysql&quot;</span><span class="p">)</span>
+            <span class="n">mysqlFiles</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">relatedFilesResults</span><span class="o">.</span><span class="n">mysql</span><span class="p">(</span>
+                <span class="n">tableNamePrefix</span> <span class="o">+</span> <span class="s2">&quot;_files&quot;</span><span class="p">,</span> <span class="n">filepath</span><span class="o">=</span><span class="n">dirPath</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">p</span> <span class="o">+</span> <span class="s2">&quot;relatedFiles.mysql&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">mysqlSources</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sourceResults</span><span class="o">.</span><span class="n">mysql</span><span class="p">(</span>
+                <span class="n">tableNamePrefix</span> <span class="o">+</span> <span class="s2">&quot;_transients&quot;</span><span class="p">)</span>
+            <span class="n">mysqlPhot</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">photResults</span><span class="o">.</span><span class="n">mysql</span><span class="p">(</span><span class="n">tableNamePrefix</span> <span class="o">+</span> <span class="s2">&quot;_photometry&quot;</span><span class="p">)</span>
+            <span class="n">mysqlSpec</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">specResults</span><span class="o">.</span><span class="n">mysql</span><span class="p">(</span><span class="n">tableNamePrefix</span> <span class="o">+</span> <span class="s2">&quot;_spectra&quot;</span><span class="p">)</span>
+            <span class="n">mysqlFiles</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">relatedFilesResults</span><span class="o">.</span><span class="n">mysql</span><span class="p">(</span>
+                <span class="n">tableNamePrefix</span> <span class="o">+</span> <span class="s2">&quot;_files&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">mysqlSources</span><span class="p">,</span> <span class="n">mysqlPhot</span><span class="p">,</span> <span class="n">mysqlSpec</span><span class="p">,</span> <span class="n">mysqlFiles</span></div>
+
+    <span class="k">def</span> <span class="nf">_query_tns</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        *determine how to query the TNS, send query and parse the results*</span>
+
+<span class="sd">        **Return:**</span>
+<span class="sd">            - ``results`` -- a list of dictionaries (one dictionary for each result set returned from the TNS)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;starting the ``get`` method&#39;</span><span class="p">)</span>
 
-        <span class="n">status_code</span><span class="p">,</span> <span class="n">content</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_query_the_tns</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">status_code</span> <span class="o">!=</span> <span class="mi">200</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
-                <span class="s1">&#39;cound not get the search reuslts from the TNS, HTML error code </span><span class="si">%(status_code)s</span><span class="s1"> &#39;</span> <span class="o">%</span> <span class="nb">locals</span><span class="p">())</span>
-            <span class="k">return</span> <span class="bp">None</span>
+        <span class="n">sourceTable</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">photoTable</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">specTable</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">relatedFilesTable</span> <span class="o">=</span> <span class="p">[]</span>
 
-        <span class="k">if</span> <span class="s2">&quot;No results found&quot;</span> <span class="ow">in</span> <span class="n">content</span><span class="p">:</span>
-            <span class="k">print</span> <span class="s2">&quot;No results found&quot;</span>
-            <span class="k">return</span> <span class="s2">&quot;No results found&quot;</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">matchObject</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span>
-                <span class="sd">r&quot;&quot;&quot;&lt;td class=&quot;cell-internal_name&quot;&gt;(.*?)&lt;/td&quot;&quot;&quot;</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">S</span><span class="p">)</span>
-            <span class="n">match</span> <span class="o">=</span> <span class="n">matchObject</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-            <span class="k">print</span> <span class="s2">&quot;Match found: </span><span class="si">%(match)s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">locals</span><span class="p">()</span>
-            <span class="k">return</span> <span class="s2">&quot;Match found: </span><span class="si">%(match)s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">locals</span><span class="p">()</span>
+        <span class="c1"># THIS stop IS TO KEEP TRACK OF THE TNS PAGINATION IF MANY RESULT PAGES</span>
+        <span class="c1"># ARE RETURNED</span>
+        <span class="n">stop</span> <span class="o">=</span> <span class="bp">False</span>
+
+        <span class="k">while</span> <span class="ow">not</span> <span class="n">stop</span><span class="p">:</span>
+
+            <span class="n">status_code</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_searchURL</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_tns_search_results</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">status_code</span> <span class="o">!=</span> <span class="mi">200</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                    <span class="s1">&#39;cound not get the search reuslts from the TNS, HTML error code </span><span class="si">%(status_code)s</span><span class="s1"> &#39;</span> <span class="o">%</span> <span class="nb">locals</span><span class="p">())</span>
+                <span class="k">return</span> <span class="bp">None</span>
+
+            <span class="k">if</span> <span class="s2">&quot;No results found&quot;</span> <span class="ow">in</span> <span class="n">content</span><span class="p">:</span>
+                <span class="k">print</span> <span class="s2">&quot;No results found&quot;</span>
+                <span class="k">return</span> <span class="n">sourceTable</span><span class="p">,</span> <span class="n">photoTable</span><span class="p">,</span> <span class="n">specTable</span><span class="p">,</span> <span class="n">relatedFilesTable</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_transient_rows</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="bp">True</span><span class="p">)</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">batchSize</span><span class="p">:</span>
+                <span class="n">stop</span> <span class="o">=</span> <span class="bp">True</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">page</span> <span class="o">+=</span> <span class="mi">1</span>
+
+            <span class="c1"># PARSE ALL ROWS RETURNED</span>
+            <span class="k">for</span> <span class="n">transientRow</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_transient_rows</span><span class="p">(</span><span class="n">content</span><span class="p">):</span>
+
+                <span class="c1"># TOP LEVEL DISCOVERY CONTENT</span>
+                <span class="n">sourceContent</span> <span class="o">=</span> <span class="n">transientRow</span><span class="o">.</span><span class="n">group</span><span class="p">()</span>
+                <span class="n">discInfo</span><span class="p">,</span> <span class="n">TNSId</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_discovery_information</span><span class="p">(</span>
+                    <span class="n">sourceContent</span><span class="p">)</span>
+                <span class="n">sourceTable</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">discInfo</span><span class="p">)</span>
+
+                <span class="c1"># PHOTOMETERY</span>
+                <span class="n">phot</span><span class="p">,</span> <span class="n">relatedFiles</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_photometry_data</span><span class="p">(</span>
+                    <span class="n">sourceContent</span><span class="p">,</span> <span class="n">TNSId</span><span class="p">)</span>
+                <span class="n">photoTable</span> <span class="o">+=</span> <span class="n">phot</span>
+                <span class="n">relatedFilesTable</span> <span class="o">+=</span> <span class="n">relatedFiles</span>
+
+                <span class="c1"># SPECTRA</span>
+                <span class="n">spec</span><span class="p">,</span> <span class="n">relatedFiles</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_spectral_data</span><span class="p">(</span>
+                    <span class="n">sourceContent</span><span class="p">,</span> <span class="n">TNSId</span><span class="p">)</span>
+                <span class="n">specTable</span> <span class="o">+=</span> <span class="n">spec</span>
+                <span class="n">relatedFilesTable</span> <span class="o">+=</span> <span class="n">relatedFiles</span>
+
+        <span class="c1"># SORT BY SEPARATION FROM THE SEARCH COORDINATES</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">sourceTable</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">sourceTable</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">itemgetter</span><span class="p">(</span>
+                <span class="s1">&#39;separationArcsec&#39;</span><span class="p">),</span> <span class="n">reverse</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">pass</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;completed the ``get`` method&#39;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">search</span></div>
+        <span class="k">return</span> <span class="n">sourceTable</span><span class="p">,</span> <span class="n">photoTable</span><span class="p">,</span> <span class="n">specTable</span><span class="p">,</span> <span class="n">relatedFilesTable</span>
 
-    <span class="k">def</span> <span class="nf">_query_the_tns</span><span class="p">(</span>
+    <span class="k">def</span> <span class="nf">_get_tns_search_results</span><span class="p">(</span>
             <span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        *query the tns*</span>
-
-<span class="sd">        **Key Arguments:**</span>
-<span class="sd">            # -</span>
-
-<span class="sd">        **Return:**</span>
-<span class="sd">            - None</span>
-
-<span class="sd">        .. todo::</span>
-
-<span class="sd">            - @review: when complete, clean _query_the_tns method</span>
-<span class="sd">            - @review: when complete add logging</span>
+<span class="sd">        *query the tns and result the response*</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;starting the ``_query_the_tns`` method&#39;</span><span class="p">)</span>
-
-        <span class="c1"># Install the Python Requests library:</span>
-        <span class="c1"># `pip install requests`</span>
-
-        <span class="kn">import</span> <span class="nn">requests</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;starting the ``_get_tns_search_results`` method&#39;</span><span class="p">)</span>
 
         <span class="k">try</span><span class="p">:</span>
             <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
                 <span class="n">url</span><span class="o">=</span><span class="s2">&quot;http://wis-tns.weizmann.ac.il/search&quot;</span><span class="p">,</span>
                 <span class="n">params</span><span class="o">=</span><span class="p">{</span>
-                    <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;name_like&quot;</span><span class="p">:</span> <span class="s2">&quot;0&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;isTNS_AT&quot;</span><span class="p">:</span> <span class="s2">&quot;all&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;public&quot;</span><span class="p">:</span> <span class="s2">&quot;all&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;unclassified_at&quot;</span><span class="p">:</span> <span class="s2">&quot;0&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;classified_sne&quot;</span><span class="p">:</span> <span class="s2">&quot;0&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;page&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">page</span><span class="p">,</span>
                     <span class="s2">&quot;ra&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">ra</span><span class="p">,</span>
                     <span class="s2">&quot;decl&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">dec</span><span class="p">,</span>
                     <span class="s2">&quot;radius&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">radiusArcsec</span><span class="p">,</span>
-                    <span class="s2">&quot;coords_unit&quot;</span><span class="p">:</span> <span class="s2">&quot;arcsec&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;groupid[]&quot;</span><span class="p">:</span> <span class="s2">&quot;null&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;type[]&quot;</span><span class="p">:</span> <span class="s2">&quot;null&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;date_start[date]&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;date_end[date]&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;discovery_mag_min&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;discovery_mag_max&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;discoverer&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;redshift_min&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;redshift_max&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;spectra_count&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;internal_name&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;hostname&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;associated_groups[]&quot;</span><span class="p">:</span> <span class="s2">&quot;null&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;num_page&quot;</span><span class="p">:</span> <span class="s2">&quot;50&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                    <span class="s2">&quot;internal_name&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">internal_name</span><span class="p">,</span>
+                    <span class="s2">&quot;date_start[date]&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">start</span><span class="p">,</span>
+                    <span class="s2">&quot;date_end[date]&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">end</span><span class="p">,</span>
+                    <span class="s2">&quot;num_page&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">batchSize</span><span class="p">,</span>
                     <span class="s2">&quot;display[redshift]&quot;</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span>
                     <span class="s2">&quot;display[hostname]&quot;</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span>
                     <span class="s2">&quot;display[host_redshift]&quot;</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span>
                     <span class="s2">&quot;display[source_group_name]&quot;</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;display[programs_name]&quot;</span><span class="p">:</span> <span class="s2">&quot;0&quot;</span><span class="p">,</span>
                     <span class="s2">&quot;display[internal_name]&quot;</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;display[isTNS_AT]&quot;</span><span class="p">:</span> <span class="s2">&quot;0&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;display[public]&quot;</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;display[end_pop_period]&quot;</span><span class="p">:</span> <span class="s2">&quot;0&quot;</span><span class="p">,</span>
                     <span class="s2">&quot;display[spectra_count]&quot;</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span>
                     <span class="s2">&quot;display[discoverymag]&quot;</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span>
                     <span class="s2">&quot;display[discmagfilter]&quot;</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span>
                     <span class="s2">&quot;display[discoverydate]&quot;</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span>
                     <span class="s2">&quot;display[discoverer]&quot;</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;display[sources]&quot;</span><span class="p">:</span> <span class="s2">&quot;0&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;display[bibcode]&quot;</span><span class="p">:</span> <span class="s2">&quot;0&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;display[sources]&quot;</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;display[bibcode]&quot;</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span>
                 <span class="p">},</span>
             <span class="p">)</span>
         <span class="k">except</span> <span class="n">requests</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">RequestException</span><span class="p">:</span>
             <span class="k">print</span><span class="p">(</span><span class="s1">&#39;HTTP Request failed&#39;</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;completed the ``_query_the_tns`` method&#39;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">content</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;completed the ``_get_tns_search_results`` method&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">url</span>
 
-    <span class="c1"># use the tab-trigger below for new method</span>
-    <span class="c1"># xt-class-method</span>
+    <span class="k">def</span> <span class="nf">_file_prefix</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;*Generate a file prefix based on the type of search for saving files to disk*</span>
 
-    <span class="c1"># 5. @flagged: what actions of the base class(es) need ammending? ammend them here</span>
-    <span class="c1"># Override Method Attributes</span>
-    <span class="c1"># method-override-tmpx</span>
+<span class="sd">        **Return:**</span>
+<span class="sd">            - ``prefix`` -- the file prefix</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;starting the ``_file_prefix`` method&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ra</span><span class="p">:</span>
+            <span class="n">now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+            <span class="n">prefix</span> <span class="o">=</span> <span class="n">now</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">t%H%M%S</span><span class="si">%f</span><span class="s2">_tns_conesearch_&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
+            <span class="n">prefix</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_tns_conesearch_&quot;</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">internal_name</span><span class="p">:</span>
+            <span class="n">prefix</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">internal_name</span> <span class="o">+</span> <span class="s2">&quot;_tns_conesearch_&quot;</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">discInLastDays</span><span class="p">:</span>
+            <span class="n">discInLastDays</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">discInLastDays</span><span class="p">)</span>
+            <span class="n">now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+            <span class="n">prefix</span> <span class="o">=</span> <span class="n">now</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span>
+                <span class="n">discInLastDays</span> <span class="o">+</span> <span class="s2">&quot;d_since_%Y%m</span><span class="si">%d</span><span class="s2">_tns_conesearch_&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;completed the ``_file_prefix`` method&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">prefix</span>
+
+    <span class="k">def</span> <span class="nf">_parse_transient_rows</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">content</span><span class="p">,</span>
+            <span class="n">count</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;* parse transient rows from the TNS result page content*</span>
+
+<span class="sd">        **Key Arguments:**</span>
+<span class="sd">            - ``content`` -- the content from the TNS results page.</span>
+<span class="sd">            - ``count`` -- return only the number of rows</span>
+
+<span class="sd">        **Return:**</span>
+<span class="sd">            - ``transientRows``</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;starting the ``_parse_transient_rows`` method&#39;</span><span class="p">)</span>
+
+        <span class="n">regexForRow</span> <span class="o">=</span> <span class="s2">r&quot;&quot;&quot;\n([^\n]*?&lt;a href=&quot;/object/.*?)(?=\n[^\n]*?&lt;a href=&quot;/object/|&lt;\!\-\- /\.section, /#content \-\-&gt;)&quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">count</span><span class="p">:</span>
+            <span class="c1"># A SINGLE SOURCE BLOCK</span>
+            <span class="n">matchedSources</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span>
+                <span class="n">regexForRow</span><span class="p">,</span>
+                <span class="n">content</span><span class="p">,</span>
+                <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">S</span>  <span class="c1"># re.S</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">matchedSources</span><span class="p">)</span>
+
+        <span class="c1"># A SINGLE SOURCE BLOCK</span>
+        <span class="n">matchedSources</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">finditer</span><span class="p">(</span>
+            <span class="n">regexForRow</span><span class="p">,</span>
+            <span class="n">content</span><span class="p">,</span>
+            <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">S</span>  <span class="c1"># re.S</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;completed the ``_parse_transient_rows`` method&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">matchedSources</span>
+
+    <span class="k">def</span> <span class="nf">_parse_discovery_information</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">content</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;* parse discovery information from one row on the TNS results page*</span>
+
+<span class="sd">        **Key Arguments:**</span>
+<span class="sd">            - ``content`` -- a table row from the TNS results page.</span>
+
+<span class="sd">        **Return:**</span>
+<span class="sd">            - ``discoveryData`` -- dictionary of results</span>
+<span class="sd">            - ``TNSId`` -- the unique TNS id for the transient</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;starting the ``_parse_discovery_information`` method&#39;</span><span class="p">)</span>
+
+        <span class="c1"># ASTROCALC UNIT CONVERTER OBJECT</span>
+        <span class="n">converter</span> <span class="o">=</span> <span class="n">unit_conversion</span><span class="p">(</span>
+            <span class="n">log</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">log</span>
+        <span class="p">)</span>
+
+        <span class="n">matches</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">finditer</span><span class="p">(</span>
+            <span class="sd">r&quot;&quot;&quot;&lt;tr class=&quot;row-.*?&quot;&gt;&lt;td class=&quot;cell-id&quot;&gt;(?P&lt;tnsId&gt;\d*?)&lt;/td&gt;&lt;td class=&quot;cell-name&quot;&gt;&lt;a href=&quot;(?P&lt;objectUrl&gt;.*?)&quot;&gt;(?P&lt;TNSName&gt;.*?)&lt;/a&gt;&lt;/td&gt;&lt;td class=&quot;cell-.*?&lt;td class=&quot;cell-ra&quot;&gt;(?P&lt;raSex&gt;.*?)&lt;/td&gt;&lt;td class=&quot;cell-decl&quot;&gt;(?P&lt;decSex&gt;.*?)&lt;/td&gt;&lt;td class=&quot;cell-ot_name&quot;&gt;(?P&lt;specType&gt;.*?)&lt;/td&gt;&lt;td class=&quot;cell-redshift&quot;&gt;(?P&lt;transRedshift&gt;.*?)&lt;/td&gt;&lt;td class=&quot;cell-hostname&quot;&gt;(?P&lt;hostName&gt;.*?)&lt;/td&gt;&lt;td class=&quot;cell-host_redshift&quot;&gt;(?P&lt;hostRedshift&gt;.*?)&lt;/td&gt;&lt;td class=&quot;cell-source_group_name&quot;&gt;(?P&lt;discSurvey&gt;.*?)&lt;/td&gt;.*?&lt;td class=&quot;cell-internal_name&quot;&gt;(&lt;a.*?&gt;)?(?P&lt;discoveryName&gt;.*?)(&lt;/a&gt;)?&lt;/td&gt;.*?&lt;td class=&quot;cell-discoverymag&quot;&gt;(?P&lt;discMag&gt;.*?)&lt;/td&gt;&lt;td class=&quot;cell-disc_filter_name&quot;&gt;(?P&lt;discMagFilter&gt;.*?)&lt;/td&gt;&lt;td class=&quot;cell-discoverydate&quot;&gt;(?P&lt;discDate&gt;.*?)&lt;/td&gt;&lt;td class=&quot;cell-discoverer&quot;&gt;(?P&lt;sender&gt;.*?)&lt;/td&gt;.*?&lt;/tr&gt;&quot;&quot;&quot;</span><span class="p">,</span>
+            <span class="n">content</span><span class="p">,</span>
+            <span class="n">flags</span><span class="o">=</span><span class="mi">0</span>  <span class="c1"># re.S</span>
+        <span class="p">)</span>
+        <span class="n">discoveryData</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">match</span> <span class="ow">in</span> <span class="n">matches</span><span class="p">:</span>
+            <span class="n">row</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">groupdict</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">row</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+                <span class="n">row</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">row</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="bp">None</span>
+            <span class="k">if</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;transRedshift&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">row</span><span class="p">[</span><span class="s2">&quot;transRedshift&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">None</span>
+            <span class="k">if</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;TNSName&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;1&quot;</span><span class="p">,</span> <span class="s2">&quot;2&quot;</span><span class="p">]:</span>
+                <span class="n">row</span><span class="p">[</span><span class="s2">&quot;TNSName&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;SN&quot;</span> <span class="o">+</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;TNSName&quot;</span><span class="p">]</span>
+            <span class="n">row</span><span class="p">[</span><span class="s2">&quot;objectUrl&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;http://wis-tns.weizmann.ac.il&quot;</span> <span class="o">+</span> \
+                <span class="n">row</span><span class="p">[</span><span class="s2">&quot;objectUrl&quot;</span><span class="p">]</span>
+
+            <span class="c1"># CONVERT COORDINATES TO DECIMAL DEGREES</span>
+            <span class="n">row</span><span class="p">[</span><span class="s2">&quot;raDeg&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">converter</span><span class="o">.</span><span class="n">ra_sexegesimal_to_decimal</span><span class="p">(</span>
+                <span class="n">ra</span><span class="o">=</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;raSex&quot;</span><span class="p">]</span>
+            <span class="p">)</span>
+            <span class="n">row</span><span class="p">[</span><span class="s2">&quot;decDeg&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">converter</span><span class="o">.</span><span class="n">dec_sexegesimal_to_decimal</span><span class="p">(</span>
+                <span class="n">dec</span><span class="o">=</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;decSex&quot;</span><span class="p">]</span>
+            <span class="p">)</span>
+
+            <span class="c1"># IF THIS IS A COORDINATE SEARCH, ADD SEPARATION FROM</span>
+            <span class="c1"># ORIGINAL QUERY COORDINATES</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ra</span><span class="p">:</span>
+                <span class="c1"># CALCULATE SEPARATION IN ARCSEC</span>
+                <span class="kn">from</span> <span class="nn">astrocalc.coords</span> <span class="kn">import</span> <span class="n">separations</span>
+                <span class="n">calculator</span> <span class="o">=</span> <span class="n">separations</span><span class="p">(</span>
+                    <span class="n">log</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">,</span>
+                    <span class="n">ra1</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ra</span><span class="p">,</span>
+                    <span class="n">dec1</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dec</span><span class="p">,</span>
+                    <span class="n">ra2</span><span class="o">=</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;raDeg&quot;</span><span class="p">],</span>
+                    <span class="n">dec2</span><span class="o">=</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;decDeg&quot;</span><span class="p">],</span>
+                <span class="p">)</span>
+                <span class="n">angularSeparation</span><span class="p">,</span> <span class="n">north</span><span class="p">,</span> <span class="n">east</span> <span class="o">=</span> <span class="n">calculator</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+                <span class="n">row</span><span class="p">[</span><span class="s2">&quot;separationArcsec&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">angularSeparation</span>
+                <span class="n">row</span><span class="p">[</span><span class="s2">&quot;separationNorthArcsec&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">north</span>
+                <span class="n">row</span><span class="p">[</span><span class="s2">&quot;separationEastArcsec&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">east</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;discSurvey&quot;</span><span class="p">]:</span>
+                <span class="n">row</span><span class="p">[</span><span class="s2">&quot;survey&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;sender&quot;</span><span class="p">]</span>
+
+            <span class="k">del</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;sender&quot;</span><span class="p">]</span>
+            <span class="k">del</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;tnsId&quot;</span><span class="p">]</span>
+            <span class="n">row</span><span class="p">[</span><span class="s2">&quot;TNSName&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;TNSName&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+            <span class="n">row</span><span class="p">[</span><span class="s2">&quot;TNSId&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;TNSName&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
+                <span class="s2">&quot;SN&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;AT&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+            <span class="n">TNSId</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;TNSId&quot;</span><span class="p">]</span>
+
+            <span class="c1"># ORDER THE DICTIONARY FOR THIS ROW OF RESULTS</span>
+            <span class="n">orow</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">OrderedDict</span><span class="p">()</span>
+            <span class="n">keyOrder</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;TNSId&quot;</span><span class="p">,</span> <span class="s2">&quot;TNSName&quot;</span><span class="p">,</span> <span class="s2">&quot;discoveryName&quot;</span><span class="p">,</span> <span class="s2">&quot;discSurvey&quot;</span><span class="p">,</span> <span class="s2">&quot;raSex&quot;</span><span class="p">,</span> <span class="s2">&quot;decSex&quot;</span><span class="p">,</span> <span class="s2">&quot;raDeg&quot;</span><span class="p">,</span> <span class="s2">&quot;decDeg&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;transRedshift&quot;</span><span class="p">,</span> <span class="s2">&quot;specType&quot;</span><span class="p">,</span> <span class="s2">&quot;discMag&quot;</span><span class="p">,</span> <span class="s2">&quot;discMagFilter&quot;</span><span class="p">,</span> <span class="s2">&quot;discDate&quot;</span><span class="p">,</span> <span class="s2">&quot;objectUrl&quot;</span><span class="p">,</span> <span class="s2">&quot;hostName&quot;</span><span class="p">,</span> <span class="s2">&quot;hostRedshift&quot;</span><span class="p">,</span> <span class="s2">&quot;separationArcsec&quot;</span><span class="p">,</span> <span class="s2">&quot;separationNorthArcsec&quot;</span><span class="p">,</span> <span class="s2">&quot;separationEastArcsec&quot;</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">row</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">k</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">keyOrder</span><span class="p">:</span>
+                    <span class="n">keyOrder</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">keyOrder</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">orow</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+                <span class="k">except</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                        <span class="s2">&quot;`</span><span class="si">%(k)s</span><span class="s2">` not found in the source data for </span><span class="si">%(TNSId)s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">locals</span><span class="p">())</span>
+                    <span class="k">pass</span>
+            <span class="n">discoveryData</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;completed the ``_parse_discovery_information`` method&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">discoveryData</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">TNSId</span>
+
+    <span class="k">def</span> <span class="nf">_parse_photometry_data</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">content</span><span class="p">,</span>
+            <span class="n">TNSId</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;*parse photometry data from a row in the tns results content*</span>
+
+<span class="sd">        **Key Arguments:**</span>
+<span class="sd">             - ``content`` -- a table row from the TNS results page</span>
+<span class="sd">             - ``TNSId`` -- the tns id of the transient</span>
+
+<span class="sd">        **Return:**</span>
+<span class="sd">            - ``photData`` -- a list of dictionaries of the photometry data</span>
+<span class="sd">            - ``relatedFilesTable`` -- a list of dictionaries of transient photometry related files </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;starting the ``_parse_photometry_data`` method&#39;</span><span class="p">)</span>
+
+        <span class="n">photData</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">relatedFilesTable</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># AT REPORT BLOCK</span>
+        <span class="n">ATBlock</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span>
+            <span class="sd">r&quot;&quot;&quot;&lt;tr class=[^\n]*?AT reportings.*?(?=&lt;tr class=[^\n]*?Classification reportings|$)&quot;&quot;&quot;</span><span class="p">,</span>
+            <span class="n">content</span><span class="p">,</span>
+            <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">S</span>  <span class="c1"># re.S</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">ATBlock</span><span class="p">:</span>
+            <span class="n">ATBlock</span> <span class="o">=</span> <span class="n">ATBlock</span><span class="o">.</span><span class="n">group</span><span class="p">()</span>
+            <span class="n">reports</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">finditer</span><span class="p">(</span>
+                <span class="sd">r&quot;&quot;&quot;&lt;tr class=&quot;row-[^&quot;]*&quot;&gt;&lt;td class=&quot;cell-id&quot;&gt;.*?&lt;/table&gt;&quot;&quot;&quot;</span><span class="p">,</span>
+                <span class="n">ATBlock</span><span class="p">,</span>
+                <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">S</span>  <span class="c1"># re.S</span>
+            <span class="p">)</span>
+
+            <span class="n">relatedFiles</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_related_files</span><span class="p">(</span><span class="n">ATBlock</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">reports</span><span class="p">:</span>
+                <span class="n">header</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span>
+                    <span class="sd">r&quot;&quot;&quot;&lt;tr class=&quot;row[^&quot;]*&quot;.*?time_received&quot;&gt;(?P&lt;reportAddedDate&gt;[^&lt;]*).*?user_name&quot;&gt;(?P&lt;sender&gt;[^&lt;]*).*?reporter_name&quot;&gt;(?P&lt;reporters&gt;[^&lt;]*).*?source_group_name&quot;&gt;(?P&lt;surveyGroup&gt;[^&lt;]*).*?ra&quot;&gt;(?P&lt;ra&gt;[^&lt;]*).*?decl&quot;&gt;(?P&lt;dec&gt;[^&lt;]*).*?discovery_date&quot;&gt;(?P&lt;obsDate&gt;[^&lt;]*).*?flux&quot;&gt;(?P&lt;mag&gt;[^&lt;]*).*?filter_name&quot;&gt;(?P&lt;magFilter&gt;[^&lt;]*).*?related_files&quot;&gt;(?P&lt;relatedFiles&gt;[^&lt;]*).*?type_name&quot;&gt;(?P&lt;suggestedType&gt;[^&lt;]*).*?hostname&quot;&gt;(?P&lt;hostName&gt;[^&lt;]*).*?host_redshift&quot;&gt;(?P&lt;hostRedshift&gt;[^&lt;]*).*?internal_name&quot;&gt;(?P&lt;surveyName&gt;[^&lt;]*).*?groups&quot;&gt;(?P&lt;survey&gt;[^&lt;]*).*?remarks&quot;&gt;(?P&lt;sourceComment&gt;[^&lt;]*)&lt;/td&gt;&quot;&quot;&quot;</span><span class="p">,</span>
+                    <span class="n">r</span><span class="o">.</span><span class="n">group</span><span class="p">(),</span>
+                    <span class="n">flags</span><span class="o">=</span><span class="mi">0</span>  <span class="c1"># re.S</span>
+                <span class="p">)</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">header</span> <span class="o">=</span> <span class="n">header</span><span class="o">.</span><span class="n">groupdict</span><span class="p">()</span>
+                <span class="k">except</span><span class="p">:</span>
+                    <span class="k">print</span> <span class="n">r</span><span class="o">.</span><span class="n">group</span><span class="p">()</span>
+                <span class="n">header</span><span class="p">[</span><span class="s2">&quot;TNSId&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">TNSId</span>
+
+                <span class="k">del</span> <span class="n">header</span><span class="p">[</span><span class="s2">&quot;reporters&quot;</span><span class="p">]</span>
+                <span class="k">del</span> <span class="n">header</span><span class="p">[</span><span class="s2">&quot;sender&quot;</span><span class="p">]</span>
+                <span class="k">del</span> <span class="n">header</span><span class="p">[</span><span class="s2">&quot;surveyGroup&quot;</span><span class="p">]</span>
+                <span class="k">del</span> <span class="n">header</span><span class="p">[</span><span class="s2">&quot;hostName&quot;</span><span class="p">]</span>
+                <span class="k">del</span> <span class="n">header</span><span class="p">[</span><span class="s2">&quot;hostRedshift&quot;</span><span class="p">]</span>
+                <span class="k">del</span> <span class="n">header</span><span class="p">[</span><span class="s2">&quot;mag&quot;</span><span class="p">]</span>
+                <span class="k">del</span> <span class="n">header</span><span class="p">[</span><span class="s2">&quot;magFilter&quot;</span><span class="p">]</span>
+                <span class="k">del</span> <span class="n">header</span><span class="p">[</span><span class="s2">&quot;obsDate&quot;</span><span class="p">]</span>
+                <span class="k">del</span> <span class="n">header</span><span class="p">[</span><span class="s2">&quot;ra&quot;</span><span class="p">]</span>
+                <span class="k">del</span> <span class="n">header</span><span class="p">[</span><span class="s2">&quot;dec&quot;</span><span class="p">]</span>
+                <span class="k">del</span> <span class="n">header</span><span class="p">[</span><span class="s2">&quot;surveyName&quot;</span><span class="p">]</span>
+
+                <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">comments</span><span class="p">:</span>
+                    <span class="k">del</span> <span class="n">header</span><span class="p">[</span><span class="s1">&#39;sourceComment&#39;</span><span class="p">]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">theseComments</span> <span class="o">=</span> <span class="n">header</span><span class="p">[</span>
+                        <span class="s2">&quot;sourceComment&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="n">header</span><span class="p">[</span><span class="s2">&quot;sourceComment&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+                    <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">theseComments</span><span class="p">:</span>
+                        <span class="n">header</span><span class="p">[</span><span class="s2">&quot;sourceComment&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">c</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                    <span class="n">header</span><span class="p">[</span><span class="s2">&quot;sourceComment&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">header</span><span class="p">[</span>
+                        <span class="s2">&quot;sourceComment&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+                <span class="n">phot</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">finditer</span><span class="p">(</span>
+                    <span class="sd">r&quot;&quot;&quot;&lt;tr class=&quot;row\-[^&quot;]*&quot;.*?obsdate&quot;&gt;(?P&lt;obsdate&gt;[^&lt;]*).*?flux&quot;&gt;(?P&lt;mag&gt;[^&lt;]*).*?fluxerr&quot;&gt;(?P&lt;magErr&gt;[^&lt;]*).*?limflux&quot;&gt;(?P&lt;limitingMag&gt;[^&lt;]*).*?unit_name&quot;&gt;(?P&lt;magUnit&gt;[^&lt;]*).*?filter_name&quot;&gt;(?P&lt;filter&gt;[^&lt;]*).*?tel_inst&quot;&gt;(?P&lt;telescope&gt;[^&lt;]*).*?exptime&quot;&gt;(?P&lt;exptime&gt;[^&lt;]*).*?observer&quot;&gt;(?P&lt;observer&gt;[^&lt;]*).*?-remarks&quot;&gt;(?P&lt;remarks&gt;[^&lt;]*)&quot;&quot;&quot;</span><span class="p">,</span>
+                    <span class="n">r</span><span class="o">.</span><span class="n">group</span><span class="p">(),</span>
+                    <span class="n">flags</span><span class="o">=</span><span class="mi">0</span>  <span class="c1"># re.S</span>
+                <span class="p">)</span>
+                <span class="n">filesAppended</span> <span class="o">=</span> <span class="bp">False</span>
+                <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">phot</span><span class="p">:</span>
+                    <span class="n">p</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">groupdict</span><span class="p">()</span>
+                    <span class="k">del</span> <span class="n">p</span><span class="p">[</span><span class="s2">&quot;observer&quot;</span><span class="p">]</span>
+
+                    <span class="k">if</span> <span class="n">p</span><span class="p">[</span><span class="s2">&quot;limitingMag&quot;</span><span class="p">]</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">p</span><span class="p">[</span><span class="s2">&quot;mag&quot;</span><span class="p">]:</span>
+                        <span class="n">p</span><span class="p">[</span><span class="s2">&quot;mag&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">p</span><span class="p">[</span><span class="s2">&quot;limitingMag&quot;</span><span class="p">]</span>
+                        <span class="n">p</span><span class="p">[</span><span class="s2">&quot;limitingMag&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+                        <span class="n">p</span><span class="p">[</span><span class="s2">&quot;remarks&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">p</span><span class="p">[</span><span class="s2">&quot;remarks&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
+                            <span class="s2">&quot;[Last non detection]&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">p</span><span class="p">[</span><span class="s2">&quot;limitingMag&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+
+                    <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">comments</span><span class="p">:</span>
+                        <span class="k">del</span> <span class="n">p</span><span class="p">[</span><span class="s2">&quot;remarks&quot;</span><span class="p">]</span>
+
+                    <span class="n">p</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">header</span><span class="p">)</span>
+
+                    <span class="k">if</span> <span class="n">p</span><span class="p">[</span><span class="s2">&quot;relatedFiles&quot;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">filesAppended</span> <span class="o">==</span> <span class="bp">False</span><span class="p">:</span>
+                        <span class="n">filesAppended</span> <span class="o">=</span> <span class="bp">True</span>
+                        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">relatedFiles</span><span class="p">:</span>
+                            <span class="c1"># ORDER THE DICTIONARY FOR THIS ROW OF</span>
+                            <span class="c1"># RESULTS</span>
+                            <span class="n">thisFile</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">OrderedDict</span><span class="p">()</span>
+                            <span class="n">thisFile</span><span class="p">[</span><span class="s2">&quot;TNSid&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">TNSId</span>
+                            <span class="n">thisFile</span><span class="p">[</span><span class="s2">&quot;filename&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span>
+                                <span class="s2">&quot;filepath&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                            <span class="n">thisFile</span><span class="p">[</span><span class="s2">&quot;url&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span><span class="s2">&quot;filepath&quot;</span><span class="p">]</span>
+                            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">comments</span><span class="p">:</span>
+                                <span class="n">thisFile</span><span class="p">[</span><span class="s2">&quot;comment&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span>
+                                    <span class="s2">&quot;fileComment&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                            <span class="n">thisFile</span><span class="p">[</span><span class="s2">&quot;dateObs&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">p</span><span class="p">[</span><span class="s2">&quot;obsdate&quot;</span><span class="p">]</span>
+                            <span class="n">thisFile</span><span class="p">[</span><span class="s2">&quot;spec1phot2&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span>
+                            <span class="n">relatedFilesTable</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">thisFile</span><span class="p">)</span>
+
+                    <span class="k">del</span> <span class="n">p</span><span class="p">[</span><span class="s2">&quot;relatedFiles&quot;</span><span class="p">]</span>
+
+                    <span class="c1"># ORDER THE DICTIONARY FOR THIS ROW OF RESULTS</span>
+                    <span class="n">orow</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">OrderedDict</span><span class="p">()</span>
+                    <span class="n">keyOrder</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;TNSId&quot;</span><span class="p">,</span> <span class="s2">&quot;survey&quot;</span><span class="p">,</span> <span class="s2">&quot;obsdate&quot;</span><span class="p">,</span> <span class="s2">&quot;filter&quot;</span><span class="p">,</span> <span class="s2">&quot;limitingMag&quot;</span><span class="p">,</span> <span class="s2">&quot;mag&quot;</span><span class="p">,</span> <span class="s2">&quot;magErr&quot;</span><span class="p">,</span>
+                                <span class="s2">&quot;magUnit&quot;</span><span class="p">,</span> <span class="s2">&quot;suggestedType&quot;</span><span class="p">,</span> <span class="s2">&quot;telescope&quot;</span><span class="p">,</span> <span class="s2">&quot;exptime&quot;</span><span class="p">,</span> <span class="s2">&quot;reportAddedDate&quot;</span><span class="p">]</span>
+                    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">p</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+                        <span class="k">if</span> <span class="n">k</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">keyOrder</span><span class="p">:</span>
+                            <span class="n">keyOrder</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">keyOrder</span><span class="p">:</span>
+                        <span class="k">try</span><span class="p">:</span>
+                            <span class="n">orow</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">p</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+                        <span class="k">except</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                                <span class="s2">&quot;`</span><span class="si">%(k)s</span><span class="s2">` not found in the source data for </span><span class="si">%(TNSId)s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">locals</span><span class="p">())</span>
+                            <span class="k">pass</span>
+
+                    <span class="n">photData</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">orow</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;completed the ``_parse_photometry_data`` method&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">photData</span><span class="p">,</span> <span class="n">relatedFilesTable</span>
+
+    <span class="k">def</span> <span class="nf">_parse_related_files</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">content</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;*parse the contents for related files URLs and comments*</span>
+
+<span class="sd">        **Key Arguments:**</span>
+<span class="sd">            - ``content`` -- the content to parse.</span>
+
+<span class="sd">        **Return:**</span>
+<span class="sd">            - ``relatedFiles`` -- a list of dictionaries of transient related files </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;starting the ``_parse_related_files`` method&#39;</span><span class="p">)</span>
+
+        <span class="n">relatedFilesList</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">finditer</span><span class="p">(</span>
+            <span class="sd">r&quot;&quot;&quot;&lt;td class=&quot;cell-filename&quot;&gt;.*?href=&quot;(?P&lt;filepath&gt;[^&quot;]*).*?remarks&quot;&gt;(?P&lt;fileComment&gt;[^&lt;]*)&quot;&quot;&quot;</span><span class="p">,</span>
+            <span class="n">content</span><span class="p">,</span>
+            <span class="n">flags</span><span class="o">=</span><span class="mi">0</span>  <span class="c1"># re.S</span>
+        <span class="p">)</span>
+
+        <span class="n">relatedFiles</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">relatedFilesList</span><span class="p">:</span>
+            <span class="n">f</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">groupdict</span><span class="p">()</span>
+            <span class="n">relatedFiles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;completed the ``_parse_related_files`` method&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">relatedFiles</span>
+
+    <span class="k">def</span> <span class="nf">_parse_spectral_data</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">content</span><span class="p">,</span>
+            <span class="n">TNSId</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;*parse spectra data from a row in the tns results content*</span>
+
+<span class="sd">        **Key Arguments:**</span>
+<span class="sd">             - ``content`` -- a table row from the TNS results page</span>
+<span class="sd">             - ``TNSId`` -- the tns id of the transient</span>
+
+<span class="sd">        **Return:**</span>
+<span class="sd">            - ``specData`` -- a list of dictionaries of the spectral data</span>
+<span class="sd">            - ``relatedFilesTable`` -- a list of dictionaries of transient spectrum related files </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;starting the ``_parse_spectral_data`` method&#39;</span><span class="p">)</span>
+
+        <span class="n">specData</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">relatedFilesTable</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># CLASSIFICATION BLOCK</span>
+        <span class="n">classBlock</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span>
+            <span class="sd">r&quot;&quot;&quot;&lt;tr class=[^\n]*?Classification reportings.*$&quot;&quot;&quot;</span><span class="p">,</span>
+            <span class="n">content</span><span class="p">,</span>
+            <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">S</span>  <span class="c1"># re.S</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">classBlock</span><span class="p">:</span>
+            <span class="n">classBlock</span> <span class="o">=</span> <span class="n">classBlock</span><span class="o">.</span><span class="n">group</span><span class="p">()</span>
+
+            <span class="n">reports</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">finditer</span><span class="p">(</span>
+                <span class="sd">r&quot;&quot;&quot;&lt;tr class=&quot;row-[^&quot;]*&quot;&gt;&lt;td class=&quot;cell-id&quot;&gt;.*?&lt;/tbody&gt;\s*&lt;/table&gt;\s*&lt;/div&gt;&lt;/td&gt; &lt;/tr&gt;\s*&lt;/tbody&gt;\s*&lt;/table&gt;\s*&lt;/div&gt;&lt;/td&gt; &lt;/tr&gt;&quot;&quot;&quot;</span><span class="p">,</span>
+                <span class="n">classBlock</span><span class="p">,</span>
+                <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">S</span>  <span class="c1">#</span>
+            <span class="p">)</span>
+
+            <span class="n">relatedFiles</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_related_files</span><span class="p">(</span><span class="n">classBlock</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">reports</span><span class="p">:</span>
+
+                <span class="n">header</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span>
+                    <span class="sd">r&quot;&quot;&quot;&lt;tr class=&quot;row.*?time_received&quot;&gt;(?P&lt;reportAddedDate&gt;[^&lt;]*).*?user_name&quot;&gt;(?P&lt;TNSuser&gt;[^&lt;]*).*?classifier_name&quot;&gt;(?P&lt;reporters&gt;[^&lt;]*).*?source_group_name&quot;&gt;(?P&lt;survey&gt;[^&lt;]*).*?-type&quot;&gt;(?P&lt;specType&gt;[^&lt;]*).*?-redshift&quot;&gt;(?P&lt;transRedshift&gt;[^&lt;]*).*?-related_files&quot;&gt;(?P&lt;relatedFiles&gt;[^&lt;]*).*?-groups&quot;&gt;(?P&lt;surveyGroup&gt;[^&lt;]*).*?-remarks&quot;&gt;(?P&lt;sourceComment&gt;[^&lt;]*)&lt;/td&gt;&quot;&quot;&quot;</span><span class="p">,</span>
+                    <span class="n">r</span><span class="o">.</span><span class="n">group</span><span class="p">(),</span>
+                    <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">S</span>  <span class="c1"># re.S</span>
+                <span class="p">)</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">header</span><span class="p">:</span>
+                    <span class="k">continue</span>
+
+                <span class="n">header</span> <span class="o">=</span> <span class="n">header</span><span class="o">.</span><span class="n">groupdict</span><span class="p">()</span>
+                <span class="n">header</span><span class="p">[</span><span class="s2">&quot;TNSId&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">TNSId</span>
+
+                <span class="k">del</span> <span class="n">header</span><span class="p">[</span><span class="s2">&quot;reporters&quot;</span><span class="p">]</span>
+                <span class="k">del</span> <span class="n">header</span><span class="p">[</span><span class="s2">&quot;surveyGroup&quot;</span><span class="p">]</span>
+                <span class="k">del</span> <span class="n">header</span><span class="p">[</span><span class="s2">&quot;survey&quot;</span><span class="p">]</span>
+
+                <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">comments</span><span class="p">:</span>
+                    <span class="k">del</span> <span class="n">header</span><span class="p">[</span><span class="s1">&#39;sourceComment&#39;</span><span class="p">]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">theseComments</span> <span class="o">=</span> <span class="n">header</span><span class="p">[</span>
+                        <span class="s2">&quot;sourceComment&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="n">header</span><span class="p">[</span><span class="s2">&quot;sourceComment&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+                    <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">theseComments</span><span class="p">:</span>
+                        <span class="n">header</span><span class="p">[</span><span class="s2">&quot;sourceComment&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">c</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                    <span class="n">header</span><span class="p">[</span><span class="s2">&quot;sourceComment&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">header</span><span class="p">[</span>
+                        <span class="s2">&quot;sourceComment&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+                <span class="n">spec</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">finditer</span><span class="p">(</span>
+                    <span class="sd">r&quot;&quot;&quot;&lt;tr class=&quot;class-results-.*?-obsdate&quot;&gt;(?P&lt;obsdate&gt;[^&lt;]*).*?-tel_inst&quot;&gt;(?P&lt;telescope&gt;[^&lt;]*).*?-exptime&quot;&gt;(?P&lt;exptime&gt;[^&lt;]*).*?-observer&quot;&gt;(?P&lt;sender&gt;[^&lt;]*).*?-reducer&quot;&gt;(?P&lt;reducer&gt;[^&lt;]*).*?-source_group_name&quot;&gt;(?P&lt;survey&gt;[^&lt;]*).*?-asciifile&quot;&gt;(.*?&lt;a href=&quot;(?P&lt;filepath&gt;[^&quot;]*)&quot;.*?&lt;/a&gt;)?.*?-fitsfile&quot;&gt;(.*?&lt;a href=&quot;(?P&lt;fitsFilepath&gt;[^&quot;]*)&quot;.*?&lt;/a&gt;)?.*?-groups&quot;&gt;(?P&lt;surveyGroup&gt;[^&lt;]*).*?-remarks&quot;&gt;(?P&lt;remarks&gt;[^&lt;]*)&quot;&quot;&quot;</span><span class="p">,</span>
+                    <span class="n">r</span><span class="o">.</span><span class="n">group</span><span class="p">(),</span>
+                    <span class="n">flags</span><span class="o">=</span><span class="mi">0</span>  <span class="c1"># re.S</span>
+                <span class="p">)</span>
+                <span class="n">filesAppended</span> <span class="o">=</span> <span class="bp">False</span>
+                <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">spec</span><span class="p">:</span>
+                    <span class="n">s</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">groupdict</span><span class="p">()</span>
+                    <span class="k">del</span> <span class="n">s</span><span class="p">[</span><span class="s2">&quot;sender&quot;</span><span class="p">]</span>
+                    <span class="k">del</span> <span class="n">s</span><span class="p">[</span><span class="s2">&quot;surveyGroup&quot;</span><span class="p">]</span>
+                    <span class="k">del</span> <span class="n">s</span><span class="p">[</span><span class="s2">&quot;reducer&quot;</span><span class="p">]</span>
+
+                    <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">comments</span><span class="p">:</span>
+                        <span class="k">del</span> <span class="n">s</span><span class="p">[</span><span class="s2">&quot;remarks&quot;</span><span class="p">]</span>
+
+                    <span class="n">s</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">header</span><span class="p">)</span>
+
+                    <span class="k">if</span> <span class="n">s</span><span class="p">[</span><span class="s2">&quot;relatedFiles&quot;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">filesAppended</span> <span class="o">==</span> <span class="bp">False</span><span class="p">:</span>
+                        <span class="n">filesAppended</span> <span class="o">=</span> <span class="bp">True</span>
+                        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">relatedFiles</span><span class="p">:</span>
+                            <span class="c1"># ORDER THE DICTIONARY FOR THIS ROW OF</span>
+                            <span class="c1"># RESULTS</span>
+                            <span class="n">thisFile</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">OrderedDict</span><span class="p">()</span>
+                            <span class="n">thisFile</span><span class="p">[</span><span class="s2">&quot;TNSid&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">TNSId</span>
+                            <span class="n">thisFile</span><span class="p">[</span><span class="s2">&quot;filename&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span>
+                                <span class="s2">&quot;filepath&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                            <span class="n">thisFile</span><span class="p">[</span><span class="s2">&quot;url&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span><span class="s2">&quot;filepath&quot;</span><span class="p">]</span>
+                            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">comments</span><span class="p">:</span>
+                                <span class="n">thisFile</span><span class="p">[</span><span class="s2">&quot;comment&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span>
+                                    <span class="s2">&quot;fileComment&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                            <span class="n">thisFile</span><span class="p">[</span><span class="s2">&quot;dateObs&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">s</span><span class="p">[</span><span class="s2">&quot;obsdate&quot;</span><span class="p">]</span>
+                            <span class="n">thisFile</span><span class="p">[</span><span class="s2">&quot;spec1phot2&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+                            <span class="n">relatedFilesTable</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">thisFile</span><span class="p">)</span>
+
+                    <span class="k">for</span> <span class="n">ffile</span> <span class="ow">in</span> <span class="p">[</span><span class="n">s</span><span class="p">[</span><span class="s2">&quot;filepath&quot;</span><span class="p">],</span> <span class="n">s</span><span class="p">[</span><span class="s2">&quot;fitsFilepath&quot;</span><span class="p">]]:</span>
+                        <span class="k">if</span> <span class="n">ffile</span><span class="p">:</span>
+                            <span class="c1"># ORDER THE DICTIONARY FOR THIS ROW OF</span>
+                            <span class="c1"># RESULTS</span>
+                            <span class="n">thisFile</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">OrderedDict</span><span class="p">()</span>
+                            <span class="n">thisFile</span><span class="p">[</span><span class="s2">&quot;TNSid&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">TNSId</span>
+                            <span class="n">thisFile</span><span class="p">[</span><span class="s2">&quot;filename&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ffile</span><span class="o">.</span><span class="n">split</span><span class="p">(</span>
+                                <span class="s2">&quot;/&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                            <span class="n">thisFile</span><span class="p">[</span><span class="s2">&quot;url&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ffile</span>
+                            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">comments</span><span class="p">:</span>
+                                <span class="n">thisFile</span><span class="p">[</span><span class="s2">&quot;comment&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+                            <span class="n">thisFile</span><span class="p">[</span><span class="s2">&quot;dateObs&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">s</span><span class="p">[</span><span class="s2">&quot;obsdate&quot;</span><span class="p">]</span>
+                            <span class="n">thisFile</span><span class="p">[</span><span class="s2">&quot;spec1phot2&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+                            <span class="n">relatedFilesTable</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">thisFile</span><span class="p">)</span>
+
+                    <span class="k">del</span> <span class="n">s</span><span class="p">[</span><span class="s2">&quot;filepath&quot;</span><span class="p">]</span>
+                    <span class="k">del</span> <span class="n">s</span><span class="p">[</span><span class="s2">&quot;fitsFilepath&quot;</span><span class="p">]</span>
+                    <span class="k">del</span> <span class="n">s</span><span class="p">[</span><span class="s2">&quot;relatedFiles&quot;</span><span class="p">]</span>
+
+                    <span class="c1"># ORDER THE DICTIONARY FOR THIS ROW OF RESULTS</span>
+                    <span class="n">orow</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">OrderedDict</span><span class="p">()</span>
+                    <span class="n">keyOrder</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;TNSId&quot;</span><span class="p">,</span> <span class="s2">&quot;survey&quot;</span><span class="p">,</span> <span class="s2">&quot;obsdate&quot;</span><span class="p">,</span> <span class="s2">&quot;specType&quot;</span><span class="p">,</span> <span class="s2">&quot;transRedshift&quot;</span><span class="p">,</span>
+                                <span class="s2">&quot;telescope&quot;</span><span class="p">,</span> <span class="s2">&quot;exptime&quot;</span><span class="p">,</span> <span class="s2">&quot;reportAddedDate&quot;</span><span class="p">,</span> <span class="s2">&quot;TNSuser&quot;</span><span class="p">]</span>
+                    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">s</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+                        <span class="k">if</span> <span class="n">k</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">keyOrder</span><span class="p">:</span>
+                            <span class="n">keyOrder</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">keyOrder</span><span class="p">:</span>
+                        <span class="k">try</span><span class="p">:</span>
+                            <span class="n">orow</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">s</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+                        <span class="k">except</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                                <span class="s2">&quot;`</span><span class="si">%(k)s</span><span class="s2">` not found in the source data for </span><span class="si">%(TNSId)s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">locals</span><span class="p">())</span>
+                            <span class="k">pass</span>
+
+                    <span class="n">specData</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">orow</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;completed the ``_parse_spectral_data`` method&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">specData</span><span class="p">,</span> <span class="n">relatedFilesTable</span></div>
 </pre></div>
 
            </div>

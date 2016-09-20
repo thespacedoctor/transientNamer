@@ -12,7 +12,9 @@ def readme():
 install_requires = [
     'pyyaml',
     'transientNamer',
-    'fundamentals'
+    'fundamentals',
+    'requests',
+    'astrocalc'
 ]
 
 # READ THE DOCS SERVERS

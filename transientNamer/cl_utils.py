@@ -4,11 +4,29 @@
 Documentation for transientNamer can be found here: http://transientNamer.readthedocs.org/en/stable
 
 Usage:
-    transientNamer <name> <ra> <dec> <discoveryMag> <discoveryFilter> <discoveryMJD> [-s <pathToSettingsFile>]
+    transientNamer [-c] search <ra> <dec> <arcsecRadius> [<render> | mysql <tableNamePrefix>] [-o directory]
+    transientNamer [-c] search <name> [<render> | mysql <tableNamePrefix>] [-o directory]
+    transientNamer [-c] new <discInLastDays> [<render> | mysql <tableNamePrefix>] [-o directory]
 
-    -h, --help            show this help message
-    -v, --version         show version
-    -s, --settings        the settings file
+Commands:
+    search                search the TNS and return the results
+    new                   list newly discovered TNS objects
+
+Arguments:
+    ra
+    dec
+    arcsecRadius
+    name                  the name of the object the search for (TNS or survey name)
+    render                output format for results. Options include json, csv, table, markdown, yaml
+    tableNamePrefix       the prefix for the tables to write the mysql insert statements for
+    dirPath               path to the directory to save the output to
+
+Options:
+    -h, --help                           show this help message
+    -v, --version                        show version
+    -s, --settings                       the settings file
+    -c, --withComments                   return TNS comments in result sets
+    -o directory --output=directory      output to files in the directory path
 """
 ################# GLOBAL IMPORTS ####################
 import sys
@@ -19,6 +37,7 @@ import glob
 import pickle
 from docopt import docopt
 from fundamentals import tools, times
+import transientNamer
 # from ..__init__ import *
 
 
@@ -34,8 +53,8 @@ def main(arguments=None):
     su = tools(
         arguments=arguments,
         docString=__doc__,
-        logLevel="DEBUG",
-        options_first=False,
+        logLevel="WARNING",
+        options_first=True,
         projectName="transientNamer",
         tunnel=False
     )
@@ -67,18 +86,68 @@ def main(arguments=None):
         '--- STARTING TO RUN THE cl_utils.py AT %s' %
         (startTime,))
 
-    namer(
-        log=log,
-        ra=ra,
-        dec=dec,
-        name=name,
-        discoveryMJD=float(discoveryMJD),
-        discoveryMag=float(discoveryMag),
-        discoveryFilter=discoveryFilter,
-        settings=settings
-    ).get()
+    # if add:
+    #     namer(
+    #         log=log,
+    #         ra=ra,
+    #         dec=dec,
+    #         name=name,
+    #         discoveryMJD=float(discoveryMJD),
+    #         discoveryMag=float(discoveryMag),
+    #         discoveryFilter=discoveryFilter,
+    #         settings=settings
+    #     ).get()
 
-    # CALL FUNCTIONS/OBJECTS
+    if search or new:
+        if ra:
+            tns = transientNamer.search(
+                log=log,
+                ra=ra,
+                dec=dec,
+                radiusArcsec=arcsecRadius,
+                comments=withCommentsFlag
+            )
+        if name:
+            tns = transientNamer.search(
+                log=log,
+                name=name,
+                comments=withCommentsFlag
+            )
+        if discInLastDays:
+            tns = transientNamer.search(
+                log=log,
+                discInLastDays=discInLastDays,
+                comments=withCommentsFlag
+            )
+
+        if tableNamePrefix:
+            sources, phot, spec, files = tns.mysql(
+                tableNamePrefix=tableNamePrefix, dirPath=outputFlag)
+        elif not render or render == "table":
+            sources, phot, spec, files = tns.table(dirPath=outputFlag)
+        elif render == "csv":
+            sources, phot, spec, files = tns.csv(dirPath=outputFlag)
+        elif render == "json":
+            sources, phot, spec, files = tns.json(dirPath=outputFlag)
+        elif render == "yaml":
+            sources, phot, spec, files = tns.yaml(dirPath=outputFlag)
+        elif render == "markdown":
+            sources, phot, spec, files = tns.markdown(dirPath=outputFlag)
+
+        numSources = len(sources.split("\n")) - 4
+        if numSources > -1:
+            print "%(numSources)s transients found" % locals()
+        print "\n# Matched Transients"
+        print sources
+        print "\n# Transient Photometry"
+        print phot
+        print "\n# Transient Spectra"
+        print spec
+        print "\n# Transient Supplementary Files"
+        print files
+        print "\n# Original TNS Search URL"
+        print tns.url
+        # CALL FUNCTIONS/OBJECTS
 
     if "dbConn" in locals() and dbConn:
         dbConn.commit()

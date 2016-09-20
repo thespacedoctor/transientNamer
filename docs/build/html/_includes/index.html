@@ -39,7 +39,7 @@
 
   
     <link rel="top" title="transientNamer 0.1 documentation" href="../index.html"/>
-        <link rel="next" title="&lt;no title&gt;" href="../autosummary.html"/>
+        <link rel="next" title="Subpackages" href="../autosummary.html"/>
         <link rel="prev" title="transientNamer" href="../index.html"/> 
 
   
@@ -101,10 +101,24 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="#usage">Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="#documentation">Documentation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#tutorial">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#tutorial">Tutorial</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#search-types">Search Types</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#name-search">Name Search</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#conesearch">Conesearch</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#recent-discoveries">Recent Discoveries</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#four-outputs">Four Outputs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#output-formats">Output Formats</a></li>
+</ul>
+</li>
 </ul>
 <p class="caption"><span class="caption-text">Documentation</span></p>
-<ul class="simple">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../autosummary.html">Subpackages</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../autosummary.html#modules">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../autosummary.html#classes">Classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../autosummary.html#functions">Functions</a></li>
 </ul>
 
             
@@ -185,11 +199,32 @@ are welcomed!</p>
 </div>
 <div class="section" id="usage">
 <h1>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">  ∞</a></h1>
-<div class="highlight-bash"><div class="highlight"><pre><span></span>transientNamer &lt;name&gt; &lt;ra&gt; &lt;dec&gt; &lt;discoveryMag&gt; &lt;discoveryFilter&gt; &lt;discoveryMJD&gt; <span class="o">[</span>-s &lt;pathToSettingsFile&gt;<span class="o">]</span>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>Documentation <span class="k">for</span> transientNamer can be found here: http://transientNamer.readthedocs.org/en/stable
 
--h, --help            show this <span class="nb">help</span> message
--v, --version         show version
--s, --settings        the settings file
+Usage:
+    transientNamer <span class="o">[</span>-c<span class="o">]</span> search &lt;ra&gt; &lt;dec&gt; &lt;arcsecRadius&gt; <span class="o">[</span>&lt;render&gt; <span class="p">|</span> mysql &lt;tableNamePrefix&gt;<span class="o">]</span> <span class="o">[</span>-o directory<span class="o">]</span>
+    transientNamer <span class="o">[</span>-c<span class="o">]</span> search &lt;name&gt; <span class="o">[</span>&lt;render&gt; <span class="p">|</span> mysql &lt;tableNamePrefix&gt;<span class="o">]</span> <span class="o">[</span>-o directory<span class="o">]</span>
+    transientNamer <span class="o">[</span>-c<span class="o">]</span> new &lt;discInLastDays&gt; <span class="o">[</span>&lt;render&gt; <span class="p">|</span> mysql &lt;tableNamePrefix&gt;<span class="o">]</span> <span class="o">[</span>-o directory<span class="o">]</span>
+
+Commands:
+    search                search the TNS and <span class="k">return</span> the results
+    new                   list newly discovered TNS objects
+
+Arguments:
+    ra
+    dec
+    arcsecRadius
+    name                  the name of the object the search <span class="k">for</span> <span class="o">(</span>TNS or survey name<span class="o">)</span>
+    render                output format <span class="k">for</span> results. Options include json, csv, table, markdown, yaml
+    tableNamePrefix       the prefix <span class="k">for</span> the tables to write the mysql insert statements <span class="k">for</span>
+    dirPath               path to the directory to save the output to
+
+Options:
+    -h, --help                           show this <span class="nb">help</span> message
+    -v, --version                        show version
+    -s, --settings                       the settings file
+    -c, --withComments                   <span class="k">return</span> TNS comments in result sets
+    -o directory --output<span class="o">=</span>directory      output to files in the directory path
 </pre></div>
 </div>
 </div>
@@ -205,6 +240,35 @@ are welcomed!</p>
 <li>add tutorial</li>
 </ul>
 </div>
+<p>This is a tutorial on how to use the command-line tools for <a class="reference internal" href="../_autosummary/transientNamer.html#module-transientNamer" title="transientNamer"><code class="xref py py-obj docutils literal"><span class="pre">transientNamer</span></code></a>, to use <a class="reference internal" href="../_autosummary/transientNamer.html#module-transientNamer" title="transientNamer"><code class="xref py py-obj docutils literal"><span class="pre">transientNamer</span></code></a> within your own python scripts please refer to the package&#8217;s documentation.</p>
+<div class="section" id="search-types">
+<h2>Search Types<a class="headerlink" href="#search-types" title="Permalink to this headline">  ∞</a></h2>
+<div class="section" id="name-search">
+<h3>Name Search<a class="headerlink" href="#name-search" title="Permalink to this headline">  ∞</a></h3>
+</div>
+<div class="section" id="conesearch">
+<h3>Conesearch<a class="headerlink" href="#conesearch" title="Permalink to this headline">  ∞</a></h3>
+</div>
+<div class="section" id="recent-discoveries">
+<h3>Recent Discoveries<a class="headerlink" href="#recent-discoveries" title="Permalink to this headline">  ∞</a></h3>
+</div>
+</div>
+<div class="section" id="four-outputs">
+<h2>Four Outputs<a class="headerlink" href="#four-outputs" title="Permalink to this headline">  ∞</a></h2>
+<p>1.
+2.
+3.
+4.</p>
+</div>
+<div class="section" id="output-formats">
+<h2>Output Formats<a class="headerlink" href="#output-formats" title="Permalink to this headline">  ∞</a></h2>
+<a class="reference internal image-reference" href="https://i.imgur.com/m09M0ho.png"><img alt="ascii files" src="https://i.imgur.com/m09M0ho.png" style="width: 800px;" /></a>
+<a class="reference internal image-reference" href="https://i.imgur.com/BwwqMBg.png"><img alt="csv output" src="https://i.imgur.com/BwwqMBg.png" style="width: 800px;" /></a>
+<a class="reference internal image-reference" href="https://i.imgur.com/ZpJIC6p.png"><img alt="yaml output" src="https://i.imgur.com/ZpJIC6p.png" style="width: 800px;" /></a>
+<a class="reference internal image-reference" href="https://i.imgur.com/wAHqARI.png"><img alt="json output" src="https://i.imgur.com/wAHqARI.png" style="width: 800px;" /></a>
+<a class="reference internal image-reference" href="https://i.imgur.com/AYLBQoJ.png"><img alt="markdown output" src="https://i.imgur.com/AYLBQoJ.png" style="width: 800px;" /></a>
+<a class="reference internal image-reference" href="https://i.imgur.com/CozySPW.png"><img alt="mysql output" src="https://i.imgur.com/CozySPW.png" style="width: 800px;" /></a>
+</div>
 </div>
 
 
@@ -214,7 +278,7 @@ are welcomed!</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../autosummary.html" class="btn btn-neutral float-right" title="&lt;no title&gt;" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="../autosummary.html" class="btn btn-neutral float-right" title="Subpackages" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="../index.html" class="btn btn-neutral" title="transientNamer" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
