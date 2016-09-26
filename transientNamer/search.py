@@ -609,7 +609,7 @@ CREATE TABLE `%(tableNamePrefix)s_transients` (
   `dateLastModified` datetime DEFAULT NULL,
   `hostName` VARCHAR(100) NULL DEFAULT NULL,
   `hostRedshift` DOUBLE NULL DEFAULT NULL, 
-  `survey` VARCHAR(100) NULL DEFAULT NULL
+  `survey` VARCHAR(100) NULL DEFAULT NULL,
   PRIMARY KEY (`primaryId`),
   UNIQUE KEY `tnsid` (`TNSId`)
 ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=latin1;
@@ -637,6 +637,8 @@ CREATE TABLE `%(tableNamePrefix)s_photometry` (
   `telescope` varchar(100) DEFAULT NULL,
   `updated` tinyint(4) DEFAULT '0',
   `dateLastModified` datetime DEFAULT NULL,
+  `remarks` VARCHAR(800) NULL DEFAULT NULL,
+  `sourceComment` VARCHAR(800) NULL DEFAULT NULL,
   PRIMARY KEY (`primaryId`),
   UNIQUE KEY `tnsid_survey_obsdate` (`TNSId`,`survey`,`obsdate`)
 ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=latin1;
@@ -660,6 +662,8 @@ CREATE TABLE `%(tableNamePrefix)s_spectra` (
   `transRedshift` double DEFAULT NULL,
   `updated` tinyint(4) DEFAULT '0',
   `dateLastModified` datetime DEFAULT NULL,
+  `remarks` VARCHAR(800) NULL DEFAULT NULL,
+  `sourceComment` VARCHAR(800) NULL DEFAULT NULL,
   PRIMARY KEY (`primaryId`),
   UNIQUE KEY `tnsid_survey_obsdate` (`TNSId`,`survey`,`obsdate`)
 ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=latin1;
@@ -679,6 +683,7 @@ CREATE TABLE `%(tableNamePrefix)s_files` (
   `url` varchar(800) DEFAULT NULL,
   `updated` tinyint(4) DEFAULT '0',
   `dateLastModified` datetime DEFAULT NULL,
+  `comment` VARCHAR(800) NULL DEFAULT NULL,
   PRIMARY KEY (`primaryId`),
   UNIQUE KEY `tnsid_url` (`TNSId`,`url`)
 ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=latin1;
