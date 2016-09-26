@@ -237,18 +237,6 @@
         <span class="s1">&#39;--- STARTING TO RUN THE cl_utils.py AT </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span>
         <span class="p">(</span><span class="n">startTime</span><span class="p">,))</span>
 
-    <span class="c1"># if add:</span>
-    <span class="c1">#     namer(</span>
-    <span class="c1">#         log=log,</span>
-    <span class="c1">#         ra=ra,</span>
-    <span class="c1">#         dec=dec,</span>
-    <span class="c1">#         name=name,</span>
-    <span class="c1">#         discoveryMJD=float(discoveryMJD),</span>
-    <span class="c1">#         discoveryMag=float(discoveryMag),</span>
-    <span class="c1">#         discoveryFilter=discoveryFilter,</span>
-    <span class="c1">#         settings=settings</span>
-    <span class="c1">#     ).get()</span>
-
     <span class="k">if</span> <span class="n">search</span> <span class="ow">or</span> <span class="n">new</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">ra</span><span class="p">:</span>
             <span class="n">tns</span> <span class="o">=</span> <span class="n">transientNamer</span><span class="o">.</span><span class="n">search</span><span class="p">(</span>

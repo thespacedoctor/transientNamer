@@ -158,25 +158,116 @@
 <p>This is a tutorial on how to use the command-line tools for <a class="reference internal" href="../_autosummary/transientNamer.html#module-transientNamer" title="transientNamer"><code class="xref py py-obj docutils literal"><span class="pre">transientNamer</span></code></a>, to use <a class="reference internal" href="../_autosummary/transientNamer.html#module-transientNamer" title="transientNamer"><code class="xref py py-obj docutils literal"><span class="pre">transientNamer</span></code></a> within your own python scripts please refer to the package&#8217;s documentation.</p>
 <div class="section" id="search-types">
 <h2>Search Types<a class="headerlink" href="#search-types" title="Permalink to this headline">  ∞</a></h2>
+<p>The are three kinds of search you can perform on the TNS with <a class="reference internal" href="../_autosummary/transientNamer.html#module-transientNamer" title="transientNamer"><code class="xref py py-obj docutils literal"><span class="pre">transientNamer</span></code></a>; a <em>name</em> search, a <em>conesearch</em> or a search for <em>recent discoveries</em>.</p>
 <div class="section" id="name-search">
 <h3>Name Search<a class="headerlink" href="#name-search" title="Permalink to this headline">  ∞</a></h3>
+<p>To perform a name-search for the transient <em>Gaia16bbi</em>, run the command:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>transientNamer search Gaia16bbi
+</pre></div>
+</div>
+<p>The results are printed to stdout:</p>
+<div class="highlight-text"><div class="highlight"><pre><span></span>1 transients found
+
+# Matched Transients
++---------------+------------+-------------+--------------+-----------------------------------------------+-----------+----------------+----------+----------------+-----------+----------+---------------+-----------+----------------------+----------+----------------+
+| decSex        | TNSName    | discSurvey  | raSex        | objectUrl                                     | hostName  | transRedshift  | decDeg   | discoveryName  | raDeg     | TNSId    | hostRedshift  | specType  | discDate             | discMag  | discMagFilter  |
++---------------+------------+-------------+--------------+-----------------------------------------------+-----------+----------------+----------+----------------+-----------+----------+---------------+-----------+----------------------+----------+----------------+
+| +22:03:00.70  | SN2016fbz  | GaiaAlerts  | 23:59:16.00  | http://wis-tns.weizmann.ac.il/object/2016fbz  |           | 0.045          | 22.0502  | Gaia16bbi      | 359.8167  | 2016fbz  |               | SN Ia     | 2016-08-16 19:59:31  | 17.4     | G-Gaia         |
++---------------+------------+-------------+--------------+-----------------------------------------------+-----------+----------------+----------+----------------+-----------+----------+---------------+-----------+----------------------+----------+----------------+
+
+# Transient Photometry
++----------+--------------+----------------------+---------+--------------+----------+---------+----------+----------------+------------------------+----------+----------------------+-------------+
+| TNSId    | survey       | obsdate              | filter  | limitingMag  | mag      | magErr  | magUnit  | suggestedType  | telescope              | exptime  | reportAddedDate      | objectName  |
++----------+--------------+----------------------+---------+--------------+----------+---------+----------+----------------+------------------------+----------+----------------------+-------------+
+| 2016fbz  | Pan-STARRS1  | 2016-08-30 13:19:12  | w-PS1   | 0            | 17.8     | 0.02    | ABMag    | PSN            | PS1_GPC1               | 45       | 2016-09-02 15:54:03  | PS16ebg     |
+| 2016fbz  | iPTF         | 2016-08-25 12:00:00  | g-PTF   | 0            | 17.2823  |         | ABMag    | PSN            | P48_CFH12k             | 60       | 2016-08-25 12:34:00  | iPTF16fbz   |
+| 2016fbz  | iPTF         | 2009-01-01 00:00:00  | R-PTF   | 1            | 21.5     |         | ABMag    | PSN            | P48_CFH12k             | 60       | 2016-08-25 12:34:00  | iPTF16fbz   |
+| 2016fbz  | GaiaAlerts   | 2016-08-16 19:59:31  | G-Gaia  | 0            | 17.4     | 0.2     | ABMag    | PSN            | Gaia_Gaia-photometric  | 60       | 2016-08-19 09:13:29  | Gaia16bbi   |
+| 2016fbz  | GaiaAlerts   | 2016-07-05 02:38:24  | G-Gaia  | 1            | 21.5     |         | ABMag    | PSN            | Gaia_Gaia-photometric  |          | 2016-08-19 09:13:29  | Gaia16bbi   |
++----------+--------------+----------------------+---------+--------------+----------+---------+----------+----------------+------------------------+----------+----------------------+-------------+
+
+# Transient Spectra
++----------+---------+----------------------+-----------+----------------+----------------------+----------+----------------------+----------+
+| TNSId    | survey  | obsdate              | specType  | transRedshift  | telescope            | exptime  | reportAddedDate      | TNSuser  |
++----------+---------+----------------------+-----------+----------------+----------------------+----------+----------------------+----------+
+| 2016fbz  | iPTF    | 2016-08-26 08:56:52  | SN Ia     | 0.045          | P60_SED-Machine      |          | 2016-09-02 08:06:07  | rferr    |
+| 2016fbz  |         | 2016-08-27 14:24:00  | SN Ia     | 0.045          | BAO-2.16m_Phot-spec  | 3000     | 2016-09-02 08:06:07  | rferr    |
++----------+---------+----------------------+-----------+----------------+----------------------+----------+----------------------+----------+
+
+# Transient Supplementary Files
++----------+-------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------+-------------+
+| TNSid    | filename                                                    | url                                                                                                                   | dateObs              | spec1phot2  |
++----------+-------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------+-------------+
+| 2016fbz  | tns_2016fbz_2016-08-26_08-56-52_P60_SED-Machine_iPTF.ascii  | https://wis-tns.weizmann.ac.il/system/files/uploaded/iPTF/tns_2016fbz_2016-08-26_08-56-52_P60_SED-Machine_iPTF.ascii  | 2016-08-26 08:56:52  | 1           |
+| 2016fbz  | tns_2016fbz_2016-08-27.60_BAO-2.16m_Phot-spec.txt           | https://wis-tns.weizmann.ac.il/system/files/uploaded/general/tns_2016fbz_2016-08-27.60_BAO-2.16m_Phot-spec.txt        | 2016-08-27 14:24:00  | 1           |
++----------+-------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------+-------------+
+
+# Original TNS Search URL
+https://wis-tns.weizmann.ac.il/search?decl=&amp;date_end%5Bdate%5D=&amp;num_page=1000&amp;display%5Bsources%5D=1&amp;name=&amp;display%5Bdiscmagfilter%5D=1&amp;display%5Bspectra_count%5D=1&amp;display%5Bdiscoverymag%5D=1&amp;display%5Bdiscoverydate%5D=1&amp;display%5Bhost_redshift%5D=1&amp;date_start%5Bdate%5D=&amp;radius=&amp;ra=&amp;internal_name=iPTF16fbz&amp;display%5Bsource_group_name%5D=1&amp;display%5Bbibcode%5D=1&amp;display%5Bredshift%5D=1&amp;display%5Binternal_name%5D=1&amp;page=0&amp;display%5Bhostname%5D=1&amp;display%5Bdiscoverer%5D=1
+</pre></div>
+</div>
+<p>Run the same command now with the <code class="xref py py-obj docutils literal"><span class="pre">-c</span></code> flag to also return the comments and remarks about the data found in the TNS. Note the comments tend to clutter up the output and make it less readable:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>transientNamer -c search Gaia16bbi
+</pre></div>
+</div>
+<p>You can use any name the transient is known as to search the TNS</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>transientNamer search SN2016fbz
+transientNamer search 2016fbz
+transientNamer search PS16ebg
+transientNamer search iPTF16fbz
+</pre></div>
+</div>
 </div>
 <div class="section" id="conesearch">
 <h3>Conesearch<a class="headerlink" href="#conesearch" title="Permalink to this headline">  ∞</a></h3>
+<p>To perform a conesearch on the TNS use a command with the syntax:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>transientNamer <span class="o">[</span>-c<span class="o">]</span> search &lt;ra&gt; &lt;dec&gt; &lt;arcsecRadius&gt;
+</pre></div>
+</div>
+<p>So to return the same result as the name search above run the following:</p>
+<blockquote>
+<div>transientNamer search 23:59:16.00 +22:03:00.70 5</div></blockquote>
+<p>or</p>
+<blockquote>
+<div>transientNamer search 359.8167 22.0502 5</div></blockquote>
 </div>
 <div class="section" id="recent-discoveries">
 <h3>Recent Discoveries<a class="headerlink" href="#recent-discoveries" title="Permalink to this headline">  ∞</a></h3>
+<p>If you want to return a list of transients that have been recently discovered, use the command syntax:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">transientNamer</span> <span class="p">[</span><span class="o">-</span><span class="n">c</span><span class="p">]</span> <span class="n">new</span> <span class="o">&lt;</span><span class="n">discInLastDays</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>So to return transients discovered in the past 3 weeks:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">transientNamer</span> <span class="n">new</span> <span class="mi">21</span>
+</pre></div>
+</div>
+<p>The recent discovery search will often return many transients, but data for  individual transients are always reported with the transient&#8217;s unique <code class="xref py py-obj docutils literal"><span class="pre">TNSId</span></code>.</p>
 </div>
 </div>
-<div class="section" id="four-outputs">
-<h2>Four Outputs<a class="headerlink" href="#four-outputs" title="Permalink to this headline">  ∞</a></h2>
-<p>1.
-2.
-3.
-4.</p>
+<div class="section" id="results">
+<h2>Results<a class="headerlink" href="#results" title="Permalink to this headline">  ∞</a></h2>
+<div class="section" id="four-categories-of-results">
+<h3>Four Categories of Results<a class="headerlink" href="#four-categories-of-results" title="Permalink to this headline">  ∞</a></h3>
+<p>Each search will always return four types of data</p>
+<ol class="arabic simple">
+<li>Source Data - top-level discovery and classification data</li>
+<li>Photometry Data - time series photometry</li>
+<li>Spectral Data - any classification and spectral coverage information</li>
+<li>Related Files - any related image stamps, finder charts, spectral FITS or ascii files etc.</li>
+</ol>
+<p>The URL built to generate the search of the TNS is also returned if you want to view the results via the TNS webpages.</p>
 </div>
-<div class="section" id="output-formats">
-<h2>Output Formats<a class="headerlink" href="#output-formats" title="Permalink to this headline">  ∞</a></h2>
+</div>
+<div class="section" id="rendering-results">
+<h2>Rendering Results<a class="headerlink" href="#rendering-results" title="Permalink to this headline">  ∞</a></h2>
+<p>By default the results are rendered as easily readable ascii tables. But by passing a few extra arguments to the command-line it&#8217;s possible to render the results in a variety of different formats; <em>csv</em>, <em>json</em>, <em>yaml</em>, <em>table</em> or <em>markdown</em>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">transientNamer</span> <span class="n">search</span> <span class="n">PS16ebg</span> <span class="n">csv</span>
+<span class="n">transientNamer</span> <span class="n">search</span> <span class="n">PS16ebg</span> <span class="n">json</span>
+<span class="n">transientNamer</span> <span class="n">search</span> <span class="n">PS16ebg</span> <span class="n">yaml</span>
+<span class="n">transientNamer</span> <span class="n">search</span> <span class="n">PS16ebg</span> <span class="n">table</span>
+<span class="n">transientNamer</span> <span class="n">search</span> <span class="n">PS16ebg</span> <span class="n">markdown</span>
+</pre></div>
+</div>
 <a class="reference internal image-reference" href="https://i.imgur.com/m09M0ho.png"><img alt="ascii files" src="https://i.imgur.com/m09M0ho.png" style="width: 800px;" /></a>
 <a class="reference internal image-reference" href="https://i.imgur.com/BwwqMBg.png"><img alt="csv output" src="https://i.imgur.com/BwwqMBg.png" style="width: 800px;" /></a>
 <a class="reference internal image-reference" href="https://i.imgur.com/ZpJIC6p.png"><img alt="yaml output" src="https://i.imgur.com/ZpJIC6p.png" style="width: 800px;" /></a>

@@ -19,7 +19,6 @@ Submodules
 .. toctree::
 
    transientNamer.cl_utils
-   transientNamer.namer
    transientNamer.search
    transientNamer.utKit
 

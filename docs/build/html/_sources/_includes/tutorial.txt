@@ -10,25 +10,138 @@ This is a tutorial on how to use the command-line tools for `transientNamer`, to
 Search Types
 ------------
 
+The are three kinds of search you can perform on the TNS with `transientNamer`; a *name* search, a *conesearch* or a search for *recent discoveries*.
+
 Name Search
 ***********
+
+To perform a name-search for the transient *Gaia16bbi*, run the command:
+
+.. code-block:: bash 
+    
+    transientNamer search Gaia16bbi
+
+The results are printed to stdout:
+
+.. code-block:: text 
+     
+    1 transients found
+
+    # Matched Transients
+    +---------------+------------+-------------+--------------+-----------------------------------------------+-----------+----------------+----------+----------------+-----------+----------+---------------+-----------+----------------------+----------+----------------+
+    | decSex        | TNSName    | discSurvey  | raSex        | objectUrl                                     | hostName  | transRedshift  | decDeg   | discoveryName  | raDeg     | TNSId    | hostRedshift  | specType  | discDate             | discMag  | discMagFilter  |
+    +---------------+------------+-------------+--------------+-----------------------------------------------+-----------+----------------+----------+----------------+-----------+----------+---------------+-----------+----------------------+----------+----------------+
+    | +22:03:00.70  | SN2016fbz  | GaiaAlerts  | 23:59:16.00  | http://wis-tns.weizmann.ac.il/object/2016fbz  |           | 0.045          | 22.0502  | Gaia16bbi      | 359.8167  | 2016fbz  |               | SN Ia     | 2016-08-16 19:59:31  | 17.4     | G-Gaia         |
+    +---------------+------------+-------------+--------------+-----------------------------------------------+-----------+----------------+----------+----------------+-----------+----------+---------------+-----------+----------------------+----------+----------------+
+
+    # Transient Photometry
+    +----------+--------------+----------------------+---------+--------------+----------+---------+----------+----------------+------------------------+----------+----------------------+-------------+
+    | TNSId    | survey       | obsdate              | filter  | limitingMag  | mag      | magErr  | magUnit  | suggestedType  | telescope              | exptime  | reportAddedDate      | objectName  |
+    +----------+--------------+----------------------+---------+--------------+----------+---------+----------+----------------+------------------------+----------+----------------------+-------------+
+    | 2016fbz  | Pan-STARRS1  | 2016-08-30 13:19:12  | w-PS1   | 0            | 17.8     | 0.02    | ABMag    | PSN            | PS1_GPC1               | 45       | 2016-09-02 15:54:03  | PS16ebg     |
+    | 2016fbz  | iPTF         | 2016-08-25 12:00:00  | g-PTF   | 0            | 17.2823  |         | ABMag    | PSN            | P48_CFH12k             | 60       | 2016-08-25 12:34:00  | iPTF16fbz   |
+    | 2016fbz  | iPTF         | 2009-01-01 00:00:00  | R-PTF   | 1            | 21.5     |         | ABMag    | PSN            | P48_CFH12k             | 60       | 2016-08-25 12:34:00  | iPTF16fbz   |
+    | 2016fbz  | GaiaAlerts   | 2016-08-16 19:59:31  | G-Gaia  | 0            | 17.4     | 0.2     | ABMag    | PSN            | Gaia_Gaia-photometric  | 60       | 2016-08-19 09:13:29  | Gaia16bbi   |
+    | 2016fbz  | GaiaAlerts   | 2016-07-05 02:38:24  | G-Gaia  | 1            | 21.5     |         | ABMag    | PSN            | Gaia_Gaia-photometric  |          | 2016-08-19 09:13:29  | Gaia16bbi   |
+    +----------+--------------+----------------------+---------+--------------+----------+---------+----------+----------------+------------------------+----------+----------------------+-------------+
+
+    # Transient Spectra
+    +----------+---------+----------------------+-----------+----------------+----------------------+----------+----------------------+----------+
+    | TNSId    | survey  | obsdate              | specType  | transRedshift  | telescope            | exptime  | reportAddedDate      | TNSuser  |
+    +----------+---------+----------------------+-----------+----------------+----------------------+----------+----------------------+----------+
+    | 2016fbz  | iPTF    | 2016-08-26 08:56:52  | SN Ia     | 0.045          | P60_SED-Machine      |          | 2016-09-02 08:06:07  | rferr    |
+    | 2016fbz  |         | 2016-08-27 14:24:00  | SN Ia     | 0.045          | BAO-2.16m_Phot-spec  | 3000     | 2016-09-02 08:06:07  | rferr    |
+    +----------+---------+----------------------+-----------+----------------+----------------------+----------+----------------------+----------+
+
+    # Transient Supplementary Files
+    +----------+-------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------+-------------+
+    | TNSid    | filename                                                    | url                                                                                                                   | dateObs              | spec1phot2  |
+    +----------+-------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------+-------------+
+    | 2016fbz  | tns_2016fbz_2016-08-26_08-56-52_P60_SED-Machine_iPTF.ascii  | https://wis-tns.weizmann.ac.il/system/files/uploaded/iPTF/tns_2016fbz_2016-08-26_08-56-52_P60_SED-Machine_iPTF.ascii  | 2016-08-26 08:56:52  | 1           |
+    | 2016fbz  | tns_2016fbz_2016-08-27.60_BAO-2.16m_Phot-spec.txt           | https://wis-tns.weizmann.ac.il/system/files/uploaded/general/tns_2016fbz_2016-08-27.60_BAO-2.16m_Phot-spec.txt        | 2016-08-27 14:24:00  | 1           |
+    +----------+-------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------+----------------------+-------------+
+
+    # Original TNS Search URL
+    https://wis-tns.weizmann.ac.il/search?decl=&date_end%5Bdate%5D=&num_page=1000&display%5Bsources%5D=1&name=&display%5Bdiscmagfilter%5D=1&display%5Bspectra_count%5D=1&display%5Bdiscoverymag%5D=1&display%5Bdiscoverydate%5D=1&display%5Bhost_redshift%5D=1&date_start%5Bdate%5D=&radius=&ra=&internal_name=iPTF16fbz&display%5Bsource_group_name%5D=1&display%5Bbibcode%5D=1&display%5Bredshift%5D=1&display%5Binternal_name%5D=1&page=0&display%5Bhostname%5D=1&display%5Bdiscoverer%5D=1
+ 
+
+Run the same command now with the `-c` flag to also return the comments and remarks about the data found in the TNS. Note the comments tend to clutter up the output and make it less readable:
+
+.. code-block:: bash 
+    
+    transientNamer -c search Gaia16bbi
+    
+You can use any name the transient is known as to search the TNS
+
+.. code-block:: bash 
+    
+    transientNamer search SN2016fbz
+    transientNamer search 2016fbz
+    transientNamer search PS16ebg
+    transientNamer search iPTF16fbz
 
 Conesearch
 **********
 
+To perform a conesearch on the TNS use a command with the syntax:
+
+.. code-block:: bash 
+    
+    transientNamer [-c] search <ra> <dec> <arcsecRadius>
+
+So to return the same result as the name search above run the following:
+
+    transientNamer search 23:59:16.00 +22:03:00.70 5
+
+or 
+
+    transientNamer search 359.8167 22.0502 5
+
 Recent Discoveries
 ******************
 
-Four Outputs
-------------
+If you want to return a list of transients that have been recently discovered, use the command syntax:
 
-1.
-2.
-3.
-4.
+.. code-block:: python 
+    
+    transientNamer [-c] new <discInLastDays>
 
-Output Formats
---------------
+So to return transients discovered in the past 3 weeks:
+
+.. code-block:: python 
+    
+    transientNamer new 21
+
+The recent discovery search will often return many transients, but data for  individual transients are always reported with the transient's unique `TNSId`.
+
+Results
+-------
+
+Four Categories of Results
+**************************
+
+Each search will always return four types of data
+
+1. Source Data - top-level discovery and classification data
+2. Photometry Data - time series photometry
+3. Spectral Data - any classification and spectral coverage information
+4. Related Files - any related image stamps, finder charts, spectral FITS or ascii files etc.
+   
+The URL built to generate the search of the TNS is also returned if you want to view the results via the TNS webpages.
+
+Rendering Results
+-----------------
+
+By default the results are rendered as easily readable ascii tables. But by passing a few extra arguments to the command-line it's possible to render the results in a variety of different formats; *csv*, *json*, *yaml*, *table* or *markdown*:
+
+.. code-block:: python 
+
+    transientNamer search PS16ebg csv
+    transientNamer search PS16ebg json
+    transientNamer search PS16ebg yaml
+    transientNamer search PS16ebg table
+    transientNamer search PS16ebg markdown
+
 
 .. image:: https://i.imgur.com/m09M0ho.png
     :width: 800px
