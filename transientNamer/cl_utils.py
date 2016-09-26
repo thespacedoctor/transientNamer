@@ -4,12 +4,13 @@
 Documentation for transientNamer can be found here: http://transientNamer.readthedocs.org/en/stable
 
 Usage:
-    transientNamer [-c] search <ra> <dec> <arcsecRadius> [<render> | mysql <tableNamePrefix>] [-o directory]
+    transientNamer [-c] cone <ra> <dec> <arcsecRadius> [<render> | mysql <tableNamePrefix>] [-o directory]
     transientNamer [-c] search <name> [<render> | mysql <tableNamePrefix>] [-o directory]
     transientNamer [-c] new <discInLastDays> [<render> | mysql <tableNamePrefix>] [-o directory]
 
 Commands:
-    search                search the TNS and return the results
+    cone                  perform a conesearch on the TNS
+    search                perform a name search on the TNS
     new                   list newly discovered TNS objects
 
 Arguments:
@@ -26,7 +27,7 @@ Options:
     -v, --version                        show version
     -s, --settings                       the settings file
     -c, --withComments                   return TNS comments in result sets
-    -o directory --output=directory      output to files in the directory path
+    -o directory, --output=directory     output to files in the directory path
 """
 ################# GLOBAL IMPORTS ####################
 import sys
@@ -54,7 +55,7 @@ def main(arguments=None):
         arguments=arguments,
         docString=__doc__,
         logLevel="WARNING",
-        options_first=True,
+        options_first=False,
         projectName="transientNamer",
         tunnel=False
     )
@@ -86,7 +87,7 @@ def main(arguments=None):
         '--- STARTING TO RUN THE cl_utils.py AT %s' %
         (startTime,))
 
-    if search or new:
+    if search or new or cone:
         if ra:
             tns = transientNamer.search(
                 log=log,
@@ -108,33 +109,46 @@ def main(arguments=None):
                 comments=withCommentsFlag
             )
 
+        # Recursively create missing directories
+        if outputFlag and not os.path.exists(outputFlag):
+            os.makedirs(outputFlag)
+
         if tableNamePrefix:
             sources, phot, spec, files = tns.mysql(
                 tableNamePrefix=tableNamePrefix, dirPath=outputFlag)
+            numSources = len(sources.split("\n")) - 1
         elif not render or render == "table":
             sources, phot, spec, files = tns.table(dirPath=outputFlag)
+            numSources = len(sources.split("\n")) - 4
         elif render == "csv":
             sources, phot, spec, files = tns.csv(dirPath=outputFlag)
+            numSources = len(sources.split("\n")) - 1
         elif render == "json":
             sources, phot, spec, files = tns.json(dirPath=outputFlag)
+            numSources = len(sources.split("{")) - 1
         elif render == "yaml":
             sources, phot, spec, files = tns.yaml(dirPath=outputFlag)
+            numSources = len(sources.split("\n-"))
         elif render == "markdown":
             sources, phot, spec, files = tns.markdown(dirPath=outputFlag)
+            numSources = len(sources.split("\n")) - 2
 
-        numSources = len(sources.split("\n")) - 4
-        if numSources > -1:
+        if numSources == 1:
+            print "%(numSources)s transient found" % locals()
+        elif numSources > 1:
             print "%(numSources)s transients found" % locals()
-        print "\n# Matched Transients"
-        print sources
-        print "\n# Transient Photometry"
-        print phot
-        print "\n# Transient Spectra"
-        print spec
-        print "\n# Transient Supplementary Files"
-        print files
-        print "\n# Original TNS Search URL"
-        print tns.url
+
+        if not outputFlag:
+            print "\n# Matched Transients"
+            print sources
+            print "\n# Transient Photometry"
+            print phot
+            print "\n# Transient Spectra"
+            print spec
+            print "\n# Transient Supplementary Files"
+            print files
+            print "\n# Original TNS Search URL"
+            print tns.url
         # CALL FUNCTIONS/OBJECTS
 
     if "dbConn" in locals() and dbConn:

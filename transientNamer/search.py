@@ -21,6 +21,7 @@ from operator import itemgetter
 os.environ['TERM'] = 'vt100'
 from fundamentals import tools
 from datetime import datetime, date, time, timedelta
+import time as timesleep
 from fundamentals.files import list_of_dictionaries_to_mysql_inserts
 from fundamentals.renderer import list_of_dictionaries
 from astrocalc.coords import unit_conversion
@@ -585,14 +586,106 @@ class search():
         """
         if dirPath:
             p = self._file_prefix()
+
+            createStatement = """
+CREATE TABLE `%(tableNamePrefix)s_transients` (
+  `primaryId` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'An internal counter',
+  `TNSId` varchar(20) NOT NULL,
+  `TNSName` varchar(20) DEFAULT NULL,
+  `dateCreated` datetime DEFAULT NULL,
+  `decDeg` double DEFAULT NULL,
+  `decSex` varchar(45) DEFAULT NULL,
+  `discDate` datetime DEFAULT NULL,
+  `discMag` double DEFAULT NULL,
+  `discMagFilter` varchar(45) DEFAULT NULL,
+  `discSurvey` varchar(100) DEFAULT NULL,
+  `discoveryName` varchar(100) DEFAULT NULL,
+  `objectUrl` varchar(200) DEFAULT NULL,
+  `raDeg` double DEFAULT NULL,
+  `raSex` varchar(45) DEFAULT NULL,
+  `specType` varchar(100) DEFAULT NULL,
+  `transRedshift` double DEFAULT NULL,
+  `updated` tinyint(4) DEFAULT '0',
+  `dateLastModified` datetime DEFAULT NULL,
+  `hostName` VARCHAR(100) NULL DEFAULT NULL,
+  `hostRedshift` DOUBLE NULL DEFAULT NULL, 
+  `survey` VARCHAR(100) NULL DEFAULT NULL
+  PRIMARY KEY (`primaryId`),
+  UNIQUE KEY `tnsid` (`TNSId`)
+) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=latin1;
+            """ % locals()
+
             mysqlSources = self.sourceResults.mysql(
-                tableNamePrefix + "_transients", filepath=dirPath + "/" + p + "sources.mysql")
+                tableNamePrefix + "_transients", filepath=dirPath + "/" + p + "sources.sql", createStatement=createStatement)
+
+            createStatement = """
+CREATE TABLE `%(tableNamePrefix)s_photometry` (
+  `primaryId` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'An internal counter',
+  `TNSId` varchar(20) NOT NULL,
+  `dateCreated` datetime DEFAULT CURRENT_TIMESTAMP,
+  `exptime` double DEFAULT NULL,
+  `filter` varchar(100) DEFAULT NULL,
+  `limitingMag` tinyint(4) DEFAULT NULL,
+  `mag` double DEFAULT NULL,
+  `magErr` double DEFAULT NULL,
+  `magUnit` varchar(100) DEFAULT NULL,
+  `objectName` varchar(100) DEFAULT NULL,
+  `obsdate` datetime DEFAULT NULL,
+  `reportAddedDate` datetime DEFAULT NULL,
+  `suggestedType` varchar(100) DEFAULT NULL,
+  `survey` varchar(100) DEFAULT NULL,
+  `telescope` varchar(100) DEFAULT NULL,
+  `updated` tinyint(4) DEFAULT '0',
+  `dateLastModified` datetime DEFAULT NULL,
+  PRIMARY KEY (`primaryId`),
+  UNIQUE KEY `tnsid_survey_obsdate` (`TNSId`,`survey`,`obsdate`)
+) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=latin1;
+            """ % locals()
+
             mysqlPhot = self.photResults.mysql(
-                tableNamePrefix + "_photometry", filepath=dirPath + "/" + p + "phot.mysql")
+                tableNamePrefix + "_photometry", filepath=dirPath + "/" + p + "phot.sql", createStatement=createStatement)
+
+            createStatement = """
+CREATE TABLE `%(tableNamePrefix)s_spectra` (
+  `primaryId` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'An internal counter',
+  `TNSId` varchar(45) NOT NULL,
+  `TNSuser` varchar(45) DEFAULT NULL,
+  `dateCreated` datetime DEFAULT CURRENT_TIMESTAMP,
+  `exptime` double DEFAULT NULL,
+  `obsdate` datetime DEFAULT NULL,
+  `reportAddedDate` datetime DEFAULT NULL,
+  `specType` varchar(100) DEFAULT NULL,
+  `survey` varchar(100) DEFAULT NULL,
+  `telescope` varchar(100) DEFAULT NULL,
+  `transRedshift` double DEFAULT NULL,
+  `updated` tinyint(4) DEFAULT '0',
+  `dateLastModified` datetime DEFAULT NULL,
+  PRIMARY KEY (`primaryId`),
+  UNIQUE KEY `tnsid_survey_obsdate` (`TNSId`,`survey`,`obsdate`)
+) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=latin1;
+            """ % locals()
+
             mysqlSpec = self.specResults.mysql(
-                tableNamePrefix + "_spectra", filepath=dirPath + "/" + p + "spec.mysql")
+                tableNamePrefix + "_spectra", filepath=dirPath + "/" + p + "spec.sql", createStatement=createStatement)
+
+            createStatement = """
+CREATE TABLE `%(tableNamePrefix)s_files` (
+  `primaryId` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'An internal counter',
+  `TNSId` varchar(100) NOT NULL,
+  `dateCreated` datetime DEFAULT CURRENT_TIMESTAMP,
+  `dateObs` datetime DEFAULT NULL,
+  `filename` varchar(200) DEFAULT NULL,
+  `spec1phot2` tinyint(4) DEFAULT NULL,
+  `url` varchar(800) DEFAULT NULL,
+  `updated` tinyint(4) DEFAULT '0',
+  `dateLastModified` datetime DEFAULT NULL,
+  PRIMARY KEY (`primaryId`),
+  UNIQUE KEY `tnsid_url` (`TNSId`,`url`)
+) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=latin1;
+            """ % locals()
+
             mysqlFiles = self.relatedFilesResults.mysql(
-                tableNamePrefix + "_files", filepath=dirPath + "/" + p + "relatedFiles.mysql")
+                tableNamePrefix + "_files", filepath=dirPath + "/" + p + "relatedFiles.sql", createStatement=createStatement)
         else:
             mysqlSources = self.sourceResults.mysql(
                 tableNamePrefix + "_transients")
@@ -620,6 +713,7 @@ class search():
         # ARE RETURNED
         stop = False
 
+        sourceCount = 0
         while not stop:
 
             status_code, content, self._searchURL = self._get_tns_search_results()
@@ -636,6 +730,12 @@ class search():
                 stop = True
             else:
                 self.page += 1
+                thisPage = self.page
+                print "Downloaded %(thisPage)s page(s) from the TNS. %(sourceCount)s transients parsed so far." % locals()
+                sourceCount += self.batchSize
+                print "\t" + self._searchURL
+
+                timesleep.sleep(1)
 
             # PARSE ALL ROWS RETURNED
             for transientRow in self._parse_transient_rows(content):
@@ -702,6 +802,7 @@ class search():
                     "display[bibcode]": "1",
                 },
             )
+
         except requests.exceptions.RequestException:
             print('HTTP Request failed')
 
@@ -899,7 +1000,7 @@ class search():
 
             for r in reports:
                 header = re.search(
-                    r"""<tr class="row[^"]*".*?time_received">(?P<reportAddedDate>[^<]*).*?user_name">(?P<sender>[^<]*).*?reporter_name">(?P<reporters>[^<]*).*?source_group_name">(?P<surveyGroup>[^<]*).*?ra">(?P<ra>[^<]*).*?decl">(?P<dec>[^<]*).*?discovery_date">(?P<obsDate>[^<]*).*?flux">(?P<mag>[^<]*).*?filter_name">(?P<magFilter>[^<]*).*?related_files">(?P<relatedFiles>[^<]*).*?type_name">(?P<suggestedType>[^<]*).*?hostname">(?P<hostName>[^<]*).*?host_redshift">(?P<hostRedshift>[^<]*).*?internal_name">(?P<surveyName>[^<]*).*?groups">(?P<survey>[^<]*).*?remarks">(?P<sourceComment>[^<]*)</td>""",
+                    r"""<tr class="row[^"]*".*?time_received">(?P<reportAddedDate>[^<]*).*?user_name">(?P<sender>[^<]*).*?reporter_name">(?P<reporters>[^<]*).*?source_group_name">(?P<surveyGroup>[^<]*).*?ra">(?P<ra>[^<]*).*?decl">(?P<dec>[^<]*).*?discovery_date">(?P<obsDate>[^<]*).*?flux">(?P<mag>[^<]*).*?filter_name">(?P<magFilter>[^<]*).*?related_files">(?P<relatedFiles>[^<]*).*?type_name">(?P<suggestedType>[^<]*).*?hostname">(?P<hostName>[^<]*).*?host_redshift">(?P<hostRedshift>[^<]*).*?internal_name">(?P<objectName>[^<]*).*?groups">(?P<survey>[^<]*).*?remarks">(?P<sourceComment>[^<]*)""",
                     r.group(),
                     flags=0  # re.S
                 )
@@ -919,7 +1020,6 @@ class search():
                 del header["obsDate"]
                 del header["ra"]
                 del header["dec"]
-                del header["surveyName"]
 
                 if not self.comments:
                     del header['sourceComment']
@@ -961,7 +1061,7 @@ class search():
                             # ORDER THE DICTIONARY FOR THIS ROW OF
                             # RESULTS
                             thisFile = collections.OrderedDict()
-                            thisFile["TNSid"] = TNSId
+                            thisFile["TNSId"] = TNSId
                             thisFile["filename"] = f[
                                 "filepath"].split("/")[-1]
                             thisFile["url"] = f["filepath"]
@@ -1109,7 +1209,7 @@ class search():
                             # ORDER THE DICTIONARY FOR THIS ROW OF
                             # RESULTS
                             thisFile = collections.OrderedDict()
-                            thisFile["TNSid"] = TNSId
+                            thisFile["TNSId"] = TNSId
                             thisFile["filename"] = f[
                                 "filepath"].split("/")[-1]
                             thisFile["url"] = f["filepath"]
@@ -1125,7 +1225,7 @@ class search():
                             # ORDER THE DICTIONARY FOR THIS ROW OF
                             # RESULTS
                             thisFile = collections.OrderedDict()
-                            thisFile["TNSid"] = TNSId
+                            thisFile["TNSId"] = TNSId
                             thisFile["filename"] = ffile.split(
                                 "/")[-1]
                             thisFile["url"] = ffile
