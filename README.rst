@@ -1,10 +1,14 @@
 transientNamer 
 =========================
 
-*Command-line tools for working with and interacting with the Transient Naming Server*.
+*A python package and command-line tools for working with and interacting with the Transient Naming Server*.
 
-Usage
-======
+Here's a summary of what's included in the python package:
+
+.. include:: /classes_and_functions.rst
+
+Command-Line Usage
+==================
 
 .. code-block:: bash 
    
@@ -81,6 +85,10 @@ This means you can modify the code from your cloned repo:
 `Pull requests <https://github.com/thespacedoctor/transientNamer/pulls>`__
 are welcomed!
 
+Sublime Snippets
+~~~~~~~~~~~~~~~~
+
+If you use `Sublime Text <https://www.sublimetext.com/>`_ as your code editor, and you're planning to develop your own python code with transientNamer, you might find `my Sublime Snippets <https://github.com/thespacedoctor/transientNamer-Sublime-Snippets>`_ useful. 
 
 Issues
 ------

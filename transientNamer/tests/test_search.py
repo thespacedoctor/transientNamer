@@ -12,8 +12,7 @@ su = tools(
     docString=__doc__,
     logLevel="ERROR",
     options_first=False,
-    projectName="transientNamer",
-    tunnel=False
+    projectName="transientNamer"
 )
 arguments, settings, log, dbConn = su.setup()
 

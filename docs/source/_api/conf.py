@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # transientNamer documentation build configuration file, created by
-# sphinx-quickstart on Tue Sep 20 14:38:38 2016.
+# sphinx-quickstart on Wed Oct 19 20:33:43 2016.
 #
 # This file is execfile()d with the current directory set to its
 # containing dir.
