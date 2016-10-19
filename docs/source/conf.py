@@ -39,7 +39,7 @@ sys.modules.update((mod_name, Mock()) for mod_name in MOCK_MODULES)
 
 
 # If your documentation needs a minimal Sphinx version, state it here.
-# needs_sphinx = '1.0'
+# needs_sphinx = '1.0'C
 
 moduleDirectory = os.path.dirname(os.path.realpath(__file__))
 exec(open(moduleDirectory + "/../../transientNamer/__version__.py").read())
@@ -298,8 +298,8 @@ def updateUsageRST():
     for l in usage.split("\n"):
         usageString += "    " + l + "\n"
 
-    usage = """Usage
-======
+    usage = """Command-Line Usage
+==================
 
 .. code-block:: bash 
    
@@ -426,6 +426,58 @@ Functions
     writeFile = codecs.open(
         moduleDirectory + "/autosummary.rst", encoding='utf-8', mode='w')
     writeFile.write(thisText)
+    writeFile.close()
+
+    import re
+    regex = re.compile(r'\n\s*.*?utKit\.utKit(\n|$)', re.I)
+    allClasses = regex.sub("\n", allClasses)
+
+    classAndFunctions = u"""
+**Classes**
+
+.. autosummary::
+   :nosignatures:
+
+   %(allClasses)s 
+
+**Functions**
+
+.. autosummary::
+   :nosignatures:
+
+   %(allFunctions)s 
+""" % locals()
+
+    moduleDirectory = os.path.dirname(__file__)
+    writeFile = codecs.open(
+        moduleDirectory + "/classes_and_functions.rst", encoding='utf-8', mode='w')
+    writeFile.write(classAndFunctions)
+    writeFile.close()
+
+    import re
+    regex = re.compile(r'\n\s*.*?utKit\.utKit(\n|$)', re.I)
+    allClasses = regex.sub("\n", allClasses)
+
+    classAndFunctions = u"""
+**Classes**
+
+.. autosummary::
+   :nosignatures:
+
+   %(allClasses)s 
+
+**Functions**
+
+.. autosummary::
+   :nosignatures:
+
+   %(allFunctions)s 
+""" % locals()
+
+    moduleDirectory = os.path.dirname(__file__)
+    writeFile = codecs.open(
+        moduleDirectory + "/classes_and_functions.rst", encoding='utf-8', mode='w')
+    writeFile.write(classAndFunctions)
     writeFile.close()
 
     return thisText

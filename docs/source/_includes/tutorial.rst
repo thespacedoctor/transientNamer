@@ -1,9 +1,5 @@
-Tutorial
-========
-
-.. todo::
-
-    - add tutorial
+Command-Line Tutorial
+=====================
       
 This is a tutorial on how to use the command-line tools for `transientNamer`, to use `transientNamer` within your own python scripts please refer to the package's documentation.
 

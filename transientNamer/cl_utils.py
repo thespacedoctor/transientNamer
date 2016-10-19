@@ -56,8 +56,7 @@ def main(arguments=None):
         docString=__doc__,
         logLevel="WARNING",
         options_first=False,
-        projectName="transientNamer",
-        tunnel=False
+        projectName="transientNamer"
     )
     arguments, settings, log, dbConn = su.setup()
 
