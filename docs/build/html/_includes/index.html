@@ -10,7 +10,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Installation &mdash; transientNamer 0.1 documentation</title>
+  <title>Installation &mdash; transientNamer 0.1.3 documentation</title>
   
 
   
@@ -38,7 +38,7 @@
   
 
   
-    <link rel="top" title="transientNamer 0.1 documentation" href="../index.html"/>
+    <link rel="top" title="transientNamer 0.1.3 documentation" href="../index.html"/>
         <link rel="next" title="Subpackages" href="../autosummary.html"/>
         <link rel="prev" title="transientNamer" href="../index.html"/> 
 
@@ -71,7 +71,7 @@
             
             
               <div class="version">
-                v0.1
+                v0.1.3
               </div>
             
           
@@ -95,28 +95,22 @@
                 <p class="caption"><span class="caption-text">Getting Started</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="">Installation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#development">Development</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#development">Development</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#sublime-snippets">Sublime Snippets</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#issues">Issues</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="#usage">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#command-line-usage">Command-Line Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="#documentation">Documentation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#tutorial">Tutorial</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#search-types">Search Types</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#name-search">Name Search</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#conesearch">Conesearch</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#recent-discoveries">Recent Discoveries</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#results">Results</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#four-categories-of-results">Four Categories of Results</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#rendering-results">Rendering Results</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#command-line-tutorial">Command-Line Tutorial</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#search-types">Search Types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#results">Results</a></li>
 </ul>
 </li>
 </ul>
-<p class="caption"><span class="caption-text">Documentation</span></p>
+<p class="caption"><span class="caption-text">Python Package Documentation</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../autosummary.html">Subpackages</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../autosummary.html#modules">Modules</a></li>
@@ -193,6 +187,10 @@ python setup.py develop
 </div>
 <p><a class="reference external" href="https://github.com/thespacedoctor/transientNamer/pulls">Pull requests</a>
 are welcomed!</p>
+<div class="section" id="sublime-snippets">
+<h3>Sublime Snippets<a class="headerlink" href="#sublime-snippets" title="Permalink to this headline">  ∞</a></h3>
+<p>If you use <a class="reference external" href="https://www.sublimetext.com/">Sublime Text</a> as your code editor, and you&#8217;re planning to develop your own python code with transientNamer, you might find <a class="reference external" href="https://github.com/thespacedoctor/transientNamer-Sublime-Snippets">my Sublime Snippets</a> useful.</p>
+</div>
 </div>
 <div class="section" id="issues">
 <h2>Issues<a class="headerlink" href="#issues" title="Permalink to this headline">  ∞</a></h2>
@@ -200,17 +198,18 @@ are welcomed!</p>
 <a class="reference external" href="https://github.com/thespacedoctor/transientNamer/issues">here</a>.</p>
 </div>
 </div>
-<div class="section" id="usage">
-<h1>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">  ∞</a></h1>
+<div class="section" id="command-line-usage">
+<h1>Command-Line Usage<a class="headerlink" href="#command-line-usage" title="Permalink to this headline">  ∞</a></h1>
 <div class="highlight-bash"><div class="highlight"><pre><span></span>Documentation <span class="k">for</span> transientNamer can be found here: http://transientNamer.readthedocs.org/en/stable
 
 Usage:
-    transientNamer <span class="o">[</span>-c<span class="o">]</span> search &lt;ra&gt; &lt;dec&gt; &lt;arcsecRadius&gt; <span class="o">[</span>&lt;render&gt; <span class="p">|</span> mysql &lt;tableNamePrefix&gt;<span class="o">]</span> <span class="o">[</span>-o directory<span class="o">]</span>
+    transientNamer <span class="o">[</span>-c<span class="o">]</span> cone &lt;ra&gt; &lt;dec&gt; &lt;arcsecRadius&gt; <span class="o">[</span>&lt;render&gt; <span class="p">|</span> mysql &lt;tableNamePrefix&gt;<span class="o">]</span> <span class="o">[</span>-o directory<span class="o">]</span>
     transientNamer <span class="o">[</span>-c<span class="o">]</span> search &lt;name&gt; <span class="o">[</span>&lt;render&gt; <span class="p">|</span> mysql &lt;tableNamePrefix&gt;<span class="o">]</span> <span class="o">[</span>-o directory<span class="o">]</span>
     transientNamer <span class="o">[</span>-c<span class="o">]</span> new &lt;discInLastDays&gt; <span class="o">[</span>&lt;render&gt; <span class="p">|</span> mysql &lt;tableNamePrefix&gt;<span class="o">]</span> <span class="o">[</span>-o directory<span class="o">]</span>
 
 Commands:
-    search                search the TNS and <span class="k">return</span> the results
+    cone                  perform a conesearch on the TNS
+    search                perform a name search on the TNS
     new                   list newly discovered TNS objects
 
 Arguments:
@@ -227,7 +226,7 @@ Options:
     -v, --version                        show version
     -s, --settings                       the settings file
     -c, --withComments                   <span class="k">return</span> TNS comments in result sets
-    -o directory --output<span class="o">=</span>directory      output to files in the directory path
+    -o directory, --output<span class="o">=</span>directory     output to files in the directory path
 </pre></div>
 </div>
 </div>
@@ -235,20 +234,12 @@ Options:
 <h1>Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline">  ∞</a></h1>
 <p>Documentation for transientNamer is hosted by <a class="reference external" href="http://transientNamer.readthedocs.org/en/stable/">Read the Docs</a> (last <a class="reference external" href="http://transientNamer.readthedocs.org/en/stable/">stable version</a> and <a class="reference external" href="http://transientNamer.readthedocs.org/en/latest/">latest version</a>).</p>
 </div>
-<div class="section" id="tutorial">
-<h1>Tutorial<a class="headerlink" href="#tutorial" title="Permalink to this headline">  ∞</a></h1>
-<div class="admonition-todo admonition" id="index-0">
-<p class="first admonition-title">Todo</p>
-<ul class="last simple">
-<li>add tutorial</li>
-</ul>
-</div>
+<div class="section" id="command-line-tutorial">
+<h1>Command-Line Tutorial<a class="headerlink" href="#command-line-tutorial" title="Permalink to this headline">  ∞</a></h1>
 <p>This is a tutorial on how to use the command-line tools for <a class="reference internal" href="../_autosummary/transientNamer.html#module-transientNamer" title="transientNamer"><code class="xref py py-obj docutils literal"><span class="pre">transientNamer</span></code></a>, to use <a class="reference internal" href="../_autosummary/transientNamer.html#module-transientNamer" title="transientNamer"><code class="xref py py-obj docutils literal"><span class="pre">transientNamer</span></code></a> within your own python scripts please refer to the package&#8217;s documentation.</p>
 <div class="section" id="search-types">
 <h2>Search Types<a class="headerlink" href="#search-types" title="Permalink to this headline">  ∞</a></h2>
 <p>The are three kinds of search you can perform on the TNS with <a class="reference internal" href="../_autosummary/transientNamer.html#module-transientNamer" title="transientNamer"><code class="xref py py-obj docutils literal"><span class="pre">transientNamer</span></code></a>; a <em>name</em> search, a <em>conesearch</em> or a search for <em>recent discoveries</em>.</p>
-<div class="section" id="name-search">
-<h3>Name Search<a class="headerlink" href="#name-search" title="Permalink to this headline">  ∞</a></h3>
 <p>To perform a name-search for the transient <em>Gaia16bbi</em>, run the command:</p>
 <div class="highlight-bash"><div class="highlight"><pre><span></span>transientNamer search Gaia16bbi
 </pre></div>
@@ -305,22 +296,16 @@ transientNamer search PS16ebg
 transientNamer search iPTF16fbz
 </pre></div>
 </div>
-</div>
-<div class="section" id="conesearch">
-<h3>Conesearch<a class="headerlink" href="#conesearch" title="Permalink to this headline">  ∞</a></h3>
 <p>To perform a conesearch on the TNS use a command with the syntax:</p>
-<div class="highlight-bash"><div class="highlight"><pre><span></span>transientNamer <span class="o">[</span>-c<span class="o">]</span> search &lt;ra&gt; &lt;dec&gt; &lt;arcsecRadius&gt;
+<div class="highlight-bash"><div class="highlight"><pre><span></span>transientNamer <span class="o">[</span>-c<span class="o">]</span> cone &lt;ra&gt; &lt;dec&gt; &lt;arcsecRadius&gt;
 </pre></div>
 </div>
 <p>So to return the same result as the name search above run the following:</p>
 <blockquote>
-<div>transientNamer search 23:59:16.00 +22:03:00.70 5</div></blockquote>
+<div>transientNamer cone 23:59:16.00 +22:03:00.70 5</div></blockquote>
 <p>or</p>
 <blockquote>
-<div>transientNamer search 359.8167 22.0502 5</div></blockquote>
-</div>
-<div class="section" id="recent-discoveries">
-<h3>Recent Discoveries<a class="headerlink" href="#recent-discoveries" title="Permalink to this headline">  ∞</a></h3>
+<div>transientNamer cone 359.8167 22.0502 5</div></blockquote>
 <p>If you want to return a list of transients that have been recently discovered, use the command syntax:</p>
 <div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">transientNamer</span> <span class="p">[</span><span class="o">-</span><span class="n">c</span><span class="p">]</span> <span class="n">new</span> <span class="o">&lt;</span><span class="n">discInLastDays</span><span class="o">&gt;</span>
 </pre></div>
@@ -331,23 +316,16 @@ transientNamer search iPTF16fbz
 </div>
 <p>The recent discovery search will often return many transients, but data for  individual transients are always reported with the transient&#8217;s unique <code class="xref py py-obj docutils literal"><span class="pre">TNSId</span></code>.</p>
 </div>
-</div>
 <div class="section" id="results">
 <h2>Results<a class="headerlink" href="#results" title="Permalink to this headline">  ∞</a></h2>
-<div class="section" id="four-categories-of-results">
-<h3>Four Categories of Results<a class="headerlink" href="#four-categories-of-results" title="Permalink to this headline">  ∞</a></h3>
 <p>Each search will always return four types of data</p>
 <ol class="arabic simple">
-<li>Source Data - top-level discovery and classification data</li>
-<li>Photometry Data - time series photometry</li>
-<li>Spectral Data - any classification and spectral coverage information</li>
-<li>Related Files - any related image stamps, finder charts, spectral FITS or ascii files etc.</li>
+<li><strong>Source Data</strong> - top-level discovery and classification data</li>
+<li><strong>Photometry Data</strong> - time series photometry</li>
+<li><strong>Spectral Data</strong> - any classification and spectral coverage information</li>
+<li><strong>Related Files</strong> - any related image stamps, finder charts, spectral FITS or ascii files etc.</li>
 </ol>
 <p>The URL built to generate the search of the TNS is also returned if you want to view the results via the TNS webpages.</p>
-</div>
-</div>
-<div class="section" id="rendering-results">
-<h2>Rendering Results<a class="headerlink" href="#rendering-results" title="Permalink to this headline">  ∞</a></h2>
 <p>By default the results are rendered as easily readable ascii tables. But by passing a few extra arguments to the command-line it&#8217;s possible to render the results in a variety of different formats; <em>csv</em>, <em>json</em>, <em>yaml</em>, <em>table</em> or <em>markdown</em>:</p>
 <div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">transientNamer</span> <span class="n">search</span> <span class="n">PS16ebg</span> <span class="n">csv</span>
 <span class="n">transientNamer</span> <span class="n">search</span> <span class="n">PS16ebg</span> <span class="n">json</span>
@@ -356,12 +334,71 @@ transientNamer search iPTF16fbz
 <span class="n">transientNamer</span> <span class="n">search</span> <span class="n">PS16ebg</span> <span class="n">markdown</span>
 </pre></div>
 </div>
+<p>It is also possible to render the results as mysql insert statements to add the results to a set of mysql database tables. The rendering requires an extra <code class="xref py py-obj docutils literal"><span class="pre">tableNamePrefix</span></code> argument, that acts as the prefix to the table names use in mysql insert statements.</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">transientNamer</span> <span class="n">search</span> <span class="n">PS16ebg</span> <span class="n">mysql</span> <span class="n">tns</span>
+</pre></div>
+</div>
+<div class="highlight-text"><div class="highlight"><pre><span></span>1 transient found
+
+# Matched Transients
+INSERT INTO `tns_transients` (TNSId,TNSName,dateCreated,decDeg,decSex,discDate,discMag,discMagFilter,discSurvey,discoveryName,hostName,hostRedshift,objectUrl,raDeg,raSex,specType,transRedshift) VALUES (&quot;2016fbz&quot; ,&quot;SN2016fbz&quot; ,&quot;2016-09-20T15:23:05&quot; ,&quot;22.05019&quot; ,&quot;+22:03:00.70&quot; ,&quot;2016-08-16 19:59:31&quot; ,&quot;17.4&quot; ,&quot;G-Gaia&quot; ,&quot;GaiaAlerts&quot; ,&quot;Gaia16bbi&quot; ,null ,null ,&quot;http://wis-tns.weizmann.ac.il/object/2016fbz&quot; ,&quot;359.816667&quot; ,&quot;23:59:16.00&quot; ,&quot;SN Ia&quot; ,&quot;0.045&quot;)  ON DUPLICATE KEY UPDATE  TNSId=&quot;2016fbz&quot;, TNSName=&quot;SN2016fbz&quot;, dateCreated=&quot;2016-09-20T15:23:05&quot;, decDeg=&quot;22.05019&quot;, decSex=&quot;+22:03:00.70&quot;, discDate=&quot;2016-08-16 19:59:31&quot;, discMag=&quot;17.4&quot;, discMagFilter=&quot;G-Gaia&quot;, discSurvey=&quot;GaiaAlerts&quot;, discoveryName=&quot;Gaia16bbi&quot;, hostName=null, hostRedshift=null, objectUrl=&quot;http://wis-tns.weizmann.ac.il/object/2016fbz&quot;, raDeg=&quot;359.816667&quot;, raSex=&quot;23:59:16.00&quot;, specType=&quot;SN Ia&quot;, transRedshift=&quot;0.045&quot;, updated=1, dateLastModified=NOW() ;
+
+
+# Transient Photometry
+INSERT INTO `tns_photometry` (TNSId,dateCreated,exptime,filter,limitingMag,mag,magErr,magUnit,objectName,obsdate,reportAddedDate,suggestedType,survey,telescope) VALUES (&quot;2016fbz&quot; ,&quot;2016-09-20T15:23:05&quot; ,&quot;45&quot; ,&quot;w-PS1&quot; ,&quot;0&quot; ,&quot;17.8&quot; ,&quot;0.02&quot; ,&quot;ABMag&quot; ,&quot;PS16ebg&quot; ,&quot;2016-08-30 13:19:12&quot; ,&quot;2016-09-02 15:54:03&quot; ,&quot;PSN&quot; ,&quot;Pan-STARRS1&quot; ,&quot;PS1_GPC1&quot;)  ON DUPLICATE KEY UPDATE  TNSId=&quot;2016fbz&quot;, dateCreated=&quot;2016-09-20T15:23:05&quot;, exptime=&quot;45&quot;, filter=&quot;w-PS1&quot;, limitingMag=&quot;0&quot;, mag=&quot;17.8&quot;, magErr=&quot;0.02&quot;, magUnit=&quot;ABMag&quot;, objectName=&quot;PS16ebg&quot;, obsdate=&quot;2016-08-30 13:19:12&quot;, reportAddedDate=&quot;2016-09-02 15:54:03&quot;, suggestedType=&quot;PSN&quot;, survey=&quot;Pan-STARRS1&quot;, telescope=&quot;PS1_GPC1&quot;, updated=1, dateLastModified=NOW() ;
+INSERT INTO `tns_photometry` (TNSId,dateCreated,exptime,filter,limitingMag,mag,magErr,magUnit,objectName,obsdate,reportAddedDate,suggestedType,survey,telescope) VALUES (&quot;2016fbz&quot; ,&quot;2016-09-20T15:23:05&quot; ,&quot;60&quot; ,&quot;g-PTF&quot; ,&quot;0&quot; ,&quot;17.2823&quot; ,&quot;&quot; ,&quot;ABMag&quot; ,&quot;iPTF16fbz&quot; ,&quot;2016-08-25 12:00:00&quot; ,&quot;2016-08-25 12:34:00&quot; ,&quot;PSN&quot; ,&quot;iPTF&quot; ,&quot;P48_CFH12k&quot;)  ON DUPLICATE KEY UPDATE  TNSId=&quot;2016fbz&quot;, dateCreated=&quot;2016-09-20T15:23:05&quot;, exptime=&quot;60&quot;, filter=&quot;g-PTF&quot;, limitingMag=&quot;0&quot;, mag=&quot;17.2823&quot;, magErr=&quot;&quot;, magUnit=&quot;ABMag&quot;, objectName=&quot;iPTF16fbz&quot;, obsdate=&quot;2016-08-25 12:00:00&quot;, reportAddedDate=&quot;2016-08-25 12:34:00&quot;, suggestedType=&quot;PSN&quot;, survey=&quot;iPTF&quot;, telescope=&quot;P48_CFH12k&quot;, updated=1, dateLastModified=NOW() ;
+INSERT INTO `tns_photometry` (TNSId,dateCreated,exptime,filter,limitingMag,mag,magErr,magUnit,objectName,obsdate,reportAddedDate,suggestedType,survey,telescope) VALUES (&quot;2016fbz&quot; ,&quot;2016-09-20T15:23:05&quot; ,&quot;60&quot; ,&quot;R-PTF&quot; ,&quot;1&quot; ,&quot;21.5&quot; ,&quot;&quot; ,&quot;ABMag&quot; ,&quot;iPTF16fbz&quot; ,&quot;2009-01-01 00:00:00&quot; ,&quot;2016-08-25 12:34:00&quot; ,&quot;PSN&quot; ,&quot;iPTF&quot; ,&quot;P48_CFH12k&quot;)  ON DUPLICATE KEY UPDATE  TNSId=&quot;2016fbz&quot;, dateCreated=&quot;2016-09-20T15:23:05&quot;, exptime=&quot;60&quot;, filter=&quot;R-PTF&quot;, limitingMag=&quot;1&quot;, mag=&quot;21.5&quot;, magErr=&quot;&quot;, magUnit=&quot;ABMag&quot;, objectName=&quot;iPTF16fbz&quot;, obsdate=&quot;2009-01-01 00:00:00&quot;, reportAddedDate=&quot;2016-08-25 12:34:00&quot;, suggestedType=&quot;PSN&quot;, survey=&quot;iPTF&quot;, telescope=&quot;P48_CFH12k&quot;, updated=1, dateLastModified=NOW() ;
+INSERT INTO `tns_photometry` (TNSId,dateCreated,exptime,filter,limitingMag,mag,magErr,magUnit,objectName,obsdate,reportAddedDate,suggestedType,survey,telescope) VALUES (&quot;2016fbz&quot; ,&quot;2016-09-20T15:23:05&quot; ,&quot;60&quot; ,&quot;G-Gaia&quot; ,&quot;0&quot; ,&quot;17.4&quot; ,&quot;0.2&quot; ,&quot;ABMag&quot; ,&quot;Gaia16bbi&quot; ,&quot;2016-08-16 19:59:31&quot; ,&quot;2016-08-19 09:13:29&quot; ,&quot;PSN&quot; ,&quot;GaiaAlerts&quot; ,&quot;Gaia_Gaia-photometric&quot;)  ON DUPLICATE KEY UPDATE  TNSId=&quot;2016fbz&quot;, dateCreated=&quot;2016-09-20T15:23:05&quot;, exptime=&quot;60&quot;, filter=&quot;G-Gaia&quot;, limitingMag=&quot;0&quot;, mag=&quot;17.4&quot;, magErr=&quot;0.2&quot;, magUnit=&quot;ABMag&quot;, objectName=&quot;Gaia16bbi&quot;, obsdate=&quot;2016-08-16 19:59:31&quot;, reportAddedDate=&quot;2016-08-19 09:13:29&quot;, suggestedType=&quot;PSN&quot;, survey=&quot;GaiaAlerts&quot;, telescope=&quot;Gaia_Gaia-photometric&quot;, updated=1, dateLastModified=NOW() ;
+INSERT INTO `tns_photometry` (TNSId,dateCreated,exptime,filter,limitingMag,mag,magErr,magUnit,objectName,obsdate,reportAddedDate,suggestedType,survey,telescope) VALUES (&quot;2016fbz&quot; ,&quot;2016-09-20T15:23:05&quot; ,&quot;&quot; ,&quot;G-Gaia&quot; ,&quot;1&quot; ,&quot;21.5&quot; ,&quot;&quot; ,&quot;ABMag&quot; ,&quot;Gaia16bbi&quot; ,&quot;2016-07-05 02:38:24&quot; ,&quot;2016-08-19 09:13:29&quot; ,&quot;PSN&quot; ,&quot;GaiaAlerts&quot; ,&quot;Gaia_Gaia-photometric&quot;)  ON DUPLICATE KEY UPDATE  TNSId=&quot;2016fbz&quot;, dateCreated=&quot;2016-09-20T15:23:05&quot;, exptime=&quot;&quot;, filter=&quot;G-Gaia&quot;, limitingMag=&quot;1&quot;, mag=&quot;21.5&quot;, magErr=&quot;&quot;, magUnit=&quot;ABMag&quot;, objectName=&quot;Gaia16bbi&quot;, obsdate=&quot;2016-07-05 02:38:24&quot;, reportAddedDate=&quot;2016-08-19 09:13:29&quot;, suggestedType=&quot;PSN&quot;, survey=&quot;GaiaAlerts&quot;, telescope=&quot;Gaia_Gaia-photometric&quot;, updated=1, dateLastModified=NOW() ;
+
+
+# Transient Spectra
+INSERT INTO `tns_spectra` (TNSId,TNSuser,dateCreated,exptime,obsdate,reportAddedDate,specType,survey,telescope,transRedshift) VALUES (&quot;2016fbz&quot; ,&quot;rferr&quot; ,&quot;2016-09-20T15:23:05&quot; ,&quot;&quot; ,&quot;2016-08-26 08:56:52&quot; ,&quot;2016-09-02 08:06:07&quot; ,&quot;SN Ia&quot; ,&quot;iPTF&quot; ,&quot;P60_SED-Machine&quot; ,&quot;0.045&quot;)  ON DUPLICATE KEY UPDATE  TNSId=&quot;2016fbz&quot;, TNSuser=&quot;rferr&quot;, dateCreated=&quot;2016-09-20T15:23:05&quot;, exptime=&quot;&quot;, obsdate=&quot;2016-08-26 08:56:52&quot;, reportAddedDate=&quot;2016-09-02 08:06:07&quot;, specType=&quot;SN Ia&quot;, survey=&quot;iPTF&quot;, telescope=&quot;P60_SED-Machine&quot;, transRedshift=&quot;0.045&quot;, updated=1, dateLastModified=NOW() ;
+INSERT INTO `tns_spectra` (TNSId,TNSuser,dateCreated,exptime,obsdate,reportAddedDate,specType,survey,telescope,transRedshift) VALUES (&quot;2016fbz&quot; ,&quot;rferr&quot; ,&quot;2016-09-20T15:23:05&quot; ,&quot;3000&quot; ,&quot;2016-08-27 14:24:00&quot; ,&quot;2016-09-02 08:06:07&quot; ,&quot;SN Ia&quot; ,&quot;&quot; ,&quot;BAO-2.16m_Phot-spec&quot; ,&quot;0.045&quot;)  ON DUPLICATE KEY UPDATE  TNSId=&quot;2016fbz&quot;, TNSuser=&quot;rferr&quot;, dateCreated=&quot;2016-09-20T15:23:05&quot;, exptime=&quot;3000&quot;, obsdate=&quot;2016-08-27 14:24:00&quot;, reportAddedDate=&quot;2016-09-02 08:06:07&quot;, specType=&quot;SN Ia&quot;, survey=&quot;&quot;, telescope=&quot;BAO-2.16m_Phot-spec&quot;, transRedshift=&quot;0.045&quot;, updated=1, dateLastModified=NOW() ;
+
+
+# Transient Supplementary Files
+INSERT INTO `tns_files` (TNSid,dateCreated,dateObs,filename,spec1phot2,url) VALUES (&quot;2016fbz&quot; ,&quot;2016-09-20T15:23:05&quot; ,&quot;2016-08-26 08:56:52&quot; ,&quot;tns_2016fbz_2016-08-26_08-56-52_P60_SED-Machine_iPTF.ascii&quot; ,&quot;1&quot; ,&quot;https://wis-tns.weizmann.ac.il/system/files/uploaded/iPTF/tns_2016fbz_2016-08-26_08-56-52_P60_SED-Machine_iPTF.ascii&quot;)  ON DUPLICATE KEY UPDATE  TNSid=&quot;2016fbz&quot;, dateCreated=&quot;2016-09-20T15:23:05&quot;, dateObs=&quot;2016-08-26 08:56:52&quot;, filename=&quot;tns_2016fbz_2016-08-26_08-56-52_P60_SED-Machine_iPTF.ascii&quot;, spec1phot2=&quot;1&quot;, url=&quot;https://wis-tns.weizmann.ac.il/system/files/uploaded/iPTF/tns_2016fbz_2016-08-26_08-56-52_P60_SED-Machine_iPTF.ascii&quot;, updated=1, dateLastModified=NOW() ;
+INSERT INTO `tns_files` (TNSid,dateCreated,dateObs,filename,spec1phot2,url) VALUES (&quot;2016fbz&quot; ,&quot;2016-09-20T15:23:05&quot; ,&quot;2016-08-27 14:24:00&quot; ,&quot;tns_2016fbz_2016-08-27.60_BAO-2.16m_Phot-spec.txt&quot; ,&quot;1&quot; ,&quot;https://wis-tns.weizmann.ac.il/system/files/uploaded/general/tns_2016fbz_2016-08-27.60_BAO-2.16m_Phot-spec.txt&quot;)  ON DUPLICATE KEY UPDATE  TNSid=&quot;2016fbz&quot;, dateCreated=&quot;2016-09-20T15:23:05&quot;, dateObs=&quot;2016-08-27 14:24:00&quot;, filename=&quot;tns_2016fbz_2016-08-27.60_BAO-2.16m_Phot-spec.txt&quot;, spec1phot2=&quot;1&quot;, url=&quot;https://wis-tns.weizmann.ac.il/system/files/uploaded/general/tns_2016fbz_2016-08-27.60_BAO-2.16m_Phot-spec.txt&quot;, updated=1, dateLastModified=NOW() ;
+
+
+# Original TNS Search URL
+https://wis-tns.weizmann.ac.il/search?decl=&amp;date_end%5Bdate%5D=&amp;num_page=1000&amp;display%5Bsources%5D=1&amp;name=&amp;display%5Bdiscmagfilter%5D=1&amp;display%5Bspectra_count%5D=1&amp;display%5Bdiscoverymag%5D=1&amp;display%5Bdiscoverydate%5D=1&amp;display%5Bhost_redshift%5D=1&amp;date_start%5Bdate%5D=&amp;radius=&amp;ra=&amp;internal_name=PS16ebg&amp;display%5Bsource_group_name%5D=1&amp;display%5Bbibcode%5D=1&amp;display%5Bredshift%5D=1&amp;display%5Binternal_name%5D=1&amp;page=0&amp;display%5Bhostname%5D=1&amp;display%5Bdiscoverer%5D=1
+</pre></div>
+</div>
+<p>To save the results to file instead of outputting to stdout, pass in the path to the directory you want to save the results to. The four categories of results are save to four separate file.</p>
+<p>For ascii tables run either of the 2 commands:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">transientNamer</span> <span class="n">search</span> <span class="n">PS16ebg</span> <span class="o">-</span><span class="n">o</span> <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">tns</span><span class="o">-</span><span class="n">data</span>
+<span class="n">transientNamer</span> <span class="n">search</span> <span class="n">PS16ebg</span> <span class="n">tables</span> <span class="o">-</span><span class="n">o</span> <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">tns</span><span class="o">-</span><span class="n">data</span>
+</pre></div>
+</div>
 <a class="reference internal image-reference" href="https://i.imgur.com/m09M0ho.png"><img alt="ascii files" src="https://i.imgur.com/m09M0ho.png" style="width: 800px;" /></a>
+<p>For csv:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">transientNamer</span> <span class="n">search</span> <span class="n">PS16ebg</span> <span class="n">csv</span> <span class="o">-</span><span class="n">o</span> <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">tns</span><span class="o">-</span><span class="n">data</span>
+</pre></div>
+</div>
 <a class="reference internal image-reference" href="https://i.imgur.com/BwwqMBg.png"><img alt="csv output" src="https://i.imgur.com/BwwqMBg.png" style="width: 800px;" /></a>
+<p>For yaml:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">transientNamer</span> <span class="n">search</span> <span class="n">PS16ebg</span> <span class="n">yaml</span> <span class="o">-</span><span class="n">o</span> <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">tns</span><span class="o">-</span><span class="n">data</span>
+</pre></div>
+</div>
 <a class="reference internal image-reference" href="https://i.imgur.com/ZpJIC6p.png"><img alt="yaml output" src="https://i.imgur.com/ZpJIC6p.png" style="width: 800px;" /></a>
+<p>For json:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">transientNamer</span> <span class="n">search</span> <span class="n">PS16ebg</span> <span class="n">json</span> <span class="o">-</span><span class="n">o</span> <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">tns</span><span class="o">-</span><span class="n">data</span>
+</pre></div>
+</div>
 <a class="reference internal image-reference" href="https://i.imgur.com/wAHqARI.png"><img alt="json output" src="https://i.imgur.com/wAHqARI.png" style="width: 800px;" /></a>
+<p>For markdown tables:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">transientNamer</span> <span class="n">search</span> <span class="n">PS16ebg</span> <span class="n">markdown</span> <span class="o">-</span><span class="n">o</span> <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">tns</span><span class="o">-</span><span class="n">data</span>
+</pre></div>
+</div>
 <a class="reference internal image-reference" href="https://i.imgur.com/AYLBQoJ.png"><img alt="markdown output" src="https://i.imgur.com/AYLBQoJ.png" style="width: 800px;" /></a>
+<p>For mysql inserts:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span><span class="n">transientNamer</span> <span class="n">search</span> <span class="n">PS16ebg</span> <span class="n">mysql</span> <span class="n">tns</span> <span class="o">-</span><span class="n">o</span> <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">tns</span><span class="o">-</span><span class="n">data</span>
+</pre></div>
+</div>
 <a class="reference internal image-reference" href="https://i.imgur.com/CozySPW.png"><img alt="mysql output" src="https://i.imgur.com/CozySPW.png" style="width: 800px;" /></a>
+<p>When exporting to file, the mysql insert statements also come with table create statements so that if the table doesn&#8217;t yet exist in the database you are importing into it will be created for you will all of the correct field types and unique index constraints applied.</p>
 </div>
 </div>
 
@@ -406,7 +443,7 @@ transientNamer search iPTF16fbz
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'0.1',
+            VERSION:'0.1.3',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

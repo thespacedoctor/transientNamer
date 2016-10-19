@@ -7,12 +7,13 @@ Command-Line Usage
     Documentation for transientNamer can be found here: http://transientNamer.readthedocs.org/en/stable
     
     Usage:
-        transientNamer [-c] search <ra> <dec> <arcsecRadius> [<render> | mysql <tableNamePrefix>] [-o directory]
+        transientNamer [-c] cone <ra> <dec> <arcsecRadius> [<render> | mysql <tableNamePrefix>] [-o directory]
         transientNamer [-c] search <name> [<render> | mysql <tableNamePrefix>] [-o directory]
         transientNamer [-c] new <discInLastDays> [<render> | mysql <tableNamePrefix>] [-o directory]
     
     Commands:
-        search                search the TNS and return the results
+        cone                  perform a conesearch on the TNS
+        search                perform a name search on the TNS
         new                   list newly discovered TNS objects
     
     Arguments:
@@ -29,5 +30,5 @@ Command-Line Usage
         -v, --version                        show version
         -s, --settings                       the settings file
         -c, --withComments                   return TNS comments in result sets
-        -o directory --output=directory      output to files in the directory path
+        -o directory, --output=directory     output to files in the directory path
     

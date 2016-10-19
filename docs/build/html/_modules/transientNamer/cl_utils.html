@@ -10,7 +10,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>transientNamer.cl_utils &mdash; transientNamer 0.1 documentation</title>
+  <title>transientNamer.cl_utils &mdash; transientNamer 0.1.3 documentation</title>
   
 
   
@@ -38,7 +38,7 @@
   
 
   
-    <link rel="top" title="transientNamer 0.1 documentation" href="../../index.html"/>
+    <link rel="top" title="transientNamer 0.1.3 documentation" href="../../index.html"/>
         <link rel="up" title="Module code" href="../index.html"/> 
 
   
@@ -70,7 +70,7 @@
             
             
               <div class="version">
-                v0.1
+                v0.1.3
               </div>
             
           
@@ -94,11 +94,11 @@
                 <p class="caption"><span class="caption-text">Getting Started</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../_includes/index.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../_includes/index.html#usage">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../_includes/index.html#command-line-usage">Command-Line Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../_includes/index.html#documentation">Documentation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../_includes/index.html#tutorial">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../_includes/index.html#command-line-tutorial">Command-Line Tutorial</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Documentation</span></p>
+<p class="caption"><span class="caption-text">Python Package Documentation</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../autosummary.html">Subpackages</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../autosummary.html#modules">Modules</a></li>
@@ -155,12 +155,13 @@
 <span class="sd">Documentation for transientNamer can be found here: http://transientNamer.readthedocs.org/en/stable</span>
 
 <span class="sd">Usage:</span>
-<span class="sd">    transientNamer [-c] search &lt;ra&gt; &lt;dec&gt; &lt;arcsecRadius&gt; [&lt;render&gt; | mysql &lt;tableNamePrefix&gt;] [-o directory]</span>
+<span class="sd">    transientNamer [-c] cone &lt;ra&gt; &lt;dec&gt; &lt;arcsecRadius&gt; [&lt;render&gt; | mysql &lt;tableNamePrefix&gt;] [-o directory]</span>
 <span class="sd">    transientNamer [-c] search &lt;name&gt; [&lt;render&gt; | mysql &lt;tableNamePrefix&gt;] [-o directory]</span>
 <span class="sd">    transientNamer [-c] new &lt;discInLastDays&gt; [&lt;render&gt; | mysql &lt;tableNamePrefix&gt;] [-o directory]</span>
 
 <span class="sd">Commands:</span>
-<span class="sd">    search                search the TNS and return the results</span>
+<span class="sd">    cone                  perform a conesearch on the TNS</span>
+<span class="sd">    search                perform a name search on the TNS</span>
 <span class="sd">    new                   list newly discovered TNS objects</span>
 
 <span class="sd">Arguments:</span>
@@ -177,7 +178,7 @@
 <span class="sd">    -v, --version                        show version</span>
 <span class="sd">    -s, --settings                       the settings file</span>
 <span class="sd">    -c, --withComments                   return TNS comments in result sets</span>
-<span class="sd">    -o directory --output=directory      output to files in the directory path</span>
+<span class="sd">    -o directory, --output=directory     output to files in the directory path</span>
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="c1">################# GLOBAL IMPORTS ####################</span>
 <span class="kn">import</span> <span class="nn">sys</span>
@@ -205,9 +206,8 @@
         <span class="n">arguments</span><span class="o">=</span><span class="n">arguments</span><span class="p">,</span>
         <span class="n">docString</span><span class="o">=</span><span class="n">__doc__</span><span class="p">,</span>
         <span class="n">logLevel</span><span class="o">=</span><span class="s2">&quot;WARNING&quot;</span><span class="p">,</span>
-        <span class="n">options_first</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
-        <span class="n">projectName</span><span class="o">=</span><span class="s2">&quot;transientNamer&quot;</span><span class="p">,</span>
-        <span class="n">tunnel</span><span class="o">=</span><span class="bp">False</span>
+        <span class="n">options_first</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span>
+        <span class="n">projectName</span><span class="o">=</span><span class="s2">&quot;transientNamer&quot;</span>
     <span class="p">)</span>
     <span class="n">arguments</span><span class="p">,</span> <span class="n">settings</span><span class="p">,</span> <span class="n">log</span><span class="p">,</span> <span class="n">dbConn</span> <span class="o">=</span> <span class="n">su</span><span class="o">.</span><span class="n">setup</span><span class="p">()</span>
 
@@ -237,7 +237,7 @@
         <span class="s1">&#39;--- STARTING TO RUN THE cl_utils.py AT </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span>
         <span class="p">(</span><span class="n">startTime</span><span class="p">,))</span>
 
-    <span class="k">if</span> <span class="n">search</span> <span class="ow">or</span> <span class="n">new</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">search</span> <span class="ow">or</span> <span class="n">new</span> <span class="ow">or</span> <span class="n">cone</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">ra</span><span class="p">:</span>
             <span class="n">tns</span> <span class="o">=</span> <span class="n">transientNamer</span><span class="o">.</span><span class="n">search</span><span class="p">(</span>
                 <span class="n">log</span><span class="o">=</span><span class="n">log</span><span class="p">,</span>
@@ -259,33 +259,46 @@
                 <span class="n">comments</span><span class="o">=</span><span class="n">withCommentsFlag</span>
             <span class="p">)</span>
 
+        <span class="c1"># Recursively create missing directories</span>
+        <span class="k">if</span> <span class="n">outputFlag</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">outputFlag</span><span class="p">):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">outputFlag</span><span class="p">)</span>
+
         <span class="k">if</span> <span class="n">tableNamePrefix</span><span class="p">:</span>
             <span class="n">sources</span><span class="p">,</span> <span class="n">phot</span><span class="p">,</span> <span class="n">spec</span><span class="p">,</span> <span class="n">files</span> <span class="o">=</span> <span class="n">tns</span><span class="o">.</span><span class="n">mysql</span><span class="p">(</span>
                 <span class="n">tableNamePrefix</span><span class="o">=</span><span class="n">tableNamePrefix</span><span class="p">,</span> <span class="n">dirPath</span><span class="o">=</span><span class="n">outputFlag</span><span class="p">)</span>
+            <span class="n">numSources</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sources</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">))</span> <span class="o">-</span> <span class="mi">1</span>
         <span class="k">elif</span> <span class="ow">not</span> <span class="n">render</span> <span class="ow">or</span> <span class="n">render</span> <span class="o">==</span> <span class="s2">&quot;table&quot;</span><span class="p">:</span>
             <span class="n">sources</span><span class="p">,</span> <span class="n">phot</span><span class="p">,</span> <span class="n">spec</span><span class="p">,</span> <span class="n">files</span> <span class="o">=</span> <span class="n">tns</span><span class="o">.</span><span class="n">table</span><span class="p">(</span><span class="n">dirPath</span><span class="o">=</span><span class="n">outputFlag</span><span class="p">)</span>
+            <span class="n">numSources</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sources</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">))</span> <span class="o">-</span> <span class="mi">4</span>
         <span class="k">elif</span> <span class="n">render</span> <span class="o">==</span> <span class="s2">&quot;csv&quot;</span><span class="p">:</span>
             <span class="n">sources</span><span class="p">,</span> <span class="n">phot</span><span class="p">,</span> <span class="n">spec</span><span class="p">,</span> <span class="n">files</span> <span class="o">=</span> <span class="n">tns</span><span class="o">.</span><span class="n">csv</span><span class="p">(</span><span class="n">dirPath</span><span class="o">=</span><span class="n">outputFlag</span><span class="p">)</span>
+            <span class="n">numSources</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sources</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">))</span> <span class="o">-</span> <span class="mi">1</span>
         <span class="k">elif</span> <span class="n">render</span> <span class="o">==</span> <span class="s2">&quot;json&quot;</span><span class="p">:</span>
             <span class="n">sources</span><span class="p">,</span> <span class="n">phot</span><span class="p">,</span> <span class="n">spec</span><span class="p">,</span> <span class="n">files</span> <span class="o">=</span> <span class="n">tns</span><span class="o">.</span><span class="n">json</span><span class="p">(</span><span class="n">dirPath</span><span class="o">=</span><span class="n">outputFlag</span><span class="p">)</span>
+            <span class="n">numSources</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sources</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;{&quot;</span><span class="p">))</span> <span class="o">-</span> <span class="mi">1</span>
         <span class="k">elif</span> <span class="n">render</span> <span class="o">==</span> <span class="s2">&quot;yaml&quot;</span><span class="p">:</span>
             <span class="n">sources</span><span class="p">,</span> <span class="n">phot</span><span class="p">,</span> <span class="n">spec</span><span class="p">,</span> <span class="n">files</span> <span class="o">=</span> <span class="n">tns</span><span class="o">.</span><span class="n">yaml</span><span class="p">(</span><span class="n">dirPath</span><span class="o">=</span><span class="n">outputFlag</span><span class="p">)</span>
+            <span class="n">numSources</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sources</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">-&quot;</span><span class="p">))</span>
         <span class="k">elif</span> <span class="n">render</span> <span class="o">==</span> <span class="s2">&quot;markdown&quot;</span><span class="p">:</span>
             <span class="n">sources</span><span class="p">,</span> <span class="n">phot</span><span class="p">,</span> <span class="n">spec</span><span class="p">,</span> <span class="n">files</span> <span class="o">=</span> <span class="n">tns</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="n">dirPath</span><span class="o">=</span><span class="n">outputFlag</span><span class="p">)</span>
+            <span class="n">numSources</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sources</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">))</span> <span class="o">-</span> <span class="mi">2</span>
 
-        <span class="n">numSources</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sources</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">))</span> <span class="o">-</span> <span class="mi">4</span>
-        <span class="k">if</span> <span class="n">numSources</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">numSources</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">print</span> <span class="s2">&quot;</span><span class="si">%(numSources)s</span><span class="s2"> transient found&quot;</span> <span class="o">%</span> <span class="nb">locals</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="n">numSources</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
             <span class="k">print</span> <span class="s2">&quot;</span><span class="si">%(numSources)s</span><span class="s2"> transients found&quot;</span> <span class="o">%</span> <span class="nb">locals</span><span class="p">()</span>
-        <span class="k">print</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2"># Matched Transients&quot;</span>
-        <span class="k">print</span> <span class="n">sources</span>
-        <span class="k">print</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2"># Transient Photometry&quot;</span>
-        <span class="k">print</span> <span class="n">phot</span>
-        <span class="k">print</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2"># Transient Spectra&quot;</span>
-        <span class="k">print</span> <span class="n">spec</span>
-        <span class="k">print</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2"># Transient Supplementary Files&quot;</span>
-        <span class="k">print</span> <span class="n">files</span>
-        <span class="k">print</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2"># Original TNS Search URL&quot;</span>
-        <span class="k">print</span> <span class="n">tns</span><span class="o">.</span><span class="n">url</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">outputFlag</span><span class="p">:</span>
+            <span class="k">print</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2"># Matched Transients&quot;</span>
+            <span class="k">print</span> <span class="n">sources</span>
+            <span class="k">print</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2"># Transient Photometry&quot;</span>
+            <span class="k">print</span> <span class="n">phot</span>
+            <span class="k">print</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2"># Transient Spectra&quot;</span>
+            <span class="k">print</span> <span class="n">spec</span>
+            <span class="k">print</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2"># Transient Supplementary Files&quot;</span>
+            <span class="k">print</span> <span class="n">files</span>
+            <span class="k">print</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2"># Original TNS Search URL&quot;</span>
+            <span class="k">print</span> <span class="n">tns</span><span class="o">.</span><span class="n">url</span>
         <span class="c1"># CALL FUNCTIONS/OBJECTS</span>
 
     <span class="k">if</span> <span class="s2">&quot;dbConn&quot;</span> <span class="ow">in</span> <span class="nb">locals</span><span class="p">()</span> <span class="ow">and</span> <span class="n">dbConn</span><span class="p">:</span>
@@ -335,7 +348,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.1',
+            VERSION:'0.1.3',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true

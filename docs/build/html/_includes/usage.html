@@ -10,7 +10,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Usage &mdash; transientNamer 0.1 documentation</title>
+  <title>Command-Line Usage &mdash; transientNamer 0.1.3 documentation</title>
   
 
   
@@ -38,7 +38,7 @@
   
 
   
-    <link rel="top" title="transientNamer 0.1 documentation" href="../index.html"/> 
+    <link rel="top" title="transientNamer 0.1.3 documentation" href="../index.html"/> 
 
   
   <script src="../_static/js/modernizr.min.js"></script>
@@ -69,7 +69,7 @@
             
             
               <div class="version">
-                v0.1
+                v0.1.3
               </div>
             
           
@@ -93,11 +93,11 @@
                 <p class="caption"><span class="caption-text">Getting Started</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="index.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="index.html#usage">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="index.html#command-line-usage">Command-Line Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="index.html#documentation">Documentation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="index.html#tutorial">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="index.html#command-line-tutorial">Command-Line Tutorial</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Documentation</span></p>
+<p class="caption"><span class="caption-text">Python Package Documentation</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../autosummary.html">Subpackages</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../autosummary.html#modules">Modules</a></li>
@@ -133,7 +133,7 @@
   <ul class="wy-breadcrumbs">
     <li><a href="../index.html">Docs</a> &raquo;</li>
       
-    <li>Usage</li>
+    <li>Command-Line Usage</li>
       <li class="wy-breadcrumbs-aside">
         
           
@@ -147,17 +147,18 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="usage">
-<h1>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">  ∞</a></h1>
+  <div class="section" id="command-line-usage">
+<h1>Command-Line Usage<a class="headerlink" href="#command-line-usage" title="Permalink to this headline">  ∞</a></h1>
 <div class="highlight-bash"><div class="highlight"><pre><span></span>Documentation <span class="k">for</span> transientNamer can be found here: http://transientNamer.readthedocs.org/en/stable
 
 Usage:
-    transientNamer <span class="o">[</span>-c<span class="o">]</span> search &lt;ra&gt; &lt;dec&gt; &lt;arcsecRadius&gt; <span class="o">[</span>&lt;render&gt; <span class="p">|</span> mysql &lt;tableNamePrefix&gt;<span class="o">]</span> <span class="o">[</span>-o directory<span class="o">]</span>
+    transientNamer <span class="o">[</span>-c<span class="o">]</span> cone &lt;ra&gt; &lt;dec&gt; &lt;arcsecRadius&gt; <span class="o">[</span>&lt;render&gt; <span class="p">|</span> mysql &lt;tableNamePrefix&gt;<span class="o">]</span> <span class="o">[</span>-o directory<span class="o">]</span>
     transientNamer <span class="o">[</span>-c<span class="o">]</span> search &lt;name&gt; <span class="o">[</span>&lt;render&gt; <span class="p">|</span> mysql &lt;tableNamePrefix&gt;<span class="o">]</span> <span class="o">[</span>-o directory<span class="o">]</span>
     transientNamer <span class="o">[</span>-c<span class="o">]</span> new &lt;discInLastDays&gt; <span class="o">[</span>&lt;render&gt; <span class="p">|</span> mysql &lt;tableNamePrefix&gt;<span class="o">]</span> <span class="o">[</span>-o directory<span class="o">]</span>
 
 Commands:
-    search                search the TNS and <span class="k">return</span> the results
+    cone                  perform a conesearch on the TNS
+    search                perform a name search on the TNS
     new                   list newly discovered TNS objects
 
 Arguments:
@@ -174,7 +175,7 @@ Options:
     -v, --version                        show version
     -s, --settings                       the settings file
     -c, --withComments                   <span class="k">return</span> TNS comments in result sets
-    -o directory --output<span class="o">=</span>directory      output to files in the directory path
+    -o directory, --output<span class="o">=</span>directory     output to files in the directory path
 </pre></div>
 </div>
 </div>
@@ -211,7 +212,7 @@ Options:
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'0.1',
+            VERSION:'0.1.3',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE:  true
