@@ -640,7 +640,9 @@ CREATE TABLE `%(tableNamePrefix)s_photometry` (
   `remarks` VARCHAR(800) NULL DEFAULT NULL,
   `sourceComment` VARCHAR(800) NULL DEFAULT NULL,
   PRIMARY KEY (`primaryId`),
-  UNIQUE KEY `tnsid_survey_obsdate` (`TNSId`,`survey`,`obsdate`)
+  UNIQUE KEY `tnsid_survey_obsdate` (`TNSId`,`survey`,`obsdate`),
+  UNIQUE INDEX `u_tnsid_survey_obsdate` (`TNSId` ASC, `survey` ASC, `obsdate` ASC),
+  UNIQUE INDEX `u_tnsid_obsdate_objname` (`TNSId` ASC, `obsdate` ASC, `objectName` ASC)
 ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=latin1;
             """ % locals()
 
@@ -665,7 +667,8 @@ CREATE TABLE `%(tableNamePrefix)s_spectra` (
   `remarks` VARCHAR(800) NULL DEFAULT NULL,
   `sourceComment` VARCHAR(800) NULL DEFAULT NULL,
   PRIMARY KEY (`primaryId`),
-  UNIQUE KEY `tnsid_survey_obsdate` (`TNSId`,`survey`,`obsdate`)
+  UNIQUE KEY `u_tnsid_survey_obsdate` (`TNSId`,`survey`,`obsdate`),
+  UNIQUE KEY `u_id_user_obsdate` (`TNSId`,`TNSuser`,`obsdate`)
 ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=latin1;
             """ % locals()
 
@@ -1016,7 +1019,6 @@ CREATE TABLE `%(tableNamePrefix)s_files` (
                 header["TNSId"] = TNSId
 
                 del header["reporters"]
-                del header["sender"]
                 del header["surveyGroup"]
                 del header["hostName"]
                 del header["hostRedshift"]
@@ -1077,7 +1079,11 @@ CREATE TABLE `%(tableNamePrefix)s_files` (
                             thisFile["spec1phot2"] = 2
                             relatedFilesTable.append(thisFile)
 
+                    if not p["survey"] and not p["objectName"]:
+                        p["survey"] = p["sender"]
+
                     del p["relatedFiles"]
+                    del p["sender"]
 
                     # ORDER THE DICTIONARY FOR THIS ROW OF RESULTS
                     orow = collections.OrderedDict()
