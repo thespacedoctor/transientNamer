@@ -1037,7 +1037,7 @@ CREATE TABLE `%(tableNamePrefix)s_files` (
                     for c in theseComments:
                         header["sourceComment"] += " " + c.strip()
                     header["sourceComment"] = header[
-                        "sourceComment"].strip()
+                        "sourceComment"].strip().replace('"', "'")
 
                 phot = re.finditer(
                     r"""<tr class="row\-[^"]*".*?obsdate">(?P<obsdate>[^<]*).*?flux">(?P<mag>[^<]*).*?fluxerr">(?P<magErr>[^<]*).*?limflux">(?P<limitingMag>[^<]*).*?unit_name">(?P<magUnit>[^<]*).*?filter_name">(?P<filter>[^<]*).*?tel_inst">(?P<telescope>[^<]*).*?exptime">(?P<exptime>[^<]*).*?observer">(?P<observer>[^<]*).*?-remarks">(?P<remarks>[^<]*)""",
@@ -1074,7 +1074,7 @@ CREATE TABLE `%(tableNamePrefix)s_files` (
                             thisFile["url"] = f["filepath"]
                             if self.comments:
                                 thisFile["comment"] = f[
-                                    "fileComment"].replace("\n", " ").strip()
+                                    "fileComment"].replace("\n", " ").strip().replace('"', "'")
                             thisFile["dateObs"] = p["obsdate"]
                             thisFile["spec1phot2"] = 2
                             relatedFilesTable.append(thisFile)
@@ -1195,7 +1195,7 @@ CREATE TABLE `%(tableNamePrefix)s_files` (
                     for c in theseComments:
                         header["sourceComment"] += " " + c.strip()
                     header["sourceComment"] = header[
-                        "sourceComment"].strip()
+                        "sourceComment"].strip().replace('"', "'")
 
                 spec = re.finditer(
                     r"""<tr class="class-results-.*?-obsdate">(?P<obsdate>[^<]*).*?-tel_inst">(?P<telescope>[^<]*).*?-exptime">(?P<exptime>[^<]*).*?-observer">(?P<sender>[^<]*).*?-reducer">(?P<reducer>[^<]*).*?-source_group_name">(?P<survey>[^<]*).*?-asciifile">(.*?<a href="(?P<filepath>[^"]*)".*?</a>)?.*?-fitsfile">(.*?<a href="(?P<fitsFilepath>[^"]*)".*?</a>)?.*?-groups">(?P<surveyGroup>[^<]*).*?-remarks">(?P<remarks>[^<]*)""",
@@ -1211,6 +1211,8 @@ CREATE TABLE `%(tableNamePrefix)s_files` (
 
                     if not self.comments:
                         del s["remarks"]
+                    else:
+                        s["remarks"] = s["remarks"].replace('"', "'")
 
                     s.update(header)
 
