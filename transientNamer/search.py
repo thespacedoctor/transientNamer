@@ -1198,12 +1198,13 @@ CREATE TABLE `%(tableNamePrefix)s_files` (
                         "sourceComment"]
 
                 spec = re.finditer(
-                    r"""<tr class="class-results-.*?-obsdate">(?P<obsdate>[^<]*).*?-tel_inst">(?P<telescope>[^<]*).*?-exptime">(?P<exptime>[^<]*).*?-observer">(?P<sender>[^<]*).*?-reducer">(?P<reducer>[^<]*).*?-source_group_name">(?P<survey>[^<]*).*?-asciifile">(.*?<a href="(?P<filepath>[^"]*)".*?</a>)?.*?-fitsfile">(.*?<a href="(?P<fitsFilepath>[^"]*)".*?</a>)?.*?-groups">(?P<surveyGroup>[^<]*).*?-remarks">(?P<remarks>[^<]*)""",
+                    r"""<tr class="row-.*?-obsdate">(?P<obsdate>[^<]*).*?-tel_inst">(?P<telescope>[^<]*).*?-exptime">(?P<exptime>[^<]*).*?-observer">(?P<sender>[^<]*).*?-reducer">(?P<reducer>[^<]*).*?-source_group_name">(?P<survey>[^<]*).*?-asciifile">(.*?<a href="(?P<filepath>[^"]*)".*?</a>)?.*?-fitsfile">(.*?<a href="(?P<fitsFilepath>[^"]*)".*?</a>)?.*?-groups">(?P<surveyGroup>[^<]*).*?-remarks">(?P<remarks>[^<]*)""",
                     r.group(),
                     flags=0  # re.S
                 )
                 filesAppended = False
                 for s in spec:
+
                     s = s.groupdict()
                     del s["sender"]
                     del s["surveyGroup"]
