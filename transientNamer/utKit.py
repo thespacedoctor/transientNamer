@@ -42,20 +42,21 @@ class utKit(utKit):
         handlers:
             console:
                 class: logging.StreamHandler
-                level: ERROR
+                level: DEBUG
                 formatter: console_style
                 stream: ext://sys.stdout
         root:
-            level: ERROR
+            level: DEBUG
             handlers: [console]"""
 
         # Override Variable Data Atrributes
         self.dbConfig = """
          version: 1
-         db: dryx_unit_testing
+         db: unit_tests
          host: localhost
-         user: unittesting
+         user: utuser
          password: utpass
+         loginPath: unittesting
          """
 
         return
