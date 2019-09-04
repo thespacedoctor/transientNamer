@@ -1,7 +1,7 @@
 Installation
 ============
 
-The easiest way to install transientNamer us to use ``pip``:
+The easiest way to install transientNamer is to use ``pip``:
 
 .. code:: bash
 

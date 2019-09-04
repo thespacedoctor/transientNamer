@@ -710,7 +710,7 @@ CREATE TABLE `%(tableNamePrefix)s_files` (
         **Return:**
             - ``results`` -- a list of dictionaries (one dictionary for each result set returned from the TNS)
         """
-        self.log.info('starting the ``get`` method')
+        self.log.debug('starting the ``get`` method')
 
         sourceTable = []
         photoTable = []
@@ -773,7 +773,7 @@ CREATE TABLE `%(tableNamePrefix)s_files` (
         except:
             pass
 
-        self.log.info('completed the ``get`` method')
+        self.log.debug('completed the ``get`` method')
         return sourceTable, photoTable, specTable, relatedFilesTable
 
     def _get_tns_search_results(
@@ -781,7 +781,7 @@ CREATE TABLE `%(tableNamePrefix)s_files` (
         """
         *query the tns and result the response*
         """
-        self.log.info('starting the ``_get_tns_search_results`` method')
+        self.log.debug('starting the ``_get_tns_search_results`` method')
 
         try:
             response = requests.get(
@@ -814,7 +814,7 @@ CREATE TABLE `%(tableNamePrefix)s_files` (
         except requests.exceptions.RequestException:
             print('HTTP Request failed')
 
-        self.log.info('completed the ``_get_tns_search_results`` method')
+        self.log.debug('completed the ``_get_tns_search_results`` method')
         return response.status_code, response.content, response.url
 
     def _file_prefix(
@@ -824,7 +824,7 @@ CREATE TABLE `%(tableNamePrefix)s_files` (
         **Return:**
             - ``prefix`` -- the file prefix
         """
-        self.log.info('starting the ``_file_prefix`` method')
+        self.log.debug('starting the ``_file_prefix`` method')
 
         if self.ra:
             now = datetime.now()
@@ -839,7 +839,7 @@ CREATE TABLE `%(tableNamePrefix)s_files` (
             prefix = now.strftime(
                 discInLastDays + "d_since_%Y%m%d_tns_conesearch_")
 
-        self.log.info('completed the ``_file_prefix`` method')
+        self.log.debug('completed the ``_file_prefix`` method')
         return prefix
 
     def _parse_transient_rows(
@@ -855,7 +855,7 @@ CREATE TABLE `%(tableNamePrefix)s_files` (
         **Return:**
             - ``transientRows``
         """
-        self.log.info('starting the ``_parse_transient_rows`` method')
+        self.log.debug('starting the ``_parse_transient_rows`` method')
 
         regexForRow = r"""\n([^\n]*?<a href="/object/.*?)(?=\n[^\n]*?<a href="/object/|<\!\-\- /\.section, /#content \-\->)"""
 
@@ -875,7 +875,7 @@ CREATE TABLE `%(tableNamePrefix)s_files` (
             flags=re.S  # re.S
         )
 
-        self.log.info('completed the ``_parse_transient_rows`` method')
+        self.log.debug('completed the ``_parse_transient_rows`` method')
         return matchedSources
 
     def _parse_discovery_information(
@@ -890,7 +890,7 @@ CREATE TABLE `%(tableNamePrefix)s_files` (
             - ``discoveryData`` -- dictionary of results
             - ``TNSId`` -- the unique TNS id for the transient
         """
-        self.log.info('starting the ``_parse_discovery_information`` method')
+        self.log.debug('starting the ``_parse_discovery_information`` method')
 
         # ASTROCALC UNIT CONVERTER OBJECT
         converter = unit_conversion(
@@ -967,7 +967,7 @@ CREATE TABLE `%(tableNamePrefix)s_files` (
                     pass
             discoveryData.append(row)
 
-        self.log.info('completed the ``_parse_discovery_information`` method')
+        self.log.debug('completed the ``_parse_discovery_information`` method')
         return discoveryData[0], TNSId
 
     def _parse_photometry_data(
@@ -984,7 +984,7 @@ CREATE TABLE `%(tableNamePrefix)s_files` (
             - ``photData`` -- a list of dictionaries of the photometry data
             - ``relatedFilesTable`` -- a list of dictionaries of transient photometry related files 
         """
-        self.log.info('starting the ``_parse_photometry_data`` method')
+        self.log.debug('starting the ``_parse_photometry_data`` method')
 
         photData = []
         relatedFilesTable = []
@@ -1037,7 +1037,7 @@ CREATE TABLE `%(tableNamePrefix)s_files` (
                     for c in theseComments:
                         header["sourceComment"] += " " + c.strip()
                     header["sourceComment"] = header[
-                        "sourceComment"].strip().replace('"', "'")[0:750]
+                        "sourceComment"].strip()[0:750]
 
                 phot = re.finditer(
                     r"""<tr class="row\-[^"]*".*?obsdate">(?P<obsdate>[^<]*).*?flux">(?P<mag>[^<]*).*?fluxerr">(?P<magErr>[^<]*).*?limflux">(?P<limitingMag>[^<]*).*?unit_name">(?P<magUnit>[^<]*).*?filter_name">(?P<filter>[^<]*).*?tel_inst">(?P<telescope>[^<]*).*?exptime">(?P<exptime>[^<]*).*?observer">(?P<observer>[^<]*).*?-remarks">(?P<remarks>[^<]*)""",
@@ -1074,7 +1074,7 @@ CREATE TABLE `%(tableNamePrefix)s_files` (
                             thisFile["url"] = f["filepath"]
                             if self.comments:
                                 thisFile["comment"] = f[
-                                    "fileComment"].replace("\n", " ").strip().replace('"', "'")[0:750]
+                                    "fileComment"].replace("\n", " ")[0:750]
                             thisFile["dateObs"] = p["obsdate"]
                             thisFile["spec1phot2"] = 2
                             relatedFilesTable.append(thisFile)
@@ -1102,7 +1102,7 @@ CREATE TABLE `%(tableNamePrefix)s_files` (
 
                     photData.append(orow)
 
-        self.log.info('completed the ``_parse_photometry_data`` method')
+        self.log.debug('completed the ``_parse_photometry_data`` method')
         return photData, relatedFilesTable
 
     def _parse_related_files(
@@ -1116,7 +1116,7 @@ CREATE TABLE `%(tableNamePrefix)s_files` (
         **Return:**
             - ``relatedFiles`` -- a list of dictionaries of transient related files 
         """
-        self.log.info('starting the ``_parse_related_files`` method')
+        self.log.debug('starting the ``_parse_related_files`` method')
 
         relatedFilesList = re.finditer(
             r"""<td class="cell-filename">.*?href="(?P<filepath>[^"]*).*?remarks">(?P<fileComment>[^<]*)""",
@@ -1129,7 +1129,7 @@ CREATE TABLE `%(tableNamePrefix)s_files` (
             f = f.groupdict()
             relatedFiles.append(f)
 
-        self.log.info('completed the ``_parse_related_files`` method')
+        self.log.debug('completed the ``_parse_related_files`` method')
         return relatedFiles
 
     def _parse_spectral_data(
@@ -1146,7 +1146,7 @@ CREATE TABLE `%(tableNamePrefix)s_files` (
             - ``specData`` -- a list of dictionaries of the spectral data
             - ``relatedFilesTable`` -- a list of dictionaries of transient spectrum related files 
         """
-        self.log.info('starting the ``_parse_spectral_data`` method')
+        self.log.debug('starting the ``_parse_spectral_data`` method')
 
         specData = []
         relatedFilesTable = []
@@ -1195,7 +1195,7 @@ CREATE TABLE `%(tableNamePrefix)s_files` (
                     for c in theseComments:
                         header["sourceComment"] += " " + c.strip()
                     header["sourceComment"] = header[
-                        "sourceComment"].strip().replace('"', "'")[0:750]
+                        "sourceComment"]
 
                 spec = re.finditer(
                     r"""<tr class="class-results-.*?-obsdate">(?P<obsdate>[^<]*).*?-tel_inst">(?P<telescope>[^<]*).*?-exptime">(?P<exptime>[^<]*).*?-observer">(?P<sender>[^<]*).*?-reducer">(?P<reducer>[^<]*).*?-source_group_name">(?P<survey>[^<]*).*?-asciifile">(.*?<a href="(?P<filepath>[^"]*)".*?</a>)?.*?-fitsfile">(.*?<a href="(?P<fitsFilepath>[^"]*)".*?</a>)?.*?-groups">(?P<surveyGroup>[^<]*).*?-remarks">(?P<remarks>[^<]*)""",
@@ -1269,5 +1269,5 @@ CREATE TABLE `%(tableNamePrefix)s_files` (
 
                     specData.append(orow)
 
-        self.log.info('completed the ``_parse_spectral_data`` method')
+        self.log.debug('completed the ``_parse_spectral_data`` method')
         return specData, relatedFilesTable
