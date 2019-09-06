@@ -25,6 +25,7 @@ import time as timesleep
 from fundamentals.files import list_of_dictionaries_to_mysql_inserts
 from fundamentals.renderer import list_of_dictionaries
 from astrocalc.coords import unit_conversion
+import time
 
 
 class search():
@@ -722,13 +723,20 @@ CREATE TABLE `%(tableNamePrefix)s_files` (
         stop = False
 
         sourceCount = 0
+        failedCount = 0
         while not stop:
 
             status_code, content, self._searchURL = self._get_tns_search_results()
             if status_code != 200:
                 self.log.error(
                     'cound not get the search reuslts from the TNS, HTML error code %(status_code)s ' % locals())
-                return None
+                # IF FAILED TOO MANY TIME - RETURN WHAT WE HAVE
+                if failedCount > 1:
+                    return sourceTable, photoTable, specTable, relatedFilesTable
+                failedCount += 1
+
+                time.sleep(2)
+                continue
 
             if "No results found" in content:
                 print "No results found"
