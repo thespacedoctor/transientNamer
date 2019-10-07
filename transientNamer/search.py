@@ -103,7 +103,7 @@ class search():
         self.internal_name = ""
         self.discInLastDays = discInLastDays
         self.page = 0
-        self.batchSize = 1000
+        self.batchSize = 500
 
         # CREATE THE TIME-RANGE WINDOW TO SEARCH TNS
         if not discInLastDays:
