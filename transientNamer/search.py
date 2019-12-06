@@ -906,7 +906,7 @@ CREATE TABLE `%(tableNamePrefix)s_files` (
         )
 
         matches = re.finditer(
-            r"""<tr class="row-.*?"><td class="cell-id">(?P<tnsId>\d*?)</td><td class="cell-name"><a href="(?P<objectUrl>.*?)">(?P<TNSName>.*?)</a></td><td class="cell-.*?<td class="cell-ra">(?P<raSex>.*?)</td><td class="cell-decl">(?P<decSex>.*?)</td><td class="cell-ot_name">(?P<specType>.*?)</td><td class="cell-redshift">(?P<transRedshift>.*?)</td><td class="cell-hostname">(?P<hostName>.*?)</td><td class="cell-host_redshift">(?P<hostRedshift>.*?)</td><td class="cell-source_group_name">(?P<discSurvey>.*?)</td>.*?<td class="cell-internal_name">(<a.*?>)?(?P<discoveryName>.*?)(</a>)?</td>.*?<td class="cell-discoverymag">(?P<discMag>.*?)</td><td class="cell-disc_filter_name">(?P<discMagFilter>.*?)</td><td class="cell-discoverydate">(?P<discDate>.*?)</td><td class="cell-discoverer">(?P<sender>.*?)</td>.*?</tr>""",
+            r"""<tr class="row-.*?"><td class="cell-id">(?P<tnsId>\d*?)</td><td class="cell-name"><a href="(?P<objectUrl>.*?)">(?P<TNSName>.*?)</a></td><td class="cell-.*?<td class="cell-ra">(?P<raSex>.*?)</td><td class="cell-decl">(?P<decSex>.*?)</td><td class="cell-ot_name">(?P<specType>.*?)</td><td class="cell-redshift">(?P<transRedshift>.*?)</td><td class="cell-hostname">(?P<hostName>.*?)</td><td class="cell-host_redshift">(?P<hostRedshift>.*?)</td><td class="cell-reporting_group_name">(?P<reportingSurvey>.*?)</td><td class="cell-source_group_name">(?P<discSurvey>.*?)</td>.*?<td class="cell-internal_name">(<a.*?>)?(?P<discoveryName>.*?)(</a>)?</td>.*?<td class="cell-discoverymag">(?P<discMag>.*?)</td><td class="cell-disc_filter_name">(?P<discMagFilter>.*?)</td><td class="cell-discoverydate">(?P<discDate>.*?)</td><td class="cell-discoverer">(?P<sender>.*?)</td>.*?</tr>""",
             content,
             flags=0  # re.S
         )
@@ -999,7 +999,7 @@ CREATE TABLE `%(tableNamePrefix)s_files` (
 
         # AT REPORT BLOCK
         ATBlock = re.search(
-            r"""<tr class=[^\n]*?AT reportings.*?(?=<tr class=[^\n]*?Classification reportings|$)""",
+            r"""<tr class=[^\n]*?AT reports.*?(?=<tr class=[^\n]*?Classification reports|$)""",
             content,
             flags=re.S  # re.S
         )
@@ -1016,7 +1016,7 @@ CREATE TABLE `%(tableNamePrefix)s_files` (
 
             for r in reports:
                 header = re.search(
-                    r"""<tr class="row[^"]*".*?time_received">(?P<reportAddedDate>[^<]*).*?user_name">(?P<sender>[^<]*).*?reporter_name">(?P<reporters>[^<]*).*?source_group_name">(?P<surveyGroup>[^<]*).*?ra">(?P<ra>[^<]*).*?decl">(?P<dec>[^<]*).*?discovery_date">(?P<obsDate>[^<]*).*?flux">(?P<mag>[^<]*).*?filter_name">(?P<magFilter>[^<]*).*?related_files">(?P<relatedFiles>[^<]*).*?type_name">(?P<suggestedType>[^<]*).*?hostname">(?P<hostName>[^<]*).*?host_redshift">(?P<hostRedshift>[^<]*).*?internal_name">(?P<objectName>[^<]*).*?groups">(?P<survey>[^<]*).*?remarks">(?P<sourceComment>[^<]*)""",
+                    r"""<tr class="row[^"]*".*?time_received">(?P<reportAddedDate>[^<]*).*?user_name">(?P<sender>[^<]*).*?reporter_name">(?P<reporters>[^<]*).*?reporting_group_name">(?P<reportingGroup>[^<]*).*?source_group_name">(?P<surveyGroup>[^<]*).*?ra">(?P<ra>[^<]*).*?decl">(?P<dec>[^<]*).*?discovery_date">(?P<obsDate>[^<]*).*?flux">(?P<mag>[^<]*).*?filter_name">(?P<magFilter>[^<]*).*?related_files">(?P<relatedFiles>[^<]*).*?type_name">(?P<suggestedType>[^<]*).*?hostname">(?P<hostName>[^<]*).*?host_redshift">(?P<hostRedshift>[^<]*).*?internal_name">(?P<objectName>[^<]*).*?groups">(?P<survey>[^<]*).*?remarks">(?P<sourceComment>[^<]*)""",
                     r.group(),
                     flags=0  # re.S
                 )
@@ -1161,7 +1161,7 @@ CREATE TABLE `%(tableNamePrefix)s_files` (
 
         # CLASSIFICATION BLOCK
         classBlock = re.search(
-            r"""<tr class=[^\n]*?Classification reportings.*$""",
+            r"""<tr class=[^\n]*?Classification reports.*$""",
             content,
             flags=re.S  # re.S
         )
