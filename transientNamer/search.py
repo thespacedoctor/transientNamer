@@ -749,8 +749,7 @@ CREATE TABLE `%(tableNamePrefix)s_files` (
                 thisPage = self.page
                 print "Downloaded %(thisPage)s page(s) from the TNS. %(sourceCount)s transients parsed so far." % locals()
                 sourceCount += self.batchSize
-                print "\t" + self._searchURL
-
+                # print "\t" + self._searchURL
                 timesleep.sleep(1)
 
             # PARSE ALL ROWS RETURNED
