@@ -5,8 +5,8 @@ transientNamer
     :target: http://transientNamer.readthedocs.io/en/latest/?badge
     :alt: Documentation Status
 
-.. image:: https://cdn.rawgit.com/thespacedoctor/transientNamer/master/coverage.svg
-    :target: https://cdn.rawgit.com/thespacedoctor/transientNamer/master/htmlcov/index.html
+.. image:: https://cdn.jsdelivr.net/gh/thespacedoctor/transientNamer@master/coverage.svg
+    :target: https://cdn.jsdelivr.net/gh/thespacedoctor/transientNamer@master/htmlcov/index.html
     :alt: Coverage Status
 
 *A python package and command-line tools for working with and interacting with the Transient Naming Server*.
