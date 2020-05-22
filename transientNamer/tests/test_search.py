@@ -1,5 +1,5 @@
 import os
-import nose
+import unittest
 import shutil
 import yaml
 from transientNamer import search
