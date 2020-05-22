@@ -29,6 +29,7 @@ Options:
     -c, --withComments                   return TNS comments in result sets
     -o directory, --output=directory     output to files in the directory path
 """
+from __future__ import print_function
 ################# GLOBAL IMPORTS ####################
 import sys
 import os
@@ -67,12 +68,12 @@ def main(arguments=None):
 
     # unpack remaining cl arguments using `exec` to setup the variable names
     # automatically
-    for arg, val in arguments.iteritems():
+    for arg, val in arguments.items():
         if arg[0] == "-":
             varname = arg.replace("-", "") + "Flag"
         else:
             varname = arg.replace("<", "").replace(">", "")
-        if isinstance(val, str) or isinstance(val, unicode):
+        if isinstance(val, ("".__class__, u"".__class__)) :
             exec(varname + " = '%s'" % (val,))
         else:
             exec(varname + " = %s" % (val,))
@@ -133,21 +134,21 @@ def main(arguments=None):
             numSources = len(sources.split("\n")) - 2
 
         if numSources == 1:
-            print "%(numSources)s transient found" % locals()
+            print("%(numSources)s transient found" % locals())
         elif numSources > 1:
-            print "%(numSources)s transients found" % locals()
+            print("%(numSources)s transients found" % locals())
 
         if not outputFlag:
-            print "\n# Matched Transients"
-            print sources
-            print "\n# Transient Photometry"
-            print phot
-            print "\n# Transient Spectra"
-            print spec
-            print "\n# Transient Supplementary Files"
-            print files
-            print "\n# Original TNS Search URL"
-            print tns.url
+            print("\n# Matched Transients")
+            print(sources)
+            print("\n# Transient Photometry")
+            print(phot)
+            print("\n# Transient Spectra")
+            print(spec)
+            print("\n# Transient Supplementary Files")
+            print(files)
+            print("\n# Original TNS Search URL")
+            print(tns.url)
         # CALL FUNCTIONS/OBJECTS
 
     if "dbConn" in locals() and dbConn:

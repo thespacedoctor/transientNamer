@@ -9,7 +9,6 @@
 :Date Created:
     March 11, 2016
 """
-from __future__ import print_function
 ################# GLOBAL IMPORTS ####################
 import sys
 import os
@@ -246,7 +245,7 @@ class search():
             .. code-block:: python
 
                 csvSources, csvPhot, csvSpec, csvFiles  = tns.csv()
-                print(csvSources)
+                print csvSources
 
             .. code-block:: text
 
@@ -302,7 +301,7 @@ class search():
             .. code-block:: python
 
                 jsonSources, jsonPhot, jsonSpec, jsonFiles  = tns.json()
-                print(jsonSources)
+                print jsonSources
 
             .. code-block:: text
 
@@ -379,7 +378,7 @@ class search():
             .. code-block:: python
 
                 yamlSources, yamlPhot, yamlSpec, yamlFiles  = tns.yaml()
-                print(yamlSources)
+                print yamlSources
 
             .. code-block:: text
 
@@ -452,7 +451,7 @@ class search():
             .. code-block:: python
 
                 markdownSources, markdownPhot, markdownSpec, markdownFiles  = tns.markdown()
-                print(markdownSources)
+                print markdownSources
 
             .. code-block:: text
 
@@ -509,7 +508,7 @@ class search():
             .. code-block:: python
 
                 tableSources, tablePhot, tableSpec, tableFiles  = tns.table()
-                print(tableSources)
+                print tableSources
 
             .. code-block:: text
 
@@ -570,7 +569,7 @@ class search():
             .. code-block:: python
 
                 mysqlSources, mysqlPhot, mysqlSpec, mysqlFiles  = tns.mysql("TNS")
-                print(mysqlSources)
+                print mysqlSources
 
             .. code-block:: text
 
@@ -740,7 +739,7 @@ CREATE TABLE `%(tableNamePrefix)s_files` (
                 continue
 
             if "No results found" in content:
-                print("No results found")
+                print "No results found"
                 return sourceTable, photoTable, specTable, relatedFilesTable
 
             if self._parse_transient_rows(content, True) < self.batchSize:
@@ -748,7 +747,7 @@ CREATE TABLE `%(tableNamePrefix)s_files` (
             else:
                 self.page += 1
                 thisPage = self.page
-                print("Downloaded %(thisPage)s page(s) from the TNS. %(sourceCount)s transients parsed so far." % locals())
+                print "Downloaded %(thisPage)s page(s) from the TNS. %(sourceCount)s transients parsed so far." % locals()
                 sourceCount += self.batchSize
                 # print "\t" + self._searchURL
                 timesleep.sleep(1)
@@ -913,7 +912,7 @@ CREATE TABLE `%(tableNamePrefix)s_files` (
         discoveryData = []
         for match in matches:
             row = match.groupdict()
-            for k, v in row.items():
+            for k, v in row.iteritems():
                 row[k] = v.strip()
                 if len(v) == 0:
                     row[k] = None
@@ -963,7 +962,7 @@ CREATE TABLE `%(tableNamePrefix)s_files` (
             orow = collections.OrderedDict()
             keyOrder = ["TNSId", "TNSName", "discoveryName", "discSurvey", "raSex", "decSex", "raDeg", "decDeg",
                         "transRedshift", "specType", "discMag", "discMagFilter", "discDate", "objectUrl", "hostName", "hostRedshift", "separationArcsec", "separationNorthArcsec", "separationEastArcsec"]
-            for k, v in row.items():
+            for k, v in row.iteritems():
                 if k not in keyOrder:
                     keyOrder.append(k)
             for k in keyOrder:
@@ -1023,7 +1022,7 @@ CREATE TABLE `%(tableNamePrefix)s_files` (
                 try:
                     header = header.groupdict()
                 except:
-                    print(r.group())
+                    print r.group()
                 header["TNSId"] = TNSId
 
                 del header["reporters"]
@@ -1097,7 +1096,7 @@ CREATE TABLE `%(tableNamePrefix)s_files` (
                     orow = collections.OrderedDict()
                     keyOrder = ["TNSId", "survey", "obsdate", "filter", "limitingMag", "mag", "magErr",
                                 "magUnit", "suggestedType", "telescope", "exptime", "reportAddedDate"]
-                    for k, v in p.items():
+                    for k, v in p.iteritems():
                         if k not in keyOrder:
                             keyOrder.append(k)
                     for k in keyOrder:
@@ -1265,7 +1264,7 @@ CREATE TABLE `%(tableNamePrefix)s_files` (
                     orow = collections.OrderedDict()
                     keyOrder = ["TNSId", "survey", "obsdate", "specType", "transRedshift",
                                 "telescope", "exptime", "reportAddedDate", "TNSuser"]
-                    for k, v in s.items():
+                    for k, v in s.iteritems():
                         if k not in keyOrder:
                             keyOrder.append(k)
                     for k in keyOrder:

@@ -12,7 +12,8 @@ Commands:
     cone                  perform a conesearch on the TNS
     search                perform a name search on the TNS
     new                   list newly discovered TNS objects
-    
+    mysql                 generate mysql insert scripts
+
 Arguments:
     ra
     dec
@@ -20,9 +21,8 @@ Arguments:
     name                  the name of the object the search for (TNS or survey name)
     render                output format for results. Options include json, csv, table, markdown, yaml
     tableNamePrefix       the prefix for the tables to write the mysql insert statements for
-    directory             path to the directory to save the output to
+    dirPath               path to the directory to save the output to
     discInLastDays        download and parse only discoveries within the last <n> days
-    mysql                 generate mysql insert scripts
 
 Options:
     -h, --help                           show this help message
@@ -31,7 +31,6 @@ Options:
     -c, --withComments                   return TNS comments in result sets
     -o directory, --output=directory     output to files in the directory path
 """
-from __future__ import print_function
 import sys
 import os
 os.environ['TERM'] = 'vt100'
@@ -41,7 +40,6 @@ import pickle
 from docopt import docopt
 from fundamentals import tools, times
 from subprocess import Popen, PIPE, STDOUT
-import transientNamer
 
 
 def tab_complete(text, state):
@@ -97,7 +95,7 @@ def main(arguments=None):
     name = a["name"]
     render = a["render"]
     tableNamePrefix = a["tableNamePrefix"]
-
+    dirPath = a["dirPath"]
     mysql = a["mysql"]
     discInLastDays = a["discInLastDays"]
     withCommentsFlag = a["withCommentsFlag"]
@@ -131,7 +129,7 @@ def main(arguments=None):
             pickleMe[k] = theseLocals[k]
         pickle.dump(pickleMe, open(pathToPickleFile, "wb"))
 
-    if "init" in a and a["init"]:
+    if a["init"]:
         from os.path import expanduser
         home = expanduser("~")
         filepath = home + "/.config/transientNamer/transientNamer.yaml"
@@ -195,21 +193,21 @@ def main(arguments=None):
             numSources = len(sources.split("\n")) - 2
 
         if numSources == 1:
-            print("%(numSources)s transient found" % locals())
+            print "%(numSources)s transient found" % locals()
         elif numSources > 1:
-            print("%(numSources)s transients found" % locals())
+            print "%(numSources)s transients found" % locals()
 
         if not outputFlag:
-            print("\n# Matched Transients")
-            print(sources)
-            print("\n# Transient Photometry")
-            print(phot)
-            print("\n# Transient Spectra")
-            print(spec)
-            print("\n# Transient Supplementary Files")
-            print(files)
-            print("\n# Original TNS Search URL")
-            print(tns.url)
+            print "\n# Matched Transients"
+            print sources
+            print "\n# Transient Photometry"
+            print phot
+            print "\n# Transient Spectra"
+            print spec
+            print "\n# Transient Supplementary Files"
+            print files
+            print "\n# Original TNS Search URL"
+            print tns.url
 
     if "dbConn" in locals() and dbConn:
         dbConn.commit()

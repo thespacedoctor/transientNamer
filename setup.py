@@ -14,7 +14,8 @@ install_requires = [
     'transientNamer',
     'fundamentals',
     'requests',
-    'astrocalc'
+    'astrocalc',
+    'unicodecsv'
 ]
 
 # READ THE DOCS SERVERS
