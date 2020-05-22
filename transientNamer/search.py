@@ -866,7 +866,7 @@ CREATE TABLE `%(tableNamePrefix)s_files` (
             return response.status_code, str(response.content), response.url
         except:
             # PYTHON 2
-            return response.status_code, str(response.content), response.url
+            return response.status_code, response.content, response.url
 
     def _file_prefix(
             self):
