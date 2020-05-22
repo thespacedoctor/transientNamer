@@ -1,9 +1,9 @@
-utKit
-==========================================
+docstring_test
+===================================================
 
 
 
-.. automodule:: transientNamer.utKit
+.. automodule:: transientNamer.docstring_test
     :members:
     :private-members:
     :undoc-members:
@@ -13,15 +13,15 @@ utKit
     
     
     
-    .. rubric:: Classes
+    
+
+    
+    
+    .. rubric:: Functions
 
     .. autosummary::
     
-      ~utKit
-    
-    
-
-    
+      ~docsting_test
     
     
 

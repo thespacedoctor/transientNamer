@@ -6,7 +6,7 @@ exec(open(moduleDirectory + "/transientNamer/__version__.py").read())
 
 
 def readme():
-    with open(moduleDirectory + '/README.md') as f:
+    with open(moduleDirectory + '/README.rst') as f:
         return f.read()
 
 install_requires = [
@@ -30,17 +30,15 @@ if exists:
 
 setup(name="transientNamer",
       version=__version__,
-      description="Python API for reading and caching TNS reports",
+      description="Command-line tools for working with and interacting with the Transient Naming Server",
       long_description=readme(),
-      long_description_content_type='text/markdown',
       classifiers=[
           'Development Status :: 4 - Beta',
           'License :: OSI Approved :: MIT License',
-          'Programming Language :: Python :: 3.7',
           'Programming Language :: Python :: 2.7',
           'Topic :: Utilities',
       ],
-      keywords=['astronomy, transients'],
+      keywords=['transients, tools, astronomy'],
       url='https://github.com/thespacedoctor/transientNamer',
       download_url='https://github.com/thespacedoctor/transientNamer/archive/v%(__version__)s.zip' % locals(
       ),

@@ -1,31 +1,23 @@
 
-Modules
--------
+**Modules**
 
 .. autosummary::
-   :toctree: _autosummary
    :nosignatures:
 
    transientNamer.commonutils 
    transientNamer.docstring_test
-   transientNamer.utKit 
+   transientNamer.utKit
 
-
-Classes
--------
+**Classes**
 
 .. autosummary::
-   :toctree: _autosummary
    :nosignatures:
 
    transientNamer.utKit.utKit 
 
-
-Functions
----------
+**Functions**
 
 .. autosummary::
-   :toctree: _autosummary
    :nosignatures:
 
    transientNamer.docstring_test.docsting_test 
