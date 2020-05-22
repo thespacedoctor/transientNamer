@@ -5,7 +5,6 @@
    :nosignatures:
 
    transientNamer.commonutils 
-   transientNamer.docstring_test
    transientNamer.utKit
 
 **Classes**
@@ -13,11 +12,12 @@
 .. autosummary::
    :nosignatures:
 
-   transientNamer.utKit.utKit 
+   transientNamer.search
+ 
 
 **Functions**
 
 .. autosummary::
    :nosignatures:
 
-   transientNamer.docstring_test.docsting_test 
+   transientNamer.commonutils.getpackagepath 

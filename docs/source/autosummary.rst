@@ -7,7 +7,6 @@ Modules
    :nosignatures:
 
    transientNamer.commonutils 
-   transientNamer.docstring_test
    transientNamer.utKit 
 
 
@@ -18,6 +17,7 @@ Classes
    :toctree: _autosummary
    :nosignatures:
 
+   transientNamer.search
    transientNamer.utKit.utKit 
 
 
@@ -28,4 +28,4 @@ Functions
    :toctree: _autosummary
    :nosignatures:
 
-   transientNamer.docstring_test.docsting_test 
+   transientNamer.commonutils.getpackagepath 

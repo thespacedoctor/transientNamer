@@ -5,14 +5,32 @@
     Documentation for transientNamer can be found here: http://transientNamer.readthedocs.org/en/stable
     
     Usage:
-        transientNamer init
-        transientNamer [-s <pathToSettingsFile>]  
+        transientNamer [-c] cone <ra> <dec> <arcsecRadius> [<render> | mysql <tableNamePrefix>] [-o directory]
+        transientNamer [-c] search <name> [<render> | mysql <tableNamePrefix>] [-o directory]
+        transientNamer [-c] new <discInLastDays> [<render> | mysql <tableNamePrefix>] [-o directory]
+    
+    Commands:
+        cone                  perform a conesearch on the TNS
+        search                perform a name search on the TNS
+        new                   list newly discovered TNS objects
+        
+    Arguments:
+        ra
+        dec
+        arcsecRadius
+        name                  the name of the object the search for (TNS or survey name)
+        render                output format for results. Options include json, csv, table, markdown, yaml
+        tableNamePrefix       the prefix for the tables to write the mysql insert statements for
+        directory             path to the directory to save the output to
+        discInLastDays        download and parse only discoveries within the last <n> days
+        mysql                 generate mysql insert scripts
     
     Options:
-        init                                   setup the transientNamer settings file for the first time
-        -h, --help                             show this help message
-        -v, --version                          show version
-        -s, --settings <pathToSettingsFile>    the settings file
+        -h, --help                           show this help message
+        -v, --version                        show version
+        -s, --settings                       the settings file
+        -c, --withComments                   return TNS comments in result sets
+        -o directory, --output=directory     output to files in the directory path
     
 
 ```

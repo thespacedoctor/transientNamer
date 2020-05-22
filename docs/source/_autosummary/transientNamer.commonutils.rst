@@ -1,37 +1,48 @@
-commonutils
-====================================================
+commonutils *(module)*
+=====================================
+
+
 
 .. automodule:: transientNamer.commonutils
     :members:
-    :private-members:
+    :undoc-members:
     :show-inheritance:
     :inherited-members:
-    :member-order: bysource
+    :member-order: groupwise
+    
+    
+    
+    
 
     
     
-    .. rubric:: Subpackage Members
+    
+
+    
+    
+    
+
+    
+    
+    .. rubric:: Sub-modules
 
     .. autosummary::
     
-        
-        
-        
-        
-        
-        
-        
-        
-        
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
         
-        
-        
-        
-        
-        
-        
-        
-        
+            ~getpackagepath (nice)
+       
+    
+    
     
     
