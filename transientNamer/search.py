@@ -26,6 +26,7 @@ from fundamentals.renderer import list_of_dictionaries
 from astrocalc.coords import unit_conversion
 import time
 
+
 class search(object):
     """
     *The worker class for the transient namer search module*
@@ -40,7 +41,7 @@ class search(object):
     - ``name`` -- name of the object to search the TNS for
     - ``discInLastDays`` -- search the TNS for transient discovered in the last X days
     - ``comments`` -- print the comments from the TNS, note these can be long making table outputs somewhat unreadable. Default *False*
-    
+
 
     **Usage**
 
@@ -77,7 +78,7 @@ class search(object):
         discInLastDays=21
     )
     ```
-    
+
     """
     # Initialisation
 
@@ -159,7 +160,7 @@ class search(object):
         ```python
         sources = tns.sources
         ```
-        
+
         """
         sourceResultsList = []
         sourceResultsList[:] = [dict(l) for l in self.sourceResultsList]
@@ -175,7 +176,7 @@ class search(object):
         ```python
         sourceSpectra = tns.spectra
         ```
-        
+
         """
         specResultsList = []
         specResultsList[:] = [dict(l) for l in self.specResultsList]
@@ -191,7 +192,7 @@ class search(object):
         ```python
         sourceFiles = tns.files
         ```
-        
+
         """
         relatedFilesResultsList = []
         relatedFilesResultsList[:] = [dict(l)
@@ -208,7 +209,7 @@ class search(object):
         ```python
         sourcePhotometry = tns.photometry
         ```
-        
+
         """
         photResultsList = []
         photResultsList[:] = [dict(l) for l in self.photResultsList]
@@ -224,7 +225,7 @@ class search(object):
         ```python
         searchURL = tns.url
         ```
-        
+
         """
 
         return self._searchURL
@@ -237,7 +238,7 @@ class search(object):
         **Key Arguments**
 
         - ``dirPath`` -- the path to the directory to save the rendered results to. Default *None*
-        
+
 
         **Return**
 
@@ -245,7 +246,7 @@ class search(object):
         - `csvPhot` -- all photometry associated with the transients
         - `csvSpec` -- all spectral data associated with the transients
         - `csvFiles`  -- all files associated with the matched transients found on the tns
-        
+
 
         **Usage**
 
@@ -270,7 +271,7 @@ class search(object):
         .. image:: https://i.imgur.com/BwwqMBg.png
             :width: 800px
             :alt: csv output
-        
+
         """
 
         if dirPath:
@@ -298,7 +299,7 @@ class search(object):
         **Key Arguments**
 
         - ``dirPath`` -- the path to the directory to save the rendered results to. Default *None*
-        
+
 
         **Return**
 
@@ -306,7 +307,7 @@ class search(object):
         - `jsonPhot` -- all photometry associated with the transients
         - `jsonSpec` -- all spectral data associated with the transients
         - `jsonFiles`  -- all files associated with the matched transients found on the tns
-        
+
 
         **Usage**
 
@@ -352,7 +353,7 @@ class search(object):
         .. image:: https://i.imgur.com/wAHqARI.png
             :width: 800px
             :alt: json output
-        
+
         """
 
         if dirPath:
@@ -380,7 +381,7 @@ class search(object):
         **Key Arguments**
 
         - ``dirPath`` -- the path to the directory to save the rendered results to. Default *None*
-        
+
 
         **Return**
 
@@ -388,7 +389,7 @@ class search(object):
         - `yamlPhot` -- all photometry associated with the transients
         - `yamlSpec` -- all spectral data associated with the transients
         - `yamlFiles`  -- all files associated with the matched transients found on the tns
-        
+
 
         **Usage**
 
@@ -430,7 +431,7 @@ class search(object):
         .. image:: https://i.imgur.com/ZpJIC6p.png
             :width: 800px
             :alt: yaml output
-        
+
         """
 
         if dirPath:
@@ -458,7 +459,7 @@ class search(object):
         **Key Arguments**
 
         - ``dirPath`` -- the path to the directory to save the rendered results to. Default *None*
-        
+
 
         **Return**
 
@@ -466,7 +467,7 @@ class search(object):
         - `markdownPhot` -- all photometry associated with the transients
         - `markdownSpec` -- all spectral data associated with the transients
         - `markdownFiles`  -- all files associated with the matched transients found on the tns
-        
+
 
         **Usage**
 
@@ -492,7 +493,7 @@ class search(object):
         .. image:: https://i.imgur.com/AYLBQoJ.png
             :width: 800px
             :alt: markdown output
-        
+
         """
 
         if dirPath:
@@ -520,7 +521,7 @@ class search(object):
         **Key Arguments**
 
         - ``dirPath`` -- the path to the directory to save the rendered results to. Default *None*
-        
+
 
         **Return**
 
@@ -528,7 +529,7 @@ class search(object):
         - `tablePhot` -- all photometry associated with the transients
         - `tableSpec` -- all spectral data associated with the transients
         - `tableFiles`  -- all files associated with the matched transients found on the tns
-        
+
 
         **Usage**
 
@@ -556,7 +557,7 @@ class search(object):
         .. image:: https://i.imgur.com/m09M0ho.png
             :width: 800px
             :alt: ascii files
-        
+
         """
 
         if dirPath:
@@ -586,7 +587,7 @@ class search(object):
 
         - ``tableNamePrefix`` -- the prefix for the database table names to assign the insert statements to. Default *TNS*.
         - ``dirPath`` -- the path to the directory to save the rendered results to. Default *None*
-        
+
 
         **Return**
 
@@ -594,7 +595,7 @@ class search(object):
         - `mysqlPhot` -- all photometry associated with the transients
         - `mysqlSpec` -- all spectral data associated with the transients
         - `mysqlFiles`  -- all files associated with the matched transients found on the tns
-        
+
 
         **Usage**
 
@@ -618,7 +619,7 @@ class search(object):
         .. image:: https://i.imgur.com/CozySPW.png
             :width: 800px
             :alt: mysql output
-        
+
         """
         if dirPath:
             p = self._file_prefix()
@@ -746,7 +747,7 @@ CREATE TABLE `%(tableNamePrefix)s_files` (
         **Return**
 
         - ``results`` -- a list of dictionaries (one dictionary for each result set returned from the TNS)
-        
+
         """
         self.log.debug('starting the ``get`` method')
 
@@ -860,7 +861,12 @@ CREATE TABLE `%(tableNamePrefix)s_files` (
             print('HTTP Request failed')
 
         self.log.debug('completed the ``_get_tns_search_results`` method')
-        return response.status_code, str(response.content), response.url
+        try:
+            # PYTHON 3
+            return response.status_code, str(response.content), response.url
+        except:
+            # PYTHON 2
+            return response.status_code, str(response.content), response.url
 
     def _file_prefix(
             self):
@@ -869,7 +875,7 @@ CREATE TABLE `%(tableNamePrefix)s_files` (
         **Return**
 
         - ``prefix`` -- the file prefix
-        
+
         """
         self.log.debug('starting the ``_file_prefix`` method')
 
@@ -899,12 +905,12 @@ CREATE TABLE `%(tableNamePrefix)s_files` (
 
         - ``content`` -- the content from the TNS results page.
         - ``count`` -- return only the number of rows
-        
+
 
         **Return**
 
         - ``transientRows``
-        
+
         """
         self.log.debug('starting the ``_parse_transient_rows`` method')
 
@@ -937,13 +943,13 @@ CREATE TABLE `%(tableNamePrefix)s_files` (
         **Key Arguments**
 
         - ``content`` -- a table row from the TNS results page.
-        
+
 
         **Return**
 
         - ``discoveryData`` -- dictionary of results
         - ``TNSId`` -- the unique TNS id for the transient
-        
+
         """
         self.log.debug('starting the ``_parse_discovery_information`` method')
 
@@ -1035,13 +1041,13 @@ CREATE TABLE `%(tableNamePrefix)s_files` (
 
          - ``content`` -- a table row from the TNS results page
          - ``TNSId`` -- the tns id of the transient
-        
+
 
         **Return**
 
         - ``photData`` -- a list of dictionaries of the photometry data
         - ``relatedFilesTable`` -- a list of dictionaries of transient photometry related files 
-        
+
         """
         self.log.debug('starting the ``_parse_photometry_data`` method')
 
@@ -1172,12 +1178,12 @@ CREATE TABLE `%(tableNamePrefix)s_files` (
         **Key Arguments**
 
         - ``content`` -- the content to parse.
-        
+
 
         **Return**
 
         - ``relatedFiles`` -- a list of dictionaries of transient related files 
-        
+
         """
         self.log.debug('starting the ``_parse_related_files`` method')
 
@@ -1205,13 +1211,13 @@ CREATE TABLE `%(tableNamePrefix)s_files` (
 
          - ``content`` -- a table row from the TNS results page
          - ``TNSId`` -- the tns id of the transient
-        
+
 
         **Return**
 
         - ``specData`` -- a list of dictionaries of the spectral data
         - ``relatedFilesTable`` -- a list of dictionaries of transient spectrum related files 
-        
+
         """
         self.log.debug('starting the ``_parse_spectral_data`` method')
 
