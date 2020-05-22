@@ -46,7 +46,6 @@ if not os.path.exists(pathToOutputDir):
 # transientNamer [-c] new <discInLastDays> [<render> | mysql
 # <tableNamePrefix>] [-o directory]
 
-
 class test_cl_utils(unittest.TestCase):
 
     def test_cone_search(self):

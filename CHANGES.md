@@ -1,4 +1,6 @@
 
 ## Release Notes
 
-<!-- **vx.x.x - xxdatexx** -->
+**v0.3.0 - May 22, 2020**
+
+* Now compatible with Python 3.*
