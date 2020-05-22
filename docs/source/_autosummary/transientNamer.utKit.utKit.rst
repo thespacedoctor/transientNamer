@@ -1,21 +1,100 @@
-transientNamer.utKit.utKit (*class*)
-==========================
+utKit *(class)*
+====================================
 
 .. currentmodule:: transientNamer.utKit
 
 .. autoclass:: utKit
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :member-order: groupwise
 
-   
-   .. automethod:: __init__
+    
 
    
    .. rubric:: Methods
 
    .. autosummary::
    
-      ~utKit.__init__
-      ~utKit.setupModule
-      ~utKit.tearDownModule
+        
+   
+        
+            ~utKit.get_project_root
+       
+   
+        
+            ~utKit.refresh_database
+       
+   
+        
+            ~utKit.setupModule
+       
+   
+        
+            ~utKit.tearDownModule
+       
+   
+   .. 
+   ..     
+   .. 
+   ..     
+   .. 
+   ..     
+   .. 
+   ..     
+   .. 
+   ..     
+   .. 
+   ..     
+   .. 
+   ..     
+   .. 
+   ..     
+   .. 
+   ..     
+   .. 
+   ..     
+   .. 
+   ..     
+   .. 
+   ..     
+   .. 
+   ..     
+   .. 
+   ..     
+   .. 
+   ..     
+   .. 
+   ..     
+   .. 
+   ..     
+   .. 
+   ..     
+   .. 
+   ..     
+   .. 
+   ..     
+   .. 
+   ..     
+   .. 
+   ..     
+   .. 
+   ..     
+   .. 
+   ..     
+   .. 
+   ..     
+   .. 
+   ..     
+   .. 
+   ..     
+   .. 
+   ..     
+   .. 
+   ..     
+   .. 
+   ..     
+   .. 
    
    
 

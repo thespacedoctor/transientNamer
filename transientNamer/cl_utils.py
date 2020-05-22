@@ -1,4 +1,4 @@
-#!/usr/local/bin/python
+#!/usr/bin/env python
 # encoding: utf-8
 """
 Documentation for transientNamer can be found here: http://transientNamer.readthedocs.org/en/stable
@@ -12,7 +12,7 @@ Commands:
     cone                  perform a conesearch on the TNS
     search                perform a name search on the TNS
     new                   list newly discovered TNS objects
-
+    
 Arguments:
     ra
     dec
@@ -20,7 +20,9 @@ Arguments:
     name                  the name of the object the search for (TNS or survey name)
     render                output format for results. Options include json, csv, table, markdown, yaml
     tableNamePrefix       the prefix for the tables to write the mysql insert statements for
-    dirPath               path to the directory to save the output to
+    directory             path to the directory to save the output to
+    discInLastDays        download and parse only discoveries within the last <n> days
+    mysql                 generate mysql insert scripts
 
 Options:
     -h, --help                           show this help message
@@ -29,7 +31,7 @@ Options:
     -c, --withComments                   return TNS comments in result sets
     -o directory, --output=directory     output to files in the directory path
 """
-################# GLOBAL IMPORTS ####################
+from __future__ import print_function
 import sys
 import os
 os.environ['TERM'] = 'vt100'
@@ -38,17 +40,15 @@ import glob
 import pickle
 from docopt import docopt
 from fundamentals import tools, times
+from subprocess import Popen, PIPE, STDOUT
 import transientNamer
-# from ..__init__ import *
-
 
 def tab_complete(text, state):
     return (glob.glob(text + '*') + [None])[state]
 
-
 def main(arguments=None):
     """
-    *The main function used when ``cl_utils.py`` is run as a single script from the cl, or when installed as a cl command*
+    *The main function used when `cl_utils.py` is run as a single script from the cl, or when installed as a cl command*
     """
     # setup the command-line util settings
     su = tools(
@@ -56,7 +56,8 @@ def main(arguments=None):
         docString=__doc__,
         logLevel="WARNING",
         options_first=False,
-        projectName="transientNamer"
+        projectName="transientNamer",
+        defaultSettingsFile=True
     )
     arguments, settings, log, dbConn = su.setup()
 
@@ -65,19 +66,18 @@ def main(arguments=None):
     readline.parse_and_bind("tab: complete")
     readline.set_completer(tab_complete)
 
-    # unpack remaining cl arguments using `exec` to setup the variable names
-    # automatically
-    for arg, val in arguments.iteritems():
+    # UNPACK REMAINING CL ARGUMENTS USING `EXEC` TO SETUP THE VARIABLE NAMES
+    # AUTOMATICALLY
+    a = {}
+    for arg, val in list(arguments.items()):
         if arg[0] == "-":
             varname = arg.replace("-", "") + "Flag"
         else:
             varname = arg.replace("<", "").replace(">", "")
-        if isinstance(val, str) or isinstance(val, unicode):
-            exec(varname + " = '%s'" % (val,))
-        else:
-            exec(varname + " = %s" % (val,))
+        a[varname] = val
         if arg == "--dbConn":
             dbConn = val
+            a["dbConn"] = val
         log.debug('%s = %s' % (varname, val,))
 
     ## START LOGGING ##
@@ -86,6 +86,66 @@ def main(arguments=None):
         '--- STARTING TO RUN THE cl_utils.py AT %s' %
         (startTime,))
 
+    cone = a["cone"]
+    search = a["search"]
+    new = a["new"]
+    ra = a["ra"]
+    dec = a["dec"]
+    arcsecRadius = a["arcsecRadius"]
+    name = a["name"]
+    render = a["render"]
+    tableNamePrefix = a["tableNamePrefix"]
+
+    mysql = a["mysql"]
+    discInLastDays = a["discInLastDays"]
+    withCommentsFlag = a["withCommentsFlag"]
+    outputFlag = a["outputFlag"]
+
+    # set options interactively if user requests
+    if "interactiveFlag" in a and a["interactiveFlag"]:
+
+        # load previous settings
+        moduleDirectory = os.path.dirname(__file__) + "/resources"
+        pathToPickleFile = "%(moduleDirectory)s/previousSettings.p" % locals()
+        try:
+            with open(pathToPickleFile):
+                pass
+            previousSettingsExist = True
+        except:
+            previousSettingsExist = False
+        previousSettings = {}
+        if previousSettingsExist:
+            previousSettings = pickle.load(open(pathToPickleFile, "rb"))
+
+        # x-raw-input
+        # x-boolean-raw-input
+        # x-raw-input-with-default-value-from-previous-settings
+
+        # save the most recently used requests
+        pickleMeObjects = []
+        pickleMe = {}
+        theseLocals = locals()
+        for k in pickleMeObjects:
+            pickleMe[k] = theseLocals[k]
+        pickle.dump(pickleMe, open(pathToPickleFile, "wb"))
+
+    if "init" in a and a["init"]:
+        from os.path import expanduser
+        home = expanduser("~")
+        filepath = home + "/.config/transientNamer/transientNamer.yaml"
+        try:
+            cmd = """open %(filepath)s""" % locals()
+            p = Popen(cmd, stdout=PIPE, stderr=PIPE, shell=True)
+        except:
+            pass
+        try:
+            cmd = """start %(filepath)s""" % locals()
+            p = Popen(cmd, stdout=PIPE, stderr=PIPE, shell=True)
+        except:
+            pass
+        return
+
+    # CALL FUNCTIONS/OBJECTS
     if search or new or cone:
         if ra:
             tns = transientNamer.search(
@@ -133,22 +193,21 @@ def main(arguments=None):
             numSources = len(sources.split("\n")) - 2
 
         if numSources == 1:
-            print "%(numSources)s transient found" % locals()
+            print("%(numSources)s transient found" % locals())
         elif numSources > 1:
-            print "%(numSources)s transients found" % locals()
+            print("%(numSources)s transients found" % locals())
 
         if not outputFlag:
-            print "\n# Matched Transients"
-            print sources
-            print "\n# Transient Photometry"
-            print phot
-            print "\n# Transient Spectra"
-            print spec
-            print "\n# Transient Supplementary Files"
-            print files
-            print "\n# Original TNS Search URL"
-            print tns.url
-        # CALL FUNCTIONS/OBJECTS
+            print("\n# Matched Transients")
+            print(sources)
+            print("\n# Transient Photometry")
+            print(phot)
+            print("\n# Transient Spectra")
+            print(spec)
+            print("\n# Transient Supplementary Files")
+            print(files)
+            print("\n# Original TNS Search URL")
+            print(tns.url)
 
     if "dbConn" in locals() and dbConn:
         dbConn.commit()
@@ -160,7 +219,6 @@ def main(arguments=None):
              (endTime, runningTime, ))
 
     return
-
 
 if __name__ == '__main__':
     main()

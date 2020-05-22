@@ -5,11 +5,10 @@
 
 :Author:
     David Young
-
-:Date Created:
-    March 11, 2016
 """
-################# GLOBAL IMPORTS ####################
+from __future__ import print_function
+from builtins import str
+from builtins import object
 import sys
 import os
 import re
@@ -28,56 +27,58 @@ from astrocalc.coords import unit_conversion
 import time
 
 
-class search():
+class search(object):
     """
     *The worker class for the transient namer search module*
 
-    **Key Arguments:**
-        - ``log`` -- logger
-        - ``settings`` -- the settings dictionary
-        - ``ra`` -- RA of the location being checked
-        - ``dec`` -- DEC of the location being searched
-        - ``radiusArcsec`` - the radius of the conesearch to perform against the TNS
-        - ``name`` -- name of the object to search the TNS for
-        - ``discInLastDays`` -- search the TNS for transient discovered in the last X days
-        - ``comments`` -- print the comments from the TNS, note these can be long making table outputs somewhat unreadable. Default *False*
+    **Key Arguments**
+
+    - ``log`` -- logger
+    - ``settings`` -- the settings dictionary
+    - ``ra`` -- RA of the location being checked
+    - ``dec`` -- DEC of the location being searched
+    - ``radiusArcsec`` - the radius of the conesearch to perform against the TNS
+    - ``name`` -- name of the object to search the TNS for
+    - ``discInLastDays`` -- search the TNS for transient discovered in the last X days
+    - ``comments`` -- print the comments from the TNS, note these can be long making table outputs somewhat unreadable. Default *False*
 
 
-    **Usage:**
+    **Usage**
 
-        To initiate a search object to search the TNS via an object name (either TNS or survey names accepted):
+    To initiate a search object to search the TNS via an object name (either TNS or survey names accepted):
 
-        .. code-block:: python
+    ```python
+    from transientNamer import search
+    tns = search(
+        log=log,
+        name="Gaia16bbi"
+    )
+    ```
 
-            from transientNamer import search
-            tns = search(
-                log=log,
-                name="Gaia16bbi"
-            )
+    or for a conesearch use something similar to:
 
-        or for a conesearch use something similar to:
+    ```python
+    from transientNamer import search
+    tns = search(
+        log=log,
+        ra="06:50:36.74",
+        dec="+31:06:44.7",
+        radiusArcsec=5
+    )
+    ```
 
-        .. code-block:: python
+    Note the search method can accept coordinates in sexagesimal or decimal defree formats.
 
-            from transientNamer import search
-            tns = search(
-                log=log,
-                ra="06:50:36.74",
-                dec="+31:06:44.7",
-                radiusArcsec=5
-            )
+    To list all new objects discovered in the last three weeks, then use:
 
-        Note the search method can accept coordinates in sexagesimal or decimal defree formats.
+    ```python
+    from transientNamer import search
+    tns = search(
+        log=log,
+        discInLastDays=21
+    )
+    ```
 
-        To list all new objects discovered in the last three weeks, then use:
-
-        .. code-block:: python
-
-            from transientNamer import search
-            tns = search(
-                log=log,
-                discInLastDays=21
-            )
     """
     # Initialisation
 
@@ -154,11 +155,12 @@ class search():
             self):
         """*The results of the search returned as a python list of dictionaries*
 
-        **Usage:**
+        **Usage**
 
-            .. code-block:: python
+        ```python
+        sources = tns.sources
+        ```
 
-                sources = tns.sources
         """
         sourceResultsList = []
         sourceResultsList[:] = [dict(l) for l in self.sourceResultsList]
@@ -169,11 +171,12 @@ class search():
             self):
         """*The associated source spectral data*
 
-        **Usage:**
+        **Usage**
 
-            .. code-block:: python 
+        ```python
+        sourceSpectra = tns.spectra
+        ```
 
-                sourceSpectra = tns.spectra
         """
         specResultsList = []
         specResultsList[:] = [dict(l) for l in self.specResultsList]
@@ -184,11 +187,12 @@ class search():
             self):
         """*The associated source files*
 
-        **Usage:**
+        **Usage**
 
-            .. code-block:: python 
+        ```python
+        sourceFiles = tns.files
+        ```
 
-                sourceFiles = tns.files
         """
         relatedFilesResultsList = []
         relatedFilesResultsList[:] = [dict(l)
@@ -200,11 +204,12 @@ class search():
             self):
         """*The associated source photometry*
 
-        **Usage:**
+        **Usage**
 
-            .. code-block:: python 
+        ```python
+        sourcePhotometry = tns.photometry
+        ```
 
-                sourcePhotometry = tns.photometry
         """
         photResultsList = []
         photResultsList[:] = [dict(l) for l in self.photResultsList]
@@ -215,11 +220,12 @@ class search():
             self):
         """*The generated URL used for searching of the TNS*
 
-        **Usage:**
+        **Usage**
 
-            .. code-block:: python
+        ```python
+        searchURL = tns.url
+        ```
 
-                searchURL = tns.url
         """
 
         return self._searchURL
@@ -229,38 +235,43 @@ class search():
             dirPath=None):
         """*Render the results in csv format*
 
-        **Key Arguments:**
-            - ``dirPath`` -- the path to the directory to save the rendered results to. Default *None*
+        **Key Arguments**
 
-        **Return:**
-            - `csvSources` -- the top-level transient data
-            - `csvPhot` -- all photometry associated with the transients
-            - `csvSpec` -- all spectral data associated with the transients
-            - `csvFiles`  -- all files associated with the matched transients found on the tns
+        - ``dirPath`` -- the path to the directory to save the rendered results to. Default *None*
 
-        **Usage:**
 
-            To render the results in csv format:
+        **Return**
 
-            .. code-block:: python
+        - `csvSources` -- the top-level transient data
+        - `csvPhot` -- all photometry associated with the transients
+        - `csvSpec` -- all spectral data associated with the transients
+        - `csvFiles`  -- all files associated with the matched transients found on the tns
 
-                csvSources, csvPhot, csvSpec, csvFiles  = tns.csv()
-                print csvSources
 
-            .. code-block:: text
+        **Usage**
 
-                TNSId,TNSName,discoveryName,discSurvey,raSex,decSex,raDeg,decDeg,transRedshift,specType,discMag,discMagFilter,discDate,objectUrl,hostName,hostRedshift,separationArcsec,separationNorthArcsec,separationEastArcsec
-                2016asf,SN2016asf,ASASSN-16cs,ASAS-SN,06:50:36.73,+31:06:45.36,102.6530,31.1126,0.021,SN Ia,17.1,V-Johnson,2016-03-06 08:09:36,http://wis-tns.weizmann.ac.il/object/2016asf,KUG 0647+311,,0.66,0.65,-0.13
+        To render the results in csv format:
 
-            You can save the results to file by passing in a directory path within which to save the files to. The four flavours of data (sources, photometry, spectra and files) are saved to separate files but all data can be assoicated with its transient source using the transient's unique `TNSId`.
+        ```python
+        csvSources, csvPhot, csvSpec, csvFiles  = tns.csv()
+        print(csvSources)
+        ```
 
-            .. code-block:: python
+        ```text
+        TNSId,TNSName,discoveryName,discSurvey,raSex,decSex,raDeg,decDeg,transRedshift,specType,discMag,discMagFilter,discDate,objectUrl,hostName,hostRedshift,separationArcsec,separationNorthArcsec,separationEastArcsec
+        2016asf,SN2016asf,ASASSN-16cs,ASAS-SN,06:50:36.73,+31:06:45.36,102.6530,31.1126,0.021,SN Ia,17.1,V-Johnson,2016-03-06 08:09:36,http://wis-tns.weizmann.ac.il/object/2016asf,KUG 0647+311,,0.66,0.65,-0.13
+        ```
 
-                tns.csv("~/tns")
+        You can save the results to file by passing in a directory path within which to save the files to. The four flavours of data (sources, photometry, spectra and files) are saved to separate files but all data can be assoicated with its transient source using the transient's unique `TNSId`.
 
-            .. image:: https://i.imgur.com/BwwqMBg.png
-                :width: 800px
-                :alt: csv output
+        ```python
+        tns.csv("~/tns")
+        ```
+
+        .. image:: https://i.imgur.com/BwwqMBg.png
+            :width: 800px
+            :alt: csv output
+
         """
 
         if dirPath:
@@ -285,59 +296,64 @@ class search():
             dirPath=None):
         """*Render the results in json format*
 
-        **Key Arguments:**
-            - ``dirPath`` -- the path to the directory to save the rendered results to. Default *None*
+        **Key Arguments**
 
-        **Return:**
-            - `jsonSources` -- the top-level transient data
-            - `jsonPhot` -- all photometry associated with the transients
-            - `jsonSpec` -- all spectral data associated with the transients
-            - `jsonFiles`  -- all files associated with the matched transients found on the tns
+        - ``dirPath`` -- the path to the directory to save the rendered results to. Default *None*
 
-        **Usage:**
 
-            To render the results in json format:
+        **Return**
 
-            .. code-block:: python
+        - `jsonSources` -- the top-level transient data
+        - `jsonPhot` -- all photometry associated with the transients
+        - `jsonSpec` -- all spectral data associated with the transients
+        - `jsonFiles`  -- all files associated with the matched transients found on the tns
 
-                jsonSources, jsonPhot, jsonSpec, jsonFiles  = tns.json()
-                print jsonSources
 
-            .. code-block:: text
+        **Usage**
 
-                [
-                    {
-                        "TNSId": "2016asf",
-                        "TNSName": "SN2016asf",
-                        "decDeg": 31.1126,
-                        "decSex": "+31:06:45.36",
-                        "discDate": "2016-03-06 08:09:36",
-                        "discMag": "17.1",
-                        "discMagFilter": "V-Johnson",
-                        "discSurvey": "ASAS-SN",
-                        "discoveryName": "ASASSN-16cs",
-                        "hostName": "KUG 0647+311",
-                        "hostRedshift": null,
-                        "objectUrl": "http://wis-tns.weizmann.ac.il/object/2016asf",
-                        "raDeg": 102.65304166666667,
-                        "raSex": "06:50:36.73",
-                        "separationArcsec": "0.66",
-                        "separationEastArcsec": "-0.13",
-                        "separationNorthArcsec": "0.65",
-                        "specType": "SN Ia",
-                        "transRedshift": "0.021"
-                    }
-                ]
+        To render the results in json format:
 
-            You can save the results to file by passing in a directory path within which to save the files to. The four flavours of data (sources, photometry, spectra and files) are saved to separate files but all data can be assoicated with its transient source using the transient's unique `TNSId`.
+        ```python
+        jsonSources, jsonPhot, jsonSpec, jsonFiles  = tns.json()
+        print(jsonSources)
+        ```
 
-            .. code-block:: python
+        ```text
+        [
+            {
+                "TNSId": "2016asf",
+                "TNSName": "SN2016asf",
+                "decDeg": 31.1126,
+                "decSex": "+31:06:45.36",
+                "discDate": "2016-03-06 08:09:36",
+                "discMag": "17.1",
+                "discMagFilter": "V-Johnson",
+                "discSurvey": "ASAS-SN",
+                "discoveryName": "ASASSN-16cs",
+                "hostName": "KUG 0647+311",
+                "hostRedshift": null,
+                "objectUrl": "http://wis-tns.weizmann.ac.il/object/2016asf",
+                "raDeg": 102.65304166666667,
+                "raSex": "06:50:36.73",
+                "separationArcsec": "0.66",
+                "separationEastArcsec": "-0.13",
+                "separationNorthArcsec": "0.65",
+                "specType": "SN Ia",
+                "transRedshift": "0.021"
+            }
+        ]
+        ```
 
-                tns.json("~/tns")
+        You can save the results to file by passing in a directory path within which to save the files to. The four flavours of data (sources, photometry, spectra and files) are saved to separate files but all data can be assoicated with its transient source using the transient's unique `TNSId`.
 
-            .. image:: https://i.imgur.com/wAHqARI.png
-                :width: 800px
-                :alt: json output
+        ```python
+        tns.json("~/tns")
+        ```
+
+        .. image:: https://i.imgur.com/wAHqARI.png
+            :width: 800px
+            :alt: json output
+
         """
 
         if dirPath:
@@ -362,55 +378,60 @@ class search():
             dirPath=None):
         """*Render the results in yaml format*
 
-        **Key Arguments:**
-            - ``dirPath`` -- the path to the directory to save the rendered results to. Default *None*
+        **Key Arguments**
 
-        **Return:**
-            - `yamlSources` -- the top-level transient data
-            - `yamlPhot` -- all photometry associated with the transients
-            - `yamlSpec` -- all spectral data associated with the transients
-            - `yamlFiles`  -- all files associated with the matched transients found on the tns
+        - ``dirPath`` -- the path to the directory to save the rendered results to. Default *None*
 
-        **Usage:**
 
-            To render the results in yaml format:
+        **Return**
 
-            .. code-block:: python
+        - `yamlSources` -- the top-level transient data
+        - `yamlPhot` -- all photometry associated with the transients
+        - `yamlSpec` -- all spectral data associated with the transients
+        - `yamlFiles`  -- all files associated with the matched transients found on the tns
 
-                yamlSources, yamlPhot, yamlSpec, yamlFiles  = tns.yaml()
-                print yamlSources
 
-            .. code-block:: text
+        **Usage**
 
-                - TNSId: 2016asf
-                  TNSName: SN2016asf
-                  decDeg: 31.1126
-                  decSex: '+31:06:45.36'
-                  discDate: '2016-03-06 08:09:36'
-                  discMag: '17.1'
-                  discMagFilter: V-Johnson
-                  discSurvey: ASAS-SN
-                  discoveryName: ASASSN-16cs
-                  hostName: KUG 0647+311
-                  hostRedshift: null
-                  objectUrl: http://wis-tns.weizmann.ac.il/object/2016asf
-                  raDeg: 102.65304166666667
-                  raSex: '06:50:36.73'
-                  separationArcsec: '0.66'
-                  separationEastArcsec: '-0.13'
-                  separationNorthArcsec: '0.65'
-                  specType: SN Ia
-                  transRedshift: '0.021'
+        To render the results in yaml format:
 
-            You can save the results to file by passing in a directory path within which to save the files to. The four flavours of data (sources, photometry, spectra and files) are saved to separate files but all data can be assoicated with its transient source using the transient's unique `TNSId`.
+        ```python
+        yamlSources, yamlPhot, yamlSpec, yamlFiles  = tns.yaml()
+        print(yamlSources)
+        ```
 
-            .. code-block:: python
+        ```text
+        - TNSId: 2016asf
+          TNSName: SN2016asf
+          decDeg: 31.1126
+          decSex: '+31:06:45.36'
+          discDate: '2016-03-06 08:09:36'
+          discMag: '17.1'
+          discMagFilter: V-Johnson
+          discSurvey: ASAS-SN
+          discoveryName: ASASSN-16cs
+          hostName: KUG 0647+311
+          hostRedshift: null
+          objectUrl: http://wis-tns.weizmann.ac.il/object/2016asf
+          raDeg: 102.65304166666667
+          raSex: '06:50:36.73'
+          separationArcsec: '0.66'
+          separationEastArcsec: '-0.13'
+          separationNorthArcsec: '0.65'
+          specType: SN Ia
+          transRedshift: '0.021'
+        ```
 
-                tns.yaml("~/tns")
+        You can save the results to file by passing in a directory path within which to save the files to. The four flavours of data (sources, photometry, spectra and files) are saved to separate files but all data can be assoicated with its transient source using the transient's unique `TNSId`.
 
-            .. image:: https://i.imgur.com/ZpJIC6p.png
-                :width: 800px
-                :alt: yaml output
+        ```python
+        tns.yaml("~/tns")
+        ```
+
+        .. image:: https://i.imgur.com/ZpJIC6p.png
+            :width: 800px
+            :alt: yaml output
+
         """
 
         if dirPath:
@@ -435,39 +456,44 @@ class search():
             dirPath=None):
         """*Render the results in markdown format*
 
-        **Key Arguments:**
-            - ``dirPath`` -- the path to the directory to save the rendered results to. Default *None*
+        **Key Arguments**
 
-        **Return:**
-            - `markdownSources` -- the top-level transient data
-            - `markdownPhot` -- all photometry associated with the transients
-            - `markdownSpec` -- all spectral data associated with the transients
-            - `markdownFiles`  -- all files associated with the matched transients found on the tns
+        - ``dirPath`` -- the path to the directory to save the rendered results to. Default *None*
 
-        **Usage:**
 
-            To render the results in markdown table format:
+        **Return**
 
-            .. code-block:: python
+        - `markdownSources` -- the top-level transient data
+        - `markdownPhot` -- all photometry associated with the transients
+        - `markdownSpec` -- all spectral data associated with the transients
+        - `markdownFiles`  -- all files associated with the matched transients found on the tns
 
-                markdownSources, markdownPhot, markdownSpec, markdownFiles  = tns.markdown()
-                print markdownSources
 
-            .. code-block:: text
+        **Usage**
 
-                | TNSId    | TNSName    | discoveryName  | discSurvey  | raSex        | decSex        | raDeg     | decDeg   | transRedshift  | specType  | discMag  | discMagFilter  | discDate             | objectUrl                                     | hostName      | hostRedshift  | separationArcsec  | separationNorthArcsec  | separationEastArcsec  |
-                |:---------|:-----------|:---------------|:------------|:-------------|:--------------|:----------|:---------|:---------------|:----------|:---------|:---------------|:---------------------|:----------------------------------------------|:--------------|:--------------|:------------------|:-----------------------|:----------------------|
-                | 2016asf  | SN2016asf  | ASASSN-16cs    | ASAS-SN     | 06:50:36.73  | +31:06:45.36  | 102.6530  | 31.1126  | 0.021          | SN Ia     | 17.1     | V-Johnson      | 2016-03-06 08:09:36  | http://wis-tns.weizmann.ac.il/object/2016asf  | KUG 0647+311  |               | 0.66              | 0.65                   | -0.13                 |
+        To render the results in markdown table format:
 
-            You can save the results to file by passing in a directory path within which to save the files to. The four flavours of data (sources, photometry, spectra and files) are saved to separate files but all data can be assoicated with its transient source using the transient's unique `TNSId`.
+        ```python
+        markdownSources, markdownPhot, markdownSpec, markdownFiles  = tns.markdown()
+        print(markdownSources)
+        ```
 
-            .. code-block:: python
+        ```text
+        | TNSId    | TNSName    | discoveryName  | discSurvey  | raSex        | decSex        | raDeg     | decDeg   | transRedshift  | specType  | discMag  | discMagFilter  | discDate             | objectUrl                                     | hostName      | hostRedshift  | separationArcsec  | separationNorthArcsec  | separationEastArcsec  |
+        |:---------|:-----------|:---------------|:------------|:-------------|:--------------|:----------|:---------|:---------------|:----------|:---------|:---------------|:---------------------|:----------------------------------------------|:--------------|:--------------|:------------------|:-----------------------|:----------------------|
+        | 2016asf  | SN2016asf  | ASASSN-16cs    | ASAS-SN     | 06:50:36.73  | +31:06:45.36  | 102.6530  | 31.1126  | 0.021          | SN Ia     | 17.1     | V-Johnson      | 2016-03-06 08:09:36  | http://wis-tns.weizmann.ac.il/object/2016asf  | KUG 0647+311  |               | 0.66              | 0.65                   | -0.13                 |
+        ```
 
-                tns.markdown("~/tns")
+        You can save the results to file by passing in a directory path within which to save the files to. The four flavours of data (sources, photometry, spectra and files) are saved to separate files but all data can be assoicated with its transient source using the transient's unique `TNSId`.
 
-            .. image:: https://i.imgur.com/AYLBQoJ.png
-                :width: 800px
-                :alt: markdown output
+        ```python
+        tns.markdown("~/tns")
+        ```
+
+        .. image:: https://i.imgur.com/AYLBQoJ.png
+            :width: 800px
+            :alt: markdown output
+
         """
 
         if dirPath:
@@ -492,41 +518,46 @@ class search():
             dirPath=None):
         """*Render the results as an ascii table*
 
-        **Key Arguments:**
-            - ``dirPath`` -- the path to the directory to save the rendered results to. Default *None*
+        **Key Arguments**
 
-        **Return:**
-            - `tableSources` -- the top-level transient data
-            - `tablePhot` -- all photometry associated with the transients
-            - `tableSpec` -- all spectral data associated with the transients
-            - `tableFiles`  -- all files associated with the matched transients found on the tns
+        - ``dirPath`` -- the path to the directory to save the rendered results to. Default *None*
 
-        **Usage:**
 
-            To render the results in ascii table format:
+        **Return**
 
-            .. code-block:: python
+        - `tableSources` -- the top-level transient data
+        - `tablePhot` -- all photometry associated with the transients
+        - `tableSpec` -- all spectral data associated with the transients
+        - `tableFiles`  -- all files associated with the matched transients found on the tns
 
-                tableSources, tablePhot, tableSpec, tableFiles  = tns.table()
-                print tableSources
 
-            .. code-block:: text
+        **Usage**
 
-                +----------+------------+----------------+-------------+--------------+---------------+-----------+----------+----------------+-----------+----------+----------------+----------------------+-----------------------------------------------+---------------+---------------+-------------------+------------------------+-----------------------+
-                | TNSId    | TNSName    | discoveryName  | discSurvey  | raSex        | decSex        | raDeg     | decDeg   | transRedshift  | specType  | discMag  | discMagFilter  | discDate             | objectUrl                                     | hostName      | hostRedshift  | separationArcsec  | separationNorthArcsec  | separationEastArcsec  |
-                +----------+------------+----------------+-------------+--------------+---------------+-----------+----------+----------------+-----------+----------+----------------+----------------------+-----------------------------------------------+---------------+---------------+-------------------+------------------------+-----------------------+
-                | 2016asf  | SN2016asf  | ASASSN-16cs    | ASAS-SN     | 06:50:36.73  | +31:06:45.36  | 102.6530  | 31.1126  | 0.021          | SN Ia     | 17.1     | V-Johnson      | 2016-03-06 08:09:36  | http://wis-tns.weizmann.ac.il/object/2016asf  | KUG 0647+311  |               | 0.66              | 0.65                   | -0.13                 |
-                +----------+------------+----------------+-------------+--------------+---------------+-----------+----------+----------------+-----------+----------+----------------+----------------------+-----------------------------------------------+---------------+---------------+-------------------+------------------------+-----------------------+
+        To render the results in ascii table format:
 
-            You can save the results to file by passing in a directory path within which to save the files to. The four flavours of data (sources, photometry, spectra and files) are saved to separate files but all data can be assoicated with its transient source using the transient's unique `TNSId`.
+        ```python
+        tableSources, tablePhot, tableSpec, tableFiles  = tns.table()
+        print(tableSources)
+        ```
 
-            .. code-block:: python
+        ```text
+        +----------+------------+----------------+-------------+--------------+---------------+-----------+----------+----------------+-----------+----------+----------------+----------------------+-----------------------------------------------+---------------+---------------+-------------------+------------------------+-----------------------+
+        | TNSId    | TNSName    | discoveryName  | discSurvey  | raSex        | decSex        | raDeg     | decDeg   | transRedshift  | specType  | discMag  | discMagFilter  | discDate             | objectUrl                                     | hostName      | hostRedshift  | separationArcsec  | separationNorthArcsec  | separationEastArcsec  |
+        +----------+------------+----------------+-------------+--------------+---------------+-----------+----------+----------------+-----------+----------+----------------+----------------------+-----------------------------------------------+---------------+---------------+-------------------+------------------------+-----------------------+
+        | 2016asf  | SN2016asf  | ASASSN-16cs    | ASAS-SN     | 06:50:36.73  | +31:06:45.36  | 102.6530  | 31.1126  | 0.021          | SN Ia     | 17.1     | V-Johnson      | 2016-03-06 08:09:36  | http://wis-tns.weizmann.ac.il/object/2016asf  | KUG 0647+311  |               | 0.66              | 0.65                   | -0.13                 |
+        +----------+------------+----------------+-------------+--------------+---------------+-----------+----------+----------------+-----------+----------+----------------+----------------------+-----------------------------------------------+---------------+---------------+-------------------+------------------------+-----------------------+
+        ```
 
-                tns.table("~/tns")
+        You can save the results to file by passing in a directory path within which to save the files to. The four flavours of data (sources, photometry, spectra and files) are saved to separate files but all data can be assoicated with its transient source using the transient's unique `TNSId`.
 
-            .. image:: https://i.imgur.com/m09M0ho.png
-                :width: 800px
-                :alt: ascii files
+        ```python
+        tns.table("~/tns")
+        ```
+
+        .. image:: https://i.imgur.com/m09M0ho.png
+            :width: 800px
+            :alt: ascii files
+
         """
 
         if dirPath:
@@ -552,38 +583,43 @@ class search():
             dirPath=None):
         """*Render the results as MySQL Insert statements*
 
-        **Key Arguments:**
-            - ``tableNamePrefix`` -- the prefix for the database table names to assign the insert statements to. Default *TNS*.
-            - ``dirPath`` -- the path to the directory to save the rendered results to. Default *None*
+        **Key Arguments**
 
-        **Return:**
-            - `mysqlSources` -- the top-level transient data
-            - `mysqlPhot` -- all photometry associated with the transients
-            - `mysqlSpec` -- all spectral data associated with the transients
-            - `mysqlFiles`  -- all files associated with the matched transients found on the tns
+        - ``tableNamePrefix`` -- the prefix for the database table names to assign the insert statements to. Default *TNS*.
+        - ``dirPath`` -- the path to the directory to save the rendered results to. Default *None*
 
-        **Usage:**
 
-            To render the results in mysql insert format:
+        **Return**
 
-            .. code-block:: python
+        - `mysqlSources` -- the top-level transient data
+        - `mysqlPhot` -- all photometry associated with the transients
+        - `mysqlSpec` -- all spectral data associated with the transients
+        - `mysqlFiles`  -- all files associated with the matched transients found on the tns
 
-                mysqlSources, mysqlPhot, mysqlSpec, mysqlFiles  = tns.mysql("TNS")
-                print mysqlSources
 
-            .. code-block:: text
+        **Usage**
 
-                INSERT INTO `TNS_sources` (TNSId,TNSName,dateCreated,decDeg,decSex,discDate,discMag,discMagFilter,discSurvey,discoveryName,hostName,hostRedshift,objectUrl,raDeg,raSex,separationArcsec,separationEastArcsec,separationNorthArcsec,specType,transRedshift) VALUES ("2016asf" ,"SN2016asf" ,"2016-09-20T11:22:13" ,"31.1126" ,"+31:06:45.36" ,"2016-03-06 08:09:36" ,"17.1" ,"V-Johnson" ,"ASAS-SN" ,"ASASSN-16cs" ,"KUG 0647+311" ,null ,"http://wis-tns.weizmann.ac.il/object/2016asf" ,"102.653041667" ,"06:50:36.73" ,"0.66" ,"-0.13" ,"0.65" ,"SN Ia" ,"0.021")  ON DUPLICATE KEY UPDATE  TNSId="2016asf", TNSName="SN2016asf", dateCreated="2016-09-20T11:22:13", decDeg="31.1126", decSex="+31:06:45.36", discDate="2016-03-06 08:09:36", discMag="17.1", discMagFilter="V-Johnson", discSurvey="ASAS-SN", discoveryName="ASASSN-16cs", hostName="KUG 0647+311", hostRedshift=null, objectUrl="http://wis-tns.weizmann.ac.il/object/2016asf", raDeg="102.653041667", raSex="06:50:36.73", separationArcsec="0.66", separationEastArcsec="-0.13", separationNorthArcsec="0.65", specType="SN Ia", transRedshift="0.021", updated=1, dateLastModified=NOW() ;
+        To render the results in mysql insert format:
 
-            You can save the results to file by passing in a directory path within which to save the files to. The four flavours of data (sources, photometry, spectra and files) are saved to separate files but all data can be assoicated with its transient source using the transient's unique `TNSId`.
+        ```python
+        mysqlSources, mysqlPhot, mysqlSpec, mysqlFiles  = tns.mysql("TNS")
+        print(mysqlSources)
+        ```
 
-            .. code-block:: python
+        ```text
+        INSERT INTO `TNS_sources` (TNSId,TNSName,dateCreated,decDeg,decSex,discDate,discMag,discMagFilter,discSurvey,discoveryName,hostName,hostRedshift,objectUrl,raDeg,raSex,separationArcsec,separationEastArcsec,separationNorthArcsec,specType,transRedshift) VALUES ("2016asf" ,"SN2016asf" ,"2016-09-20T11:22:13" ,"31.1126" ,"+31:06:45.36" ,"2016-03-06 08:09:36" ,"17.1" ,"V-Johnson" ,"ASAS-SN" ,"ASASSN-16cs" ,"KUG 0647+311" ,null ,"http://wis-tns.weizmann.ac.il/object/2016asf" ,"102.653041667" ,"06:50:36.73" ,"0.66" ,"-0.13" ,"0.65" ,"SN Ia" ,"0.021")  ON DUPLICATE KEY UPDATE  TNSId="2016asf", TNSName="SN2016asf", dateCreated="2016-09-20T11:22:13", decDeg="31.1126", decSex="+31:06:45.36", discDate="2016-03-06 08:09:36", discMag="17.1", discMagFilter="V-Johnson", discSurvey="ASAS-SN", discoveryName="ASASSN-16cs", hostName="KUG 0647+311", hostRedshift=null, objectUrl="http://wis-tns.weizmann.ac.il/object/2016asf", raDeg="102.653041667", raSex="06:50:36.73", separationArcsec="0.66", separationEastArcsec="-0.13", separationNorthArcsec="0.65", specType="SN Ia", transRedshift="0.021", updated=1, dateLastModified=NOW() ;
+        ```
 
-                tns.mysql("TNS", "~/tns")
+        You can save the results to file by passing in a directory path within which to save the files to. The four flavours of data (sources, photometry, spectra and files) are saved to separate files but all data can be assoicated with its transient source using the transient's unique `TNSId`.
 
-            .. image:: https://i.imgur.com/CozySPW.png
-                :width: 800px
-                :alt: mysql output
+        ```python
+        tns.mysql("TNS", "~/tns")
+        ```
+
+        .. image:: https://i.imgur.com/CozySPW.png
+            :width: 800px
+            :alt: mysql output
+
         """
         if dirPath:
             p = self._file_prefix()
@@ -708,8 +744,10 @@ CREATE TABLE `%(tableNamePrefix)s_files` (
         """
         *determine how to query the TNS, send query and parse the results*
 
-        **Return:**
-            - ``results`` -- a list of dictionaries (one dictionary for each result set returned from the TNS)
+        **Return**
+
+        - ``results`` -- a list of dictionaries (one dictionary for each result set returned from the TNS)
+
         """
         self.log.debug('starting the ``get`` method')
 
@@ -739,7 +777,7 @@ CREATE TABLE `%(tableNamePrefix)s_files` (
                 continue
 
             if "No results found" in content:
-                print "No results found"
+                print("No results found")
                 return sourceTable, photoTable, specTable, relatedFilesTable
 
             if self._parse_transient_rows(content, True) < self.batchSize:
@@ -747,7 +785,8 @@ CREATE TABLE `%(tableNamePrefix)s_files` (
             else:
                 self.page += 1
                 thisPage = self.page
-                print "Downloaded %(thisPage)s page(s) from the TNS. %(sourceCount)s transients parsed so far." % locals()
+                print(
+                    "Downloaded %(thisPage)s page(s) from the TNS. %(sourceCount)s transients parsed so far." % locals())
                 sourceCount += self.batchSize
                 # print "\t" + self._searchURL
                 timesleep.sleep(1)
@@ -822,14 +861,21 @@ CREATE TABLE `%(tableNamePrefix)s_files` (
             print('HTTP Request failed')
 
         self.log.debug('completed the ``_get_tns_search_results`` method')
-        return response.status_code, response.content, response.url
+        try:
+            # PYTHON 3
+            return response.status_code, str(response.content), response.url
+        except:
+            # PYTHON 2
+            return response.status_code, response.content, response.url
 
     def _file_prefix(
             self):
         """*Generate a file prefix based on the type of search for saving files to disk*
 
-        **Return:**
-            - ``prefix`` -- the file prefix
+        **Return**
+
+        - ``prefix`` -- the file prefix
+
         """
         self.log.debug('starting the ``_file_prefix`` method')
 
@@ -855,12 +901,16 @@ CREATE TABLE `%(tableNamePrefix)s_files` (
             count=False):
         """* parse transient rows from the TNS result page content*
 
-        **Key Arguments:**
-            - ``content`` -- the content from the TNS results page.
-            - ``count`` -- return only the number of rows
+        **Key Arguments**
 
-        **Return:**
-            - ``transientRows``
+        - ``content`` -- the content from the TNS results page.
+        - ``count`` -- return only the number of rows
+
+
+        **Return**
+
+        - ``transientRows``
+
         """
         self.log.debug('starting the ``_parse_transient_rows`` method')
 
@@ -890,12 +940,16 @@ CREATE TABLE `%(tableNamePrefix)s_files` (
             content):
         """* parse discovery information from one row on the TNS results page*
 
-        **Key Arguments:**
-            - ``content`` -- a table row from the TNS results page.
+        **Key Arguments**
 
-        **Return:**
-            - ``discoveryData`` -- dictionary of results
-            - ``TNSId`` -- the unique TNS id for the transient
+        - ``content`` -- a table row from the TNS results page.
+
+
+        **Return**
+
+        - ``discoveryData`` -- dictionary of results
+        - ``TNSId`` -- the unique TNS id for the transient
+
         """
         self.log.debug('starting the ``_parse_discovery_information`` method')
 
@@ -912,7 +966,7 @@ CREATE TABLE `%(tableNamePrefix)s_files` (
         discoveryData = []
         for match in matches:
             row = match.groupdict()
-            for k, v in row.iteritems():
+            for k, v in list(row.items()):
                 row[k] = v.strip()
                 if len(v) == 0:
                     row[k] = None
@@ -962,7 +1016,7 @@ CREATE TABLE `%(tableNamePrefix)s_files` (
             orow = collections.OrderedDict()
             keyOrder = ["TNSId", "TNSName", "discoveryName", "discSurvey", "raSex", "decSex", "raDeg", "decDeg",
                         "transRedshift", "specType", "discMag", "discMagFilter", "discDate", "objectUrl", "hostName", "hostRedshift", "separationArcsec", "separationNorthArcsec", "separationEastArcsec"]
-            for k, v in row.iteritems():
+            for k, v in list(row.items()):
                 if k not in keyOrder:
                     keyOrder.append(k)
             for k in keyOrder:
@@ -983,13 +1037,17 @@ CREATE TABLE `%(tableNamePrefix)s_files` (
             TNSId):
         """*parse photometry data from a row in the tns results content*
 
-        **Key Arguments:**
-             - ``content`` -- a table row from the TNS results page
-             - ``TNSId`` -- the tns id of the transient
+        **Key Arguments**
 
-        **Return:**
-            - ``photData`` -- a list of dictionaries of the photometry data
-            - ``relatedFilesTable`` -- a list of dictionaries of transient photometry related files 
+         - ``content`` -- a table row from the TNS results page
+         - ``TNSId`` -- the tns id of the transient
+
+
+        **Return**
+
+        - ``photData`` -- a list of dictionaries of the photometry data
+        - ``relatedFilesTable`` -- a list of dictionaries of transient photometry related files 
+
         """
         self.log.debug('starting the ``_parse_photometry_data`` method')
 
@@ -1022,7 +1080,7 @@ CREATE TABLE `%(tableNamePrefix)s_files` (
                 try:
                     header = header.groupdict()
                 except:
-                    print r.group()
+                    print(r.group())
                 header["TNSId"] = TNSId
 
                 del header["reporters"]
@@ -1096,7 +1154,7 @@ CREATE TABLE `%(tableNamePrefix)s_files` (
                     orow = collections.OrderedDict()
                     keyOrder = ["TNSId", "survey", "obsdate", "filter", "limitingMag", "mag", "magErr",
                                 "magUnit", "suggestedType", "telescope", "exptime", "reportAddedDate"]
-                    for k, v in p.iteritems():
+                    for k, v in list(p.items()):
                         if k not in keyOrder:
                             keyOrder.append(k)
                     for k in keyOrder:
@@ -1117,11 +1175,15 @@ CREATE TABLE `%(tableNamePrefix)s_files` (
             content):
         """*parse the contents for related files URLs and comments*
 
-        **Key Arguments:**
-            - ``content`` -- the content to parse.
+        **Key Arguments**
 
-        **Return:**
-            - ``relatedFiles`` -- a list of dictionaries of transient related files 
+        - ``content`` -- the content to parse.
+
+
+        **Return**
+
+        - ``relatedFiles`` -- a list of dictionaries of transient related files 
+
         """
         self.log.debug('starting the ``_parse_related_files`` method')
 
@@ -1145,13 +1207,17 @@ CREATE TABLE `%(tableNamePrefix)s_files` (
             TNSId):
         """*parse spectra data from a row in the tns results content*
 
-        **Key Arguments:**
-             - ``content`` -- a table row from the TNS results page
-             - ``TNSId`` -- the tns id of the transient
+        **Key Arguments**
 
-        **Return:**
-            - ``specData`` -- a list of dictionaries of the spectral data
-            - ``relatedFilesTable`` -- a list of dictionaries of transient spectrum related files 
+         - ``content`` -- a table row from the TNS results page
+         - ``TNSId`` -- the tns id of the transient
+
+
+        **Return**
+
+        - ``specData`` -- a list of dictionaries of the spectral data
+        - ``relatedFilesTable`` -- a list of dictionaries of transient spectrum related files 
+
         """
         self.log.debug('starting the ``_parse_spectral_data`` method')
 
@@ -1264,7 +1330,7 @@ CREATE TABLE `%(tableNamePrefix)s_files` (
                     orow = collections.OrderedDict()
                     keyOrder = ["TNSId", "survey", "obsdate", "specType", "transRedshift",
                                 "telescope", "exptime", "reportAddedDate", "TNSuser"]
-                    for k, v in s.iteritems():
+                    for k, v in list(s.items()):
                         if k not in keyOrder:
                             keyOrder.append(k)
                     for k in keyOrder:

@@ -1,27 +1,17 @@
 
-Subpackages
------------
-
-.. autosummary::
-   :toctree: _autosummary
-   :nosignatures:
-   :template: autosummary/subpackage.rst
-
-   transientNamer
-   transientNamer.commonutils 
-
 Modules
------------
+-------
 
 .. autosummary::
    :toctree: _autosummary
    :nosignatures:
 
-   transientNamer.cl_utils
+   transientNamer.commonutils 
    transientNamer.utKit 
 
+
 Classes
------------
+-------
 
 .. autosummary::
    :toctree: _autosummary
@@ -30,11 +20,12 @@ Classes
    transientNamer.search
    transientNamer.utKit.utKit 
 
+
 Functions
------------
+---------
 
 .. autosummary::
    :toctree: _autosummary
    :nosignatures:
 
-   transientNamer.cl_utils.tab_complete 
+   transientNamer.commonutils.getpackagepath 
