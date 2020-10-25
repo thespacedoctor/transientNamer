@@ -1,7 +1,9 @@
 
 ## Release Notes
 
-* fixed bytes to string with utf-8 encoding bug stopping regexes from passing
+**v0.3.1 - October 25, 2020**
+
+* **Fixed:** bytes to string with utf-8 encoding bug stopping regexes from passing
 
 **v0.3.0 - May 22, 2020**
 
