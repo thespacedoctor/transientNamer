@@ -765,6 +765,7 @@ CREATE TABLE `%(tableNamePrefix)s_files` (
         while not stop:
 
             status_code, content, self._searchURL = self._get_tns_search_results()
+
             if status_code != 200:
                 self.log.error(
                     'cound not get the search reuslts from the TNS, HTML error code %(status_code)s ' % locals())
@@ -863,7 +864,7 @@ CREATE TABLE `%(tableNamePrefix)s_files` (
         self.log.debug('completed the ``_get_tns_search_results`` method')
         try:
             # PYTHON 3
-            return response.status_code, str(response.content), response.url
+            return response.status_code, str(response.content, 'utf-8'), response.url
         except:
             # PYTHON 2
             return response.status_code, response.content, response.url
