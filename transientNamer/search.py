@@ -108,16 +108,11 @@ class search(object):
 
         # CREATE THE TIME-RANGE WINDOW TO SEARCH TNS
         if not discInLastDays:
-            self.start = ""
-            self.end = ""
+            self.discInLastDays = ""
+            self.period_units = ""
         else:
-            discInLastDays = int(discInLastDays)
-            td = timedelta(days=1)
-            end = datetime.now() + td
-            self.end = end.strftime("%Y-%m-%d")
-            td = timedelta(days=discInLastDays)
-            start = datetime.now() - td
-            self.start = start.strftime("%Y-%m-%d")
+            self.discInLastDays = int(discInLastDays)
+            self.period_units = "days"
 
         # DETERMINE IF WE HAVE A TNS OR INTERAL SURVEY NAME
         if self.name:
@@ -840,8 +835,8 @@ CREATE TABLE `%(tableNamePrefix)s_files` (
                     "radius": self.radiusArcsec,
                     "name": self.name,
                     "internal_name": self.internal_name,
-                    "date_start[date]": self.start,
-                    "date_end[date]": self.end,
+                    "discovered_period_units": self.period_units,
+                    "discovered_period_value": self.discInLastDays,
                     "num_page": self.batchSize,
                     "display[redshift]": "1",
                     "display[hostname]": "1",
