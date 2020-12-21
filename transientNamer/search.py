@@ -39,7 +39,7 @@ class search(object):
     - ``dec`` -- DEC of the location being searched
     - ``radiusArcsec`` - the radius of the conesearch to perform against the TNS
     - ``name`` -- name of the object to search the TNS for
-    - ``discInLastDays`` -- search the TNS for transient discovered in the last X days
+    - ``discInLastDays`` -- search the TNS for transient reported in the last X days
     - ``comments`` -- print the comments from the TNS, note these can be long making table outputs somewhat unreadable. Default *False*
 
 
@@ -69,7 +69,7 @@ class search(object):
 
     Note the search method can accept coordinates in sexagesimal or decimal defree formats.
 
-    To list all new objects discovered in the last three weeks, then use:
+    To list all new objects reported in the last three weeks, then use:
 
     ```python
     from transientNamer import search
