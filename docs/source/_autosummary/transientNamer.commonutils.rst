@@ -16,6 +16,12 @@ commonutils *(module)*
 
     
     
+    .. rubric:: Functions
+
+    .. autosummary::
+    
+      ~getpackagepath
+    
     
 
     

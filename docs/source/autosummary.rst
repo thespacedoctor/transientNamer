@@ -17,8 +17,7 @@ Classes
    :toctree: _autosummary
    :nosignatures:
 
-   transientNamer.search
-   transientNamer.utKit.utKit 
+   transientNamer.search 
 
 
 Functions

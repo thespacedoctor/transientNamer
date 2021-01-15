@@ -7,12 +7,12 @@
     Usage:
         transientNamer [-c] cone <ra> <dec> <arcsecRadius> [<render> | mysql <tableNamePrefix>] [-o directory]
         transientNamer [-c] search <name> [<render> | mysql <tableNamePrefix>] [-o directory]
-        transientNamer [-c] new <discInLastDays> [<render> | mysql <tableNamePrefix>] [-o directory]
+        transientNamer [-c] new <reportedInLastDays> [<render> | mysql <tableNamePrefix>] [-o directory]
     
     Commands:
         cone                  perform a conesearch on the TNS
         search                perform a name search on the TNS
-        new                   list newly discovered TNS objects
+        new                   list newly reported TNS objects
         
     Arguments:
         ra
@@ -22,7 +22,7 @@
         render                output format for results. Options include json, csv, table, markdown, yaml
         tableNamePrefix       the prefix for the tables to write the mysql insert statements for
         directory             path to the directory to save the output to
-        discInLastDays        download and parse only discoveries within the last <n> days
+        reportedInLastDays    download and parse data reported within the last <n> days
         mysql                 generate mysql insert scripts
     
     Options:

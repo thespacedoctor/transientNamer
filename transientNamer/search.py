@@ -254,7 +254,7 @@ class search(object):
 
         ```text
         TNSId,TNSName,discoveryName,discSurvey,raSex,decSex,raDeg,decDeg,transRedshift,specType,discMag,discMagFilter,discDate,objectUrl,hostName,hostRedshift,separationArcsec,separationNorthArcsec,separationEastArcsec
-        2016asf,SN2016asf,ASASSN-16cs,ASAS-SN,06:50:36.73,+31:06:45.36,102.6530,31.1126,0.021,SN Ia,17.1,V-Johnson,2016-03-06 08:09:36,http://wis-tns.weizmann.ac.il/object/2016asf,KUG 0647+311,,0.66,0.65,-0.13
+        2016asf,SN2016asf,ASASSN-16cs,ASAS-SN,06:50:36.73,+31:06:45.36,102.6530,31.1126,0.021,SN Ia,17.1,V-Johnson,2016-03-06 08:09:36,https://www.wis-tns.org/object/2016asf,KUG 0647+311,,0.66,0.65,-0.13
         ```
 
         You can save the results to file by passing in a directory path within which to save the files to. The four flavours of data (sources, photometry, spectra and files) are saved to separate files but all data can be assoicated with its transient source using the transient's unique `TNSId`.
@@ -327,7 +327,7 @@ class search(object):
                 "discoveryName": "ASASSN-16cs",
                 "hostName": "KUG 0647+311",
                 "hostRedshift": null,
-                "objectUrl": "http://wis-tns.weizmann.ac.il/object/2016asf",
+                "objectUrl": "https://www.wis-tns.org/object/2016asf",
                 "raDeg": 102.65304166666667,
                 "raSex": "06:50:36.73",
                 "separationArcsec": "0.66",
@@ -407,7 +407,7 @@ class search(object):
           discoveryName: ASASSN-16cs
           hostName: KUG 0647+311
           hostRedshift: null
-          objectUrl: http://wis-tns.weizmann.ac.il/object/2016asf
+          objectUrl: https://www.wis-tns.org/object/2016asf
           raDeg: 102.65304166666667
           raSex: '06:50:36.73'
           separationArcsec: '0.66'
@@ -476,7 +476,7 @@ class search(object):
         ```text
         | TNSId    | TNSName    | discoveryName  | discSurvey  | raSex        | decSex        | raDeg     | decDeg   | transRedshift  | specType  | discMag  | discMagFilter  | discDate             | objectUrl                                     | hostName      | hostRedshift  | separationArcsec  | separationNorthArcsec  | separationEastArcsec  |
         |:---------|:-----------|:---------------|:------------|:-------------|:--------------|:----------|:---------|:---------------|:----------|:---------|:---------------|:---------------------|:----------------------------------------------|:--------------|:--------------|:------------------|:-----------------------|:----------------------|
-        | 2016asf  | SN2016asf  | ASASSN-16cs    | ASAS-SN     | 06:50:36.73  | +31:06:45.36  | 102.6530  | 31.1126  | 0.021          | SN Ia     | 17.1     | V-Johnson      | 2016-03-06 08:09:36  | http://wis-tns.weizmann.ac.il/object/2016asf  | KUG 0647+311  |               | 0.66              | 0.65                   | -0.13                 |
+        | 2016asf  | SN2016asf  | ASASSN-16cs    | ASAS-SN     | 06:50:36.73  | +31:06:45.36  | 102.6530  | 31.1126  | 0.021          | SN Ia     | 17.1     | V-Johnson      | 2016-03-06 08:09:36  | https://www.wis-tns.org/object/2016asf  | KUG 0647+311  |               | 0.66              | 0.65                   | -0.13                 |
         ```
 
         You can save the results to file by passing in a directory path within which to save the files to. The four flavours of data (sources, photometry, spectra and files) are saved to separate files but all data can be assoicated with its transient source using the transient's unique `TNSId`.
@@ -539,7 +539,7 @@ class search(object):
         +----------+------------+----------------+-------------+--------------+---------------+-----------+----------+----------------+-----------+----------+----------------+----------------------+-----------------------------------------------+---------------+---------------+-------------------+------------------------+-----------------------+
         | TNSId    | TNSName    | discoveryName  | discSurvey  | raSex        | decSex        | raDeg     | decDeg   | transRedshift  | specType  | discMag  | discMagFilter  | discDate             | objectUrl                                     | hostName      | hostRedshift  | separationArcsec  | separationNorthArcsec  | separationEastArcsec  |
         +----------+------------+----------------+-------------+--------------+---------------+-----------+----------+----------------+-----------+----------+----------------+----------------------+-----------------------------------------------+---------------+---------------+-------------------+------------------------+-----------------------+
-        | 2016asf  | SN2016asf  | ASASSN-16cs    | ASAS-SN     | 06:50:36.73  | +31:06:45.36  | 102.6530  | 31.1126  | 0.021          | SN Ia     | 17.1     | V-Johnson      | 2016-03-06 08:09:36  | http://wis-tns.weizmann.ac.il/object/2016asf  | KUG 0647+311  |               | 0.66              | 0.65                   | -0.13                 |
+        | 2016asf  | SN2016asf  | ASASSN-16cs    | ASAS-SN     | 06:50:36.73  | +31:06:45.36  | 102.6530  | 31.1126  | 0.021          | SN Ia     | 17.1     | V-Johnson      | 2016-03-06 08:09:36  | https://www.wis-tns.org/object/2016asf  | KUG 0647+311  |               | 0.66              | 0.65                   | -0.13                 |
         +----------+------------+----------------+-------------+--------------+---------------+-----------+----------+----------------+-----------+----------+----------------+----------------------+-----------------------------------------------+---------------+---------------+-------------------+------------------------+-----------------------+
         ```
 
@@ -602,7 +602,7 @@ class search(object):
         ```
 
         ```text
-        INSERT INTO `TNS_sources` (TNSId,TNSName,dateCreated,decDeg,decSex,discDate,discMag,discMagFilter,discSurvey,discoveryName,hostName,hostRedshift,objectUrl,raDeg,raSex,separationArcsec,separationEastArcsec,separationNorthArcsec,specType,transRedshift) VALUES ("2016asf" ,"SN2016asf" ,"2016-09-20T11:22:13" ,"31.1126" ,"+31:06:45.36" ,"2016-03-06 08:09:36" ,"17.1" ,"V-Johnson" ,"ASAS-SN" ,"ASASSN-16cs" ,"KUG 0647+311" ,null ,"http://wis-tns.weizmann.ac.il/object/2016asf" ,"102.653041667" ,"06:50:36.73" ,"0.66" ,"-0.13" ,"0.65" ,"SN Ia" ,"0.021")  ON DUPLICATE KEY UPDATE  TNSId="2016asf", TNSName="SN2016asf", dateCreated="2016-09-20T11:22:13", decDeg="31.1126", decSex="+31:06:45.36", discDate="2016-03-06 08:09:36", discMag="17.1", discMagFilter="V-Johnson", discSurvey="ASAS-SN", discoveryName="ASASSN-16cs", hostName="KUG 0647+311", hostRedshift=null, objectUrl="http://wis-tns.weizmann.ac.il/object/2016asf", raDeg="102.653041667", raSex="06:50:36.73", separationArcsec="0.66", separationEastArcsec="-0.13", separationNorthArcsec="0.65", specType="SN Ia", transRedshift="0.021", updated=1, dateLastModified=NOW() ;
+        INSERT INTO `TNS_sources` (TNSId,TNSName,dateCreated,decDeg,decSex,discDate,discMag,discMagFilter,discSurvey,discoveryName,hostName,hostRedshift,objectUrl,raDeg,raSex,separationArcsec,separationEastArcsec,separationNorthArcsec,specType,transRedshift) VALUES ("2016asf" ,"SN2016asf" ,"2016-09-20T11:22:13" ,"31.1126" ,"+31:06:45.36" ,"2016-03-06 08:09:36" ,"17.1" ,"V-Johnson" ,"ASAS-SN" ,"ASASSN-16cs" ,"KUG 0647+311" ,null ,"https://www.wis-tns.org/object/2016asf" ,"102.653041667" ,"06:50:36.73" ,"0.66" ,"-0.13" ,"0.65" ,"SN Ia" ,"0.021")  ON DUPLICATE KEY UPDATE  TNSId="2016asf", TNSName="SN2016asf", dateCreated="2016-09-20T11:22:13", decDeg="31.1126", decSex="+31:06:45.36", discDate="2016-03-06 08:09:36", discMag="17.1", discMagFilter="V-Johnson", discSurvey="ASAS-SN", discoveryName="ASASSN-16cs", hostName="KUG 0647+311", hostRedshift=null, objectUrl="https://www.wis-tns.org/object/2016asf", raDeg="102.653041667", raSex="06:50:36.73", separationArcsec="0.66", separationEastArcsec="-0.13", separationNorthArcsec="0.65", specType="SN Ia", transRedshift="0.021", updated=1, dateLastModified=NOW() ;
         ```
 
         You can save the results to file by passing in a directory path within which to save the files to. The four flavours of data (sources, photometry, spectra and files) are saved to separate files but all data can be assoicated with its transient source using the transient's unique `TNSId`.
@@ -827,7 +827,7 @@ CREATE TABLE `%(tableNamePrefix)s_files` (
 
         try:
             response = requests.get(
-                url="http://wis-tns.weizmann.ac.il/search",
+                url="https://www.wis-tns.org/search",
                 params={
                     "page": self.page,
                     "ra": self.ra,
@@ -970,7 +970,7 @@ CREATE TABLE `%(tableNamePrefix)s_files` (
                 row["transRedshift"] = None
             if row["TNSName"][0] in ["1", "2"]:
                 row["TNSName"] = "SN" + row["TNSName"]
-            row["objectUrl"] = "http://wis-tns.weizmann.ac.il" + \
+            row["objectUrl"] = "https://www.wis-tns.org" + \
                 row["objectUrl"]
 
             # CONVERT COORDINATES TO DECIMAL DEGREES
