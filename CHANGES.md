@@ -1,6 +1,8 @@
 
 ## Release Notes
 
+Updated URL to the new TNS URL <https://www.wis-tns.org>  
+
 **v0.3.2 - December 21, 2020**
 
 * **ENHANCEMENT**: now using discovered_period_value for discInLastDays. More efficient than adding range of obsdate.
