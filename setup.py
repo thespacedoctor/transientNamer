@@ -4,6 +4,7 @@ import os
 moduleDirectory = os.path.dirname(os.path.realpath(__file__))
 exec(open(moduleDirectory + "/transientNamer/__version__.py").read())
 
+
 def readme():
     with open(moduleDirectory + '/README.md') as f:
         return f.read()
@@ -16,7 +17,8 @@ install_requires = [
     'astrocalc',
     'unicodecsv',
     'numpy',
-    'python-dateutil'
+    'python-dateutil',
+    'bs4'
 ]
 
 # READ THE DOCS SERVERS

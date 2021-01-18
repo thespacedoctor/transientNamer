@@ -16,6 +16,8 @@ version: 1
 #     remote datbase host: mydatabaseName
 #     port: 9002
 
+astronote-cache: /tmp/astronote-cache
+
 logging settings:
     formatters:
         file_style:
