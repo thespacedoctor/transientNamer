@@ -53,6 +53,34 @@ except:
 
 class test_astronotes(unittest.TestCase):
 
+    def test_astronotes_create_tables_function(self):
+
+        from fundamentals.mysql import writequery
+        sqlQueries = [
+            f"""DROP table astronotes_content""",
+            f"""DROP table astronotes_transients""",
+            f"""DROP table astronotes_keywords"""
+        ]
+
+        for sqlQuery in sqlQueries:
+            try:
+                writequery(
+                    log=log,
+                    sqlQuery=sqlQuery,
+                    dbConn=dbConn
+                )
+            except:
+                pass
+
+        from transientNamer import astronotes
+        an = astronotes(
+            log=log,
+            dbConn=dbConn,
+            settings=settings
+        )
+        an._create_db_tables()
+        # print(noteIds)
+
     def test_astronotes_function(self):
 
         from transientNamer import astronotes
@@ -66,10 +94,14 @@ class test_astronotes(unittest.TestCase):
         from transientNamer import astronotes
         an = astronotes(
             log=log,
+            dbConn=dbConn,
             settings=settings
         )
-        noteIds = an.download(
+        downloadCount = an.download(
             cache_dir=settings["astronote-cache"], inLastDays=30)
+        print(f"{downloadCount} new astronotes downloaded anc cached")
+
+        an.notes_to_database()
 
     def test_astronotes_function_exception(self):
 

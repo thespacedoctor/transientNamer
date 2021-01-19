@@ -1,11 +1,10 @@
 version: 1
-# database settings:
-#     db: unit_tests
-#     host: localhost
-#     user: utuser
-#     password: utpass
-#     loginPath: unittesting
-#     tunnel: False
+
+database settings:
+    db: unit_tests
+    host: localhost
+    user: utuser
+    password: utpass
 
 # # SSH TUNNEL - if a tunnel is required to connect to the database(s) then add setup here
 # # Note only one tunnel is setup - may need to change this to 2 tunnels in the future if 

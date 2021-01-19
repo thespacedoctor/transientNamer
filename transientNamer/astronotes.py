@@ -18,6 +18,8 @@ from fundamentals import tools
 import requests
 import json
 from pprint import pprint
+from fundamentals.mysql import insert_list_of_dictionaries_into_database_tables
+from fundamentals.mysql import convert_dictionary_to_mysql_table
 
 
 class astronotes(object):
@@ -26,6 +28,7 @@ class astronotes(object):
 
     **Key Arguments:**
         - ``log`` -- logger
+        - ``dbConn`` -- database connection. Default *False*
         - ``settings`` -- the settings dictionary
 
     **Usage:**
@@ -49,28 +52,18 @@ class astronotes(object):
     ```
 
     """
-    # Initialisation
-    # 1. @flagged: what are the unique attrributes for each object? Add them
-    # to __init__
 
     def __init__(
             self,
             log,
+            dbConn=False,
             settings=False,
 
     ):
         self.log = log
         log.debug("instansiating a new 'astronotes' object")
         self.settings = settings
-        # xt-self-arg-tmpx
-
-        # 2. @flagged: what are the default attrributes each object could have? Add them to variable attribute set here
-        # Variable Data Atrributes
-
-        # 3. @flagged: what variable attrributes need overriden in any baseclass(es) used
-        # Override Variable Data Atrributes
-
-        # Initial Actions
+        self.dbConn = dbConn
 
         return None
 
@@ -85,7 +78,7 @@ class astronotes(object):
             - `inLastDays` -- download only notes reported in the last N days. Default *False*. (Download all)
 
         **Return:**
-            - None
+            - `downloadCount` -- number of new files cached
 
         **Usage:**
 
@@ -95,8 +88,9 @@ class astronotes(object):
             log=log,
             settings=settings
         )
-        an.download(
+        downloadCount = an.download(
             cache_dir=settings["astronote-cache"], inLastDays=30)
+        print(f"{downloadCount} new astronotes downloaded anc cached")
         ```
 
         ---
@@ -144,6 +138,7 @@ class astronotes(object):
             os.makedirs(self.settings["astronote-cache"])
 
         # DOWNLOAD ONE NOTE PER FILE
+        downloadCount = 0
         for k, v in allNotes.items():
             filepath = self.settings["astronote-cache"] + f"/{k}.json"
             vJson = json.dumps(
@@ -156,9 +151,10 @@ class astronotes(object):
                 myFile = open(filepath, 'w')
                 myFile.write(vJson)
                 myFile.close()
+                downloadCount += 1
 
         self.log.debug('completed the ``download`` method')
-        return None
+        return downloadCount
 
     def get_all_noteids(
             self,
@@ -180,6 +176,7 @@ class astronotes(object):
             settings=settings
         )
         noteIds = an.get_all_noteid(inLastDays=3000)
+        print(f"Astronote IDs: {noteIds}")
         ```
 
         ---
@@ -234,6 +231,214 @@ class astronotes(object):
 
         self.log.debug('completed the ``get_all_noteids`` method')
         return noteIds
+
+    def notes_to_database(
+            self):
+        """*read the notes and import them into indexed MySQL database tables*
+
+        **Key Arguments:**
+            # -
+
+        **Return:**
+            - None
+
+        **Usage:**
+
+        ```python
+        usage code 
+        ```
+
+        ---
+
+        ```eval_rst
+        .. todo::
+
+            - add usage info
+            - create a sublime snippet for usage
+            - write a command-line tool for this method
+            - update package tutorial with command-line tool info if needed
+        ```
+        """
+        self.log.debug('starting the ``notes_to_database`` method')
+
+        # CREATE THE DATABASE TABLES IF THEY DON'T EXIST
+        self._create_db_tables()
+
+        # GENERATE A LIST OF FILE PATHS
+        jsonNotes = []
+        cache = self.settings["astronote-cache"]
+        for d in os.listdir(cache):
+            filepath = os.path.join(cache, d)
+            if os.path.isfile(filepath) and os.path.splitext(filepath)[1] == ".json":
+                jsonNotes.append(filepath)
+
+        # NOW READ THE JSON FILES AND WRITE DICTIONARIES NEEDED FOR MYSQL
+        # TABLES
+        astronotes_content = []
+        astronotes_keywords = []
+        astronotes_transients = []
+        for file in jsonNotes:
+            with open(file) as data_file:
+                data = json.load(data_file)
+            for k, v in data.items():
+                if not len(v):
+                    data[k] = None
+            for k in data['keywords']:
+                astronotes_keywords.append(
+                    {"astronote": data['astronote'], "keyword": k})
+            del data['keywords']
+            if 'related_objects' in data and data['related_objects']:
+                for dict in data['related_objects']:
+                    try:
+                        del dict['ra']
+                        del dict['dec']
+                    except:
+                        pass
+                    dict['astronote'] = data['astronote']
+                    for k, v in dict.items():
+                        if not len(v):
+                            dict[k] = None
+
+                    astronotes_transients.append(dict)
+            del data['related_objects']
+            del data['related_astronotes']
+
+            astronotes_content.append(data)
+
+        print(f"{len(astronotes_transients)} transients")
+
+        # INSERT LIST OF
+        # DICTIONARIES INTO DATABASE
+        insert_list_of_dictionaries_into_database_tables(
+            dbConn=self.dbConn,
+            log=self.log,
+            dictList=astronotes_keywords,
+            dbTableName="astronotes_keywords",
+            uniqueKeyList=["astronote", "keyword"],
+            dateModified=True,
+            dateCreated=True,
+            batchSize=2500,
+            replace=True,
+            dbSettings=self.settings["database settings"]
+        )
+
+        insert_list_of_dictionaries_into_database_tables(
+            dbConn=self.dbConn,
+            log=self.log,
+            dictList=astronotes_transients,
+            dbTableName="astronotes_transients",
+            uniqueKeyList=["astronote", "iauname"],
+            dateModified=True,
+            dateCreated=True,
+            batchSize=2500,
+            replace=True,
+            dbSettings=self.settings["database settings"]
+        )
+
+        insert_list_of_dictionaries_into_database_tables(
+            dbConn=self.dbConn,
+            log=self.log,
+            dictList=astronotes_content,
+            dbTableName="astronotes_content",
+            uniqueKeyList=["astronote"],
+            dateModified=True,
+            dateCreated=True,
+            batchSize=2500,
+            replace=True,
+            dbSettings=self.settings["database settings"]
+        )
+
+        self.log.debug('completed the ``notes_to_database`` method')
+        return None
+
+    def _create_db_tables(
+            self):
+        """*create the astronote database tables if they don't yet exist*
+
+        **Usage:**
+
+        ```python
+        from transientNamer import astronotes
+        an = astronotes(
+            log=log,
+            dbConn=dbConn,
+            settings=settings
+        )
+        an._create_db_tables()
+        ```
+
+        ---
+
+        ```eval_rst
+        .. todo::
+
+            - write a command-line tool for this method
+            - update package tutorial with command-line tool info if needed
+        ```
+        """
+        self.log.debug('starting the ``_create_db_tables`` method')
+
+        from fundamentals.mysql import writequery
+        sqlQueries = []
+        sqlQueries.append(f"""CREATE TABLE IF NOT EXISTS `astronotes_content` (
+              `primaryId` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'An internal counter',
+              `dateCreated` datetime DEFAULT CURRENT_TIMESTAMP,
+              `dateLastModified` datetime DEFAULT CURRENT_TIMESTAMP,
+              `updated` tinyint(4) DEFAULT '0',
+              `abstract` text,
+              `astronote` varchar(30) NOT NULL,
+              `authors` text,
+              `public_timestamp` datetime DEFAULT NULL,
+              `source_group` varchar(100) DEFAULT NULL,
+              `title` text,
+              `type` varchar(100) DEFAULT NULL,
+              `html_parsed_flag` TINYINT NULL DEFAULT 0,
+              PRIMARY KEY (`primaryId`),
+              UNIQUE KEY `astronote` (`astronote`)
+            ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4;
+        """)
+
+        sqlQueries.append(f"""CREATE TABLE IF NOT EXISTS `astronotes_keywords` (
+              `primaryId` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'An internal counter',
+              `dateCreated` datetime DEFAULT CURRENT_TIMESTAMP,
+              `dateLastModified` datetime DEFAULT CURRENT_TIMESTAMP,
+              `updated` tinyint(4) DEFAULT '0',
+              `astronote` varchar(30) NOT NULL,
+              `keyword` varchar(30) NOT NULL,
+              PRIMARY KEY (`primaryId`),
+              UNIQUE KEY `astronote_keyword` (`astronote`,`keyword`)
+            ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4;
+        """)
+
+        sqlQueries.append(f"""CREATE TABLE IF NOT EXISTS `astronotes_transients` (
+              `primaryId` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'An internal counter',
+              `dateCreated` datetime DEFAULT CURRENT_TIMESTAMP,
+              `dateLastModified` datetime DEFAULT CURRENT_TIMESTAMP,
+              `updated` tinyint(4) DEFAULT '0',
+              `alt_name` varchar(100) DEFAULT NULL,
+              `astronote` varchar(30) NOT NULL,
+              `decdeg` double DEFAULT NULL,
+              `iauname` varchar(30) DEFAULT NULL,
+              `iauname_prefix` varchar(10) DEFAULT NULL,
+              `objtype` varchar(30) DEFAULT NULL,
+              `radeg` double DEFAULT NULL,
+              `redshift` double DEFAULT NULL,
+              PRIMARY KEY (`primaryId`),
+              UNIQUE KEY `astronote_iauname` (`astronote`,`iauname`),
+              UNIQUE KEY `astronote_alt_name` (`alt_name`,`astronote`)
+            ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4;
+
+        """)
+
+        for sqlQuery in sqlQueries:
+            writequery(
+                log=self.log,
+                sqlQuery=sqlQuery,
+                dbConn=self.dbConn
+            )
+
+        self.log.debug('completed the ``_create_db_tables`` method')
+        return None
 
     # use the tab-trigger below for new method
     # xt-class-method

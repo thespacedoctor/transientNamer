@@ -18,7 +18,8 @@ install_requires = [
     'unicodecsv',
     'numpy',
     'python-dateutil',
-    'bs4'
+    'bs4',
+    'pandas'
 ]
 
 # READ THE DOCS SERVERS
