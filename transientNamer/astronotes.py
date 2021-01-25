@@ -306,7 +306,7 @@ class astronotes(object):
               `html_parsed_flag` TINYINT NULL DEFAULT 0,
               PRIMARY KEY (`primaryId`),
               UNIQUE KEY `astronote` (`astronote`)
-            ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4;
+            ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4;
         """)
 
         sqlQueries.append(f"""CREATE TABLE IF NOT EXISTS `astronotes_keywords` (
@@ -318,7 +318,7 @@ class astronotes(object):
               `keyword` varchar(30) NOT NULL,
               PRIMARY KEY (`primaryId`),
               UNIQUE KEY `astronote_keyword` (`astronote`,`keyword`)
-            ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4;
+            ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4;
         """)
 
         sqlQueries.append(f"""CREATE TABLE IF NOT EXISTS `astronotes_transients` (
@@ -348,7 +348,7 @@ class astronotes(object):
               PRIMARY KEY (`primaryId`),
               UNIQUE KEY `astronote_iauname` (`astronote`,`iauname`),
               UNIQUE KEY `astronote_alt_name` (`alt_name`,`astronote`)
-            ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4;
+            ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4;
         """)
 
         for sqlQuery in sqlQueries:

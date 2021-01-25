@@ -1,7 +1,7 @@
 
 ## Release Notes
 
-**v0.4.0 - January 25, 2021**
+**v0.4.1 - January 25, 2021**
 
 * **FEATURE**:** you can now download and parse astronotes (including ability to add to MySQL database tables)
 * **REFACTOR:** Updated URL to the new TNS URL <https://www.wis-tns.org>  

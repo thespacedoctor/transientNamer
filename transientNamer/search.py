@@ -644,7 +644,7 @@ CREATE TABLE `%(tableNamePrefix)s_sources` (
   `survey` VARCHAR(100) NULL DEFAULT NULL,
   PRIMARY KEY (`primaryId`),
   UNIQUE KEY `tnsid` (`TNSId`)
-) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=latin1;
             """ % locals()
 
             mysqlSources = self.sourceResults.mysql(
@@ -675,7 +675,7 @@ CREATE TABLE `%(tableNamePrefix)s_photometry` (
   UNIQUE KEY `tnsid_survey_obsdate` (`TNSId`,`survey`,`obsdate`),
   UNIQUE INDEX `u_tnsid_survey_obsdate` (`TNSId` ASC, `survey` ASC, `obsdate` ASC),
   UNIQUE INDEX `u_tnsid_obsdate_objname` (`TNSId` ASC, `obsdate` ASC, `objectName` ASC)
-) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=latin1;
             """ % locals()
 
             mysqlPhot = self.photResults.mysql(
@@ -701,7 +701,7 @@ CREATE TABLE `%(tableNamePrefix)s_spectra` (
   PRIMARY KEY (`primaryId`),
   UNIQUE KEY `u_tnsid_survey_obsdate` (`TNSId`,`survey`,`obsdate`),
   UNIQUE KEY `u_id_user_obsdate` (`TNSId`,`TNSuser`,`obsdate`)
-) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=latin1;
             """ % locals()
 
             mysqlSpec = self.specResults.mysql(
@@ -721,7 +721,7 @@ CREATE TABLE `%(tableNamePrefix)s_files` (
   `comment` VARCHAR(800) NULL DEFAULT NULL,
   PRIMARY KEY (`primaryId`),
   UNIQUE KEY `tnsid_url` (`TNSId`,`url`)
-) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=latin1;
             """ % locals()
 
             mysqlFiles = self.relatedFilesResults.mysql(
