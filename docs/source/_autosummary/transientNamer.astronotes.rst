@@ -1,4 +1,4 @@
-astronotes *(class)*
+﻿astronotes *(class)*
 ===================================
 
 .. currentmodule:: transientNamer
