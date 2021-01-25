@@ -360,7 +360,7 @@
     <p id="t306" class="pln"><span class="n"><a href="#t306">306</a></span><span class="t"><span class="str">              `html_parsed_flag` TINYINT NULL DEFAULT 0,</span>&nbsp;</span><span class="r"></span></p>
     <p id="t307" class="pln"><span class="n"><a href="#t307">307</a></span><span class="t"><span class="str">              PRIMARY KEY (`primaryId`),</span>&nbsp;</span><span class="r"></span></p>
     <p id="t308" class="pln"><span class="n"><a href="#t308">308</a></span><span class="t"><span class="str">              UNIQUE KEY `astronote` (`astronote`)</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t309" class="pln"><span class="n"><a href="#t309">309</a></span><span class="t"><span class="str">            ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4;</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t309" class="pln"><span class="n"><a href="#t309">309</a></span><span class="t"><span class="str">            ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4;</span>&nbsp;</span><span class="r"></span></p>
     <p id="t310" class="pln"><span class="n"><a href="#t310">310</a></span><span class="t"><span class="str">        """</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t311" class="pln"><span class="n"><a href="#t311">311</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t312" class="run"><span class="n"><a href="#t312">312</a></span><span class="t">        <span class="nam">sqlQueries</span><span class="op">.</span><span class="nam">append</span><span class="op">(</span><span class="str">f"""CREATE TABLE IF NOT EXISTS `astronotes_keywords` (</span>&nbsp;</span><span class="r"></span></p>
@@ -372,7 +372,7 @@
     <p id="t318" class="pln"><span class="n"><a href="#t318">318</a></span><span class="t"><span class="str">              `keyword` varchar(30) NOT NULL,</span>&nbsp;</span><span class="r"></span></p>
     <p id="t319" class="pln"><span class="n"><a href="#t319">319</a></span><span class="t"><span class="str">              PRIMARY KEY (`primaryId`),</span>&nbsp;</span><span class="r"></span></p>
     <p id="t320" class="pln"><span class="n"><a href="#t320">320</a></span><span class="t"><span class="str">              UNIQUE KEY `astronote_keyword` (`astronote`,`keyword`)</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t321" class="pln"><span class="n"><a href="#t321">321</a></span><span class="t"><span class="str">            ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4;</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t321" class="pln"><span class="n"><a href="#t321">321</a></span><span class="t"><span class="str">            ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4;</span>&nbsp;</span><span class="r"></span></p>
     <p id="t322" class="pln"><span class="n"><a href="#t322">322</a></span><span class="t"><span class="str">        """</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t323" class="pln"><span class="n"><a href="#t323">323</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t324" class="run"><span class="n"><a href="#t324">324</a></span><span class="t">        <span class="nam">sqlQueries</span><span class="op">.</span><span class="nam">append</span><span class="op">(</span><span class="str">f"""CREATE TABLE IF NOT EXISTS `astronotes_transients` (</span>&nbsp;</span><span class="r"></span></p>
@@ -402,7 +402,7 @@
     <p id="t348" class="pln"><span class="n"><a href="#t348">348</a></span><span class="t"><span class="str">              PRIMARY KEY (`primaryId`),</span>&nbsp;</span><span class="r"></span></p>
     <p id="t349" class="pln"><span class="n"><a href="#t349">349</a></span><span class="t"><span class="str">              UNIQUE KEY `astronote_iauname` (`astronote`,`iauname`),</span>&nbsp;</span><span class="r"></span></p>
     <p id="t350" class="pln"><span class="n"><a href="#t350">350</a></span><span class="t"><span class="str">              UNIQUE KEY `astronote_alt_name` (`alt_name`,`astronote`)</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t351" class="pln"><span class="n"><a href="#t351">351</a></span><span class="t"><span class="str">            ) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4;</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t351" class="pln"><span class="n"><a href="#t351">351</a></span><span class="t"><span class="str">            ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4;</span>&nbsp;</span><span class="r"></span></p>
     <p id="t352" class="pln"><span class="n"><a href="#t352">352</a></span><span class="t"><span class="str">        """</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t353" class="pln"><span class="n"><a href="#t353">353</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t354" class="run"><span class="n"><a href="#t354">354</a></span><span class="t">        <span class="key">for</span> <span class="nam">sqlQuery</span> <span class="key">in</span> <span class="nam">sqlQueries</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
@@ -612,7 +612,7 @@
     <div class="content">
         <p>
             <a class="nav" href="index.html">&#xab; index</a> &nbsp; &nbsp; <a class="nav" href="https://coverage.readthedocs.io">coverage.py v5.3.1</a>,
-            created at 2021-01-25 12:23 +0000
+            created at 2021-01-25 14:44 +0000
         </p>
     </div>
 </div>

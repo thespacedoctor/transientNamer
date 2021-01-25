@@ -698,7 +698,7 @@
     <p id="t644" class="pln"><span class="n"><a href="#t644">644</a></span><span class="t"><span class="str">  `survey` VARCHAR(100) NULL DEFAULT NULL,</span>&nbsp;</span><span class="r"></span></p>
     <p id="t645" class="pln"><span class="n"><a href="#t645">645</a></span><span class="t"><span class="str">  PRIMARY KEY (`primaryId`),</span>&nbsp;</span><span class="r"></span></p>
     <p id="t646" class="pln"><span class="n"><a href="#t646">646</a></span><span class="t"><span class="str">  UNIQUE KEY `tnsid` (`TNSId`)</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t647" class="pln"><span class="n"><a href="#t647">647</a></span><span class="t"><span class="str">) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=latin1;</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t647" class="pln"><span class="n"><a href="#t647">647</a></span><span class="t"><span class="str">) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=latin1;</span>&nbsp;</span><span class="r"></span></p>
     <p id="t648" class="pln"><span class="n"><a href="#t648">648</a></span><span class="t"><span class="str">            """</span> <span class="op">%</span> <span class="nam">locals</span><span class="op">(</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t649" class="pln"><span class="n"><a href="#t649">649</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t650" class="run"><span class="n"><a href="#t650">650</a></span><span class="t">            <span class="nam">mysqlSources</span> <span class="op">=</span> <span class="nam">self</span><span class="op">.</span><span class="nam">sourceResults</span><span class="op">.</span><span class="nam">mysql</span><span class="op">(</span>&nbsp;</span><span class="r"></span></p>
@@ -729,7 +729,7 @@
     <p id="t675" class="pln"><span class="n"><a href="#t675">675</a></span><span class="t"><span class="str">  UNIQUE KEY `tnsid_survey_obsdate` (`TNSId`,`survey`,`obsdate`),</span>&nbsp;</span><span class="r"></span></p>
     <p id="t676" class="pln"><span class="n"><a href="#t676">676</a></span><span class="t"><span class="str">  UNIQUE INDEX `u_tnsid_survey_obsdate` (`TNSId` ASC, `survey` ASC, `obsdate` ASC),</span>&nbsp;</span><span class="r"></span></p>
     <p id="t677" class="pln"><span class="n"><a href="#t677">677</a></span><span class="t"><span class="str">  UNIQUE INDEX `u_tnsid_obsdate_objname` (`TNSId` ASC, `obsdate` ASC, `objectName` ASC)</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t678" class="pln"><span class="n"><a href="#t678">678</a></span><span class="t"><span class="str">) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=latin1;</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t678" class="pln"><span class="n"><a href="#t678">678</a></span><span class="t"><span class="str">) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=latin1;</span>&nbsp;</span><span class="r"></span></p>
     <p id="t679" class="pln"><span class="n"><a href="#t679">679</a></span><span class="t"><span class="str">            """</span> <span class="op">%</span> <span class="nam">locals</span><span class="op">(</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t680" class="pln"><span class="n"><a href="#t680">680</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t681" class="run"><span class="n"><a href="#t681">681</a></span><span class="t">            <span class="nam">mysqlPhot</span> <span class="op">=</span> <span class="nam">self</span><span class="op">.</span><span class="nam">photResults</span><span class="op">.</span><span class="nam">mysql</span><span class="op">(</span>&nbsp;</span><span class="r"></span></p>
@@ -755,7 +755,7 @@
     <p id="t701" class="pln"><span class="n"><a href="#t701">701</a></span><span class="t"><span class="str">  PRIMARY KEY (`primaryId`),</span>&nbsp;</span><span class="r"></span></p>
     <p id="t702" class="pln"><span class="n"><a href="#t702">702</a></span><span class="t"><span class="str">  UNIQUE KEY `u_tnsid_survey_obsdate` (`TNSId`,`survey`,`obsdate`),</span>&nbsp;</span><span class="r"></span></p>
     <p id="t703" class="pln"><span class="n"><a href="#t703">703</a></span><span class="t"><span class="str">  UNIQUE KEY `u_id_user_obsdate` (`TNSId`,`TNSuser`,`obsdate`)</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t704" class="pln"><span class="n"><a href="#t704">704</a></span><span class="t"><span class="str">) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=latin1;</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t704" class="pln"><span class="n"><a href="#t704">704</a></span><span class="t"><span class="str">) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=latin1;</span>&nbsp;</span><span class="r"></span></p>
     <p id="t705" class="pln"><span class="n"><a href="#t705">705</a></span><span class="t"><span class="str">            """</span> <span class="op">%</span> <span class="nam">locals</span><span class="op">(</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t706" class="pln"><span class="n"><a href="#t706">706</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t707" class="run"><span class="n"><a href="#t707">707</a></span><span class="t">            <span class="nam">mysqlSpec</span> <span class="op">=</span> <span class="nam">self</span><span class="op">.</span><span class="nam">specResults</span><span class="op">.</span><span class="nam">mysql</span><span class="op">(</span>&nbsp;</span><span class="r"></span></p>
@@ -775,7 +775,7 @@
     <p id="t721" class="pln"><span class="n"><a href="#t721">721</a></span><span class="t"><span class="str">  `comment` VARCHAR(800) NULL DEFAULT NULL,</span>&nbsp;</span><span class="r"></span></p>
     <p id="t722" class="pln"><span class="n"><a href="#t722">722</a></span><span class="t"><span class="str">  PRIMARY KEY (`primaryId`),</span>&nbsp;</span><span class="r"></span></p>
     <p id="t723" class="pln"><span class="n"><a href="#t723">723</a></span><span class="t"><span class="str">  UNIQUE KEY `tnsid_url` (`TNSId`,`url`)</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t724" class="pln"><span class="n"><a href="#t724">724</a></span><span class="t"><span class="str">) ENGINE=MyISAM AUTO_INCREMENT=0 DEFAULT CHARSET=latin1;</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t724" class="pln"><span class="n"><a href="#t724">724</a></span><span class="t"><span class="str">) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=latin1;</span>&nbsp;</span><span class="r"></span></p>
     <p id="t725" class="pln"><span class="n"><a href="#t725">725</a></span><span class="t"><span class="str">            """</span> <span class="op">%</span> <span class="nam">locals</span><span class="op">(</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t726" class="pln"><span class="n"><a href="#t726">726</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t727" class="run"><span class="n"><a href="#t727">727</a></span><span class="t">            <span class="nam">mysqlFiles</span> <span class="op">=</span> <span class="nam">self</span><span class="op">.</span><span class="nam">relatedFilesResults</span><span class="op">.</span><span class="nam">mysql</span><span class="op">(</span>&nbsp;</span><span class="r"></span></p>
@@ -1400,7 +1400,7 @@
     <div class="content">
         <p>
             <a class="nav" href="index.html">&#xab; index</a> &nbsp; &nbsp; <a class="nav" href="https://coverage.readthedocs.io">coverage.py v5.3.1</a>,
-            created at 2021-01-25 12:23 +0000
+            created at 2021-01-25 14:44 +0000
         </p>
     </div>
 </div>
