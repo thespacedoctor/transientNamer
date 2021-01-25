@@ -12,6 +12,7 @@
 .. autosummary::
    :nosignatures:
 
+   transientNamer.astronotes
    transientNamer.search 
 
 **Functions**

@@ -1,7 +1,7 @@
 #!/usr/local/bin/python
 # encoding: utf-8
 """
-*Search the Transient Name Server given a set of coordinates and a search radius*
+*Search the Transient Name Server with various search constraints*
 
 :Author:
     David Young
@@ -29,7 +29,7 @@ import time
 
 class search(object):
     """
-    *The worker class for the transient namer search module*
+    *Search the Transient Name Server with various search constraints*
 
     **Key Arguments**
 

@@ -1,9 +1,9 @@
-﻿utKit *(class)*
-====================================
+astronotes *(class)*
+===================================
 
-.. currentmodule:: transientNamer.utKit
+.. currentmodule:: transientNamer
 
-.. autoclass:: utKit
+.. autoclass:: astronotes
    :members:
    :show-inheritance:
    :inherited-members:
@@ -19,19 +19,15 @@
         
    
         
-            ~utKit.get_project_root
+            ~astronotes.download
        
    
         
-            ~utKit.refresh_database
+            ~astronotes.get_all_noteids
        
    
         
-            ~utKit.setupModule
-       
-   
-        
-            ~utKit.tearDownModule
+            ~astronotes.notes_to_database
        
    
    .. 
@@ -88,6 +84,16 @@
    ..     
    .. 
    ..     
+   ..          ~astronotes._create_db_tables
+   ..      
+   .. 
+   ..     
+   ..          ~astronotes._parse_html_to_database
+   ..      
+   .. 
+   ..     
+   ..          ~astronotes._parse_json_to_database
+   ..      
    .. 
    ..     
    .. 

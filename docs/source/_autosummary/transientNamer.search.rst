@@ -1,4 +1,4 @@
-﻿search *(class)*
+search *(class)*
 ===============================
 
 .. currentmodule:: transientNamer
