@@ -19,7 +19,8 @@ install_requires = [
     'numpy',
     'python-dateutil',
     'bs4',
-    'pandas'
+    'pandas',
+    'multiprocess'
 ]
 
 # READ THE DOCS SERVERS
@@ -42,7 +43,6 @@ setup(name="transientNamer",
           'Development Status :: 4 - Beta',
           'License :: OSI Approved :: MIT License',
           'Programming Language :: Python :: 3.7',
-          'Programming Language :: Python :: 2.7',
           'Topic :: Utilities',
       ],
       keywords=['astronomy, transients'],
