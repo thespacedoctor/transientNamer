@@ -8,11 +8,13 @@
         transientNamer [-c] cone <ra> <dec> <arcsecRadius> [<render> | mysql <tableNamePrefix>] [-o directory]
         transientNamer [-c] search <name> [<render> | mysql <tableNamePrefix>] [-o directory]
         transientNamer [-c] new <reportedInLastDays> [<render> | mysql <tableNamePrefix>] [-o directory]
+        transientNamer [-i] notes <reportedInLastDays> 
     
     Commands:
         cone                  perform a conesearch on the TNS
         search                perform a name search on the TNS
         new                   list newly reported TNS objects
+        notes                 download astronotes amd cache in local directory
         
     Arguments:
         ra
@@ -30,6 +32,7 @@
         -v, --version                        show version
         -s, --settings                       the settings file
         -c, --withComments                   return TNS comments in result sets
+        -i, --import                         parse and import the content of the astronotes into a MySQL database
         -o directory, --output=directory     output to files in the directory path
     
 

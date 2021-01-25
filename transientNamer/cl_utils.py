@@ -7,11 +7,13 @@ Usage:
     transientNamer [-c] cone <ra> <dec> <arcsecRadius> [<render> | mysql <tableNamePrefix>] [-o directory]
     transientNamer [-c] search <name> [<render> | mysql <tableNamePrefix>] [-o directory]
     transientNamer [-c] new <reportedInLastDays> [<render> | mysql <tableNamePrefix>] [-o directory]
+    transientNamer [-i] notes <reportedInLastDays> 
 
 Commands:
     cone                  perform a conesearch on the TNS
     search                perform a name search on the TNS
     new                   list newly reported TNS objects
+    notes                 download astronotes amd cache in local directory
     
 Arguments:
     ra
@@ -29,6 +31,7 @@ Options:
     -v, --version                        show version
     -s, --settings                       the settings file
     -c, --withComments                   return TNS comments in result sets
+    -i, --import                         parse and import the content of the astronotes into a MySQL database
     -o directory, --output=directory     output to files in the directory path
 """
 from __future__ import print_function
@@ -42,6 +45,7 @@ from docopt import docopt
 from fundamentals import tools, times
 from subprocess import Popen, PIPE, STDOUT
 import transientNamer
+from transientNamer import astronotes
 
 
 def tab_complete(text, state):
@@ -97,7 +101,9 @@ def main(arguments=None):
     name = a["name"]
     render = a["render"]
     tableNamePrefix = a["tableNamePrefix"]
+    notes = a["notes"]
 
+    parse = a["importFlag"]
     mysql = a["mysql"]
     reportedInLastDays = a["reportedInLastDays"]
     withCommentsFlag = a["withCommentsFlag"]
@@ -210,6 +216,20 @@ def main(arguments=None):
             print(files)
             print("\n# Original TNS Search URL")
             print(tns.url)
+
+    if notes:
+        an = astronotes.astronotes(
+            log=log,
+            dbConn=dbConn,
+            settings=settings
+        )
+        downloadCount = an.download(
+            cache_dir=settings["astronote-cache"], inLastDays=reportedInLastDays)
+        print(f"{downloadCount} new astronotes downloaded and cached")
+
+        if parse:
+            print(f"importing notes into database tables")
+            an.notes_to_database()
 
     if "dbConn" in locals() and dbConn:
         dbConn.commit()

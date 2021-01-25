@@ -99,7 +99,7 @@ class test_astronotes(unittest.TestCase):
         )
         downloadCount = an.download(
             cache_dir=settings["astronote-cache"], inLastDays=30)
-        print(f"{downloadCount} new astronotes downloaded anc cached")
+        print(f"{downloadCount} new astronotes downloaded and cached")
 
         an.notes_to_database()
 

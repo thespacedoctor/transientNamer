@@ -17,8 +17,7 @@
 
 *Python API for reading and caching TNS reports*.
 
-Documentation for transientNamer is hosted by [Read the Docs](https://transientNamer.readthedocs.io/en/master/) (
-[development version](https://transientNamer.readthedocs.io/en/develop/) and [master version](https://transientNamer.readthedocs.io/en/master/)). The code lives on [github](https://github.com/thespacedoctor/transientNamer). Please report any issues you find [here](https://github.com/thespacedoctor/transientNamer/issues).
+Documentation for transientNamer is hosted by [Read the Docs](https://transientNamer.readthedocs.io/en/master/) ([development version](https://transientNamer.readthedocs.io/en/develop/) and [master version](https://transientNamer.readthedocs.io/en/master/)). The code lives on [github](https://github.com/thespacedoctor/transientNamer). Please report any issues you find [here](https://github.com/thespacedoctor/transientNamer/issues).
 
 ## Features
 

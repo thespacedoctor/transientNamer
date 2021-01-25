@@ -9,6 +9,7 @@
 
    install
    initialisation
+   downloading_astronotes
    todolist
    changes_link
 ```

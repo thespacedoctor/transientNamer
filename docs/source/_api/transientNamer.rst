@@ -23,6 +23,7 @@ Submodules
 .. toctree::
    :maxdepth: 4
 
+   transientNamer.astronotes
    transientNamer.cl_utils
    transientNamer.search
    transientNamer.utKit

@@ -17,6 +17,7 @@ Classes
    :toctree: _autosummary
    :nosignatures:
 
+   transientNamer.astronotes
    transientNamer.search 
 
 
