@@ -22,7 +22,12 @@ database settings:
     password: dbpass
 
 astronote-cache: ~/Desktop/astronotes
+
+# FIND IN YOUR USER ACCOUNT SETTING ON TNS : https://www.wis-tns.org
+user-agent: 'tns_marker{"XXXX"}'
 ```
+
+You will need to register to the TNS to get a unique `tns-marker` from your account settings on <https://www.wis-tns.org>. Once you have the `tns-marker` add it to your settings file.
 
 ## Basic Python Setup
 

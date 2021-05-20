@@ -17,6 +17,12 @@ version: 1
 #     remote datbase host: mydatabaseName
 #     port: 9002
 
+astronote-cache: /tmp/astronote-cache
+
+# FIND IN YOUR USER ACCOUNT SETTING ON TNS : https://www.wis-tns.org
+user-agent: 'tns_marker{"XXXX"}'
+
+
 logging settings:
     formatters:
         file_style:
