@@ -1,8 +1,10 @@
 
 ## Release Notes
 
-requests will fail if TNS responds with any status other than 200
-added user-agent header now required by TNS (needs added in the settings file)
+**v0.4.2 - January 25, 2021**
+
+* **REFACTOR:** requests will fail if TNS responds with any status other than 200
+* **REFACTOR:** added user-agent header now required by TNS (needs added in the settings file)
 
 **v0.4.1 - January 25, 2021**
 
