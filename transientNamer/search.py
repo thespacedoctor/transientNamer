@@ -762,10 +762,11 @@ CREATE TABLE `%(tableNamePrefix)s_files` (
             status_code, content, self._searchURL = self._get_tns_search_results()
 
             if status_code != 200:
-                self.log.error(
-                    'cound not get the search reuslts from the TNS, HTML error code %(status_code)s ' % locals())
                 # IF FAILED TOO MANY TIME - RETURN WHAT WE HAVE
-                if failedCount > 1:
+                if failedCount > 2:
+                    self.log.error(f'cound not get the search reuslts from the TNS, HTML error code {status_code}. Search URL was {self._searchURL}')
+                    raise ConnectionError(
+                        'cound not get the search reuslts from the TNS, HTML error code %(status_code)s ' % locals())
                     return sourceTable, photoTable, specTable, relatedFilesTable
                 failedCount += 1
 
@@ -851,6 +852,9 @@ CREATE TABLE `%(tableNamePrefix)s_files` (
                     "display[sources]": "1",
                     "display[bibcode]": "1",
                 },
+                headers={
+                    'User-Agent': self.settings["user-agent"]
+                }
             )
 
         except requests.exceptions.RequestException:

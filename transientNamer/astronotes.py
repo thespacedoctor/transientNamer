@@ -113,6 +113,9 @@ class astronotes(object):
                         "page": page,
                         "format": "json"
                     },
+                    headers={
+                        'User-Agent': self.settings["user-agent"]
+                    }
                 )
                 searchPage = response.content.decode("utf-8")
             except requests.exceptions.RequestException:
@@ -153,6 +156,10 @@ class astronotes(object):
                 try:
                     response = requests.get(
                         url=f"https://www.wis-tns.org/astronotes/astronote/{n}",
+                        headers={
+                            'User-Agent': self.settings["user-agent"]
+                        }
+
                     )
                     noteContent = response.content.decode("utf-8")
                 except requests.exceptions.RequestException:
@@ -207,6 +214,9 @@ class astronotes(object):
                         "num_page": paginationSets,
                         "page": page
                     },
+                    headers={
+                        'User-Agent': self.settings["user-agent"]
+                    }
                 )
                 searchPage = response.content.decode("utf-8")
             except requests.exceptions.RequestException:
@@ -214,8 +224,6 @@ class astronotes(object):
             page += 1
 
             # GET NOTES WRAPPER
-
-            getpage = requests.get('http://www.learningaboutelectronics.com')
             getpage_soup = BeautifulSoup(searchPage, 'html.parser')
             noteswrapper = getpage_soup.find(
                 'div', {'id': 'notes-wrapper'})
@@ -265,7 +273,6 @@ class astronotes(object):
         astronoteIds[:] = [l["astronote"] for l in rows]
 
         self._parse_json_to_database(skipAstronoteIds=astronoteIds)
-        astronoteIds = []
         self._parse_html_to_database(skipAstronoteIds=astronoteIds)
 
         self.log.debug('completed the ``notes_to_database`` method')
