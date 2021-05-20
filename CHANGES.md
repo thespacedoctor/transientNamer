@@ -1,8 +1,11 @@
 
 ## Release Notes
 
-**v0.4.2 - January 25, 2021**
+**v0.4.3 - January 25, 2021**
 
+* **FIXED**: call to settings file now explicit from command-line (was not required until tns-marker added)
+
+**v0.4.2 - January 25, 2021**
 
 * **REFACTOR:** requests will fail if TNS responds with any status other than 200
 * **REFACTOR:** added user-agent header now required by TNS (needs added in the settings file)
