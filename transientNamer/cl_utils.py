@@ -161,19 +161,22 @@ def main(arguments=None):
                 ra=ra,
                 dec=dec,
                 radiusArcsec=arcsecRadius,
-                comments=withCommentsFlag
+                comments=withCommentsFlag,
+                settings=settings
             )
         if name:
             tns = transientNamer.search(
                 log=log,
                 name=name,
-                comments=withCommentsFlag
+                comments=withCommentsFlag,
+                settings=settings
             )
         if reportedInLastDays:
             tns = transientNamer.search(
                 log=log,
                 discInLastDays=reportedInLastDays,
-                comments=withCommentsFlag
+                comments=withCommentsFlag,
+                settings=settings
             )
 
         # Recursively create missing directories
