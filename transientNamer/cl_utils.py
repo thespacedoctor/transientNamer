@@ -4,10 +4,10 @@
 Documentation for transientNamer can be found here: http://transientNamer.readthedocs.org/en/stable
 
 Usage:
-    transientNamer [-c] cone <ra> <dec> <arcsecRadius> [<render> | mysql <tableNamePrefix>] [-o directory]
-    transientNamer [-c] search <name> [<render> | mysql <tableNamePrefix>] [-o directory]
-    transientNamer [-c] new <reportedInLastDays> [<render> | mysql <tableNamePrefix>] [-o directory]
-    transientNamer [-i] notes <reportedInLastDays> 
+    transientNamer [-c] cone <ra> <dec> <arcsecRadius> [<render> | mysql <tableNamePrefix>] [-o directory] [-s pathToSettingsFile]
+    transientNamer [-c] search <name> [<render> | mysql <tableNamePrefix>] [-o directory] [-s pathToSettingsFile]
+    transientNamer [-c] new <reportedInLastDays> [<render> | mysql <tableNamePrefix>] [-o directory] [-s pathToSettingsFile]
+    transientNamer [-i] notes <reportedInLastDays> [-s pathToSettingsFile]
 
 Commands:
     cone                  perform a conesearch on the TNS
@@ -27,12 +27,12 @@ Arguments:
     mysql                 generate mysql insert scripts
 
 Options:
-    -h, --help                           show this help message
-    -v, --version                        show version
-    -s, --settings                       the settings file
-    -c, --withComments                   return TNS comments in result sets
-    -i, --import                         parse and import the content of the astronotes into a MySQL database
-    -o directory, --output=directory     output to files in the directory path
+    -h, --help                                              show this help message
+    -v, --version                                           show version
+    -s pathToSettingsFile, --settings=pathToSettingsFile    the settings file
+    -c, --withComments                                      return TNS comments in result sets
+    -i, --import                                            parse and import the content of the astronotes into a MySQL database
+    -o directory, --output=directory                        output to files in the directory path
 """
 from __future__ import print_function
 import sys
