@@ -795,6 +795,8 @@ CREATE TABLE `%(tableNamePrefix)s_files` (
                 sourceContent = transientRow.group()
                 discInfo, TNSId = self._parse_discovery_information(
                     sourceContent)
+                if 'survey' not in discInfo:
+                    discInfo['survey'] = None
                 sourceTable.append(discInfo)
 
                 # PHOTOMETERY
