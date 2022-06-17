@@ -55,7 +55,7 @@ class test_astronotes(unittest.TestCase):
 
     def test_astronotes_create_tables_function(self):
         import time
-        time.sleep(10)
+        time.sleep(15)
 
         from fundamentals.mysql import writequery
         sqlQueries = [
@@ -85,7 +85,7 @@ class test_astronotes(unittest.TestCase):
 
     def test_astronotes_function(self):
         import time
-        time.sleep(10)
+        time.sleep(15)
 
         from transientNamer import astronotes
         an = astronotes(
@@ -109,7 +109,7 @@ class test_astronotes(unittest.TestCase):
 
     def test_astronotes_function_exception(self):
         import time
-        time.sleep(10)
+        time.sleep(15)
 
         from transientNamer import astronotes
         try:

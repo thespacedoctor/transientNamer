@@ -51,7 +51,7 @@ class test_cl_utils(unittest.TestCase):
 
     def test_cone_search(self):
         import time
-        time.sleep(10)
+        time.sleep(15)
         # TEST CL-OPTIONS
         command = f"transientNamer cone 06:45:03.36 +35:44:29.8 5. -s {settingsFile}"
         args = docopt(doc, command.split(" ")[1:])
@@ -60,7 +60,7 @@ class test_cl_utils(unittest.TestCase):
 
     def test_cone_search_comments(self):
         import time
-        time.sleep(10)
+        time.sleep(15)
         # TEST CL-OPTIONS
         command = f"transientNamer -c cone 06:45:03.36 +35:44:29.8 5. -s {settingsFile}"
         args = docopt(doc, command.split(" ")[1:])
@@ -69,32 +69,32 @@ class test_cl_utils(unittest.TestCase):
 
     def test_cone_search_render(self):
         import time
-        time.sleep(10)
+        time.sleep(15)
         # TEST CL-OPTIONS
         command = f"transientNamer -c cone 06:45:03.36 +35:44:29.8 5. json -s {settingsFile}"
         args = docopt(doc, command.split(" ")[1:])
         cl_utils.main(args)
 
         # TEST CL-OPTIONS
-        time.sleep(10)
+        time.sleep(15)
         command = f"transientNamer -c cone 06:45:03.36 +35:44:29.8 5. csv -s {settingsFile}"
         args = docopt(doc, command.split(" ")[1:])
         cl_utils.main(args)
 
         # TEST CL-OPTIONS
-        time.sleep(10)
+        time.sleep(15)
         command = f"transientNamer -c cone 06:45:03.36 +35:44:29.8 5. table -s {settingsFile}"
         args = docopt(doc, command.split(" ")[1:])
         cl_utils.main(args)
 
         # TEST CL-OPTIONS
-        time.sleep(10)
+        time.sleep(15)
         command = f"transientNamer -c cone 06:45:03.36 +35:44:29.8 5. markdown -s {settingsFile}"
         args = docopt(doc, command.split(" ")[1:])
         cl_utils.main(args)
 
         # TEST CL-OPTIONS
-        time.sleep(10)
+        time.sleep(15)
         command = f"transientNamer -c cone 06:45:03.36 +35:44:29.8 5. yaml -s {settingsFile}"
         args = docopt(doc, command.split(" ")[1:])
         cl_utils.main(args)
@@ -102,7 +102,7 @@ class test_cl_utils(unittest.TestCase):
 
     def test_cone_search_mysql(self):
         import time
-        time.sleep(10)
+        time.sleep(15)
         # TEST CL-OPTIONS
         command = f"transientNamer cone 06:45:03.36 +35:44:29.8 5. mysql test_table -s {settingsFile}"
         args = docopt(doc, command.split(" ")[1:])
@@ -111,7 +111,7 @@ class test_cl_utils(unittest.TestCase):
 
     def test_cone_search_mysql_to_file(self):
         import time
-        time.sleep(10)
+        time.sleep(15)
         # TEST CL-OPTIONS
         thisDir = pathToOutputDir
         command = f"transientNamer cone 06:45:03.36 +35:44:29.8 5. mysql test_table -o %(thisDir)s/cl_output/ -s {settingsFile}"
@@ -121,7 +121,7 @@ class test_cl_utils(unittest.TestCase):
 
     def test_name_search(self):
         import time
-        time.sleep(10)
+        time.sleep(15)
         # TEST CL-OPTIONS
         command = f"transientNamer search 2016fbz -s {settingsFile}"
         args = docopt(doc, command.split(" ")[1:])
@@ -130,38 +130,38 @@ class test_cl_utils(unittest.TestCase):
 
     def test_name_search_render(self):
         import time
-        time.sleep(10)
+        time.sleep(15)
         # TEST CL-OPTIONS
         command = f"transientNamer search 2016fbz json -s {settingsFile}"
         args = docopt(doc, command.split(" ")[1:])
         cl_utils.main(args)
 
         # TEST CL-OPTIONS
-        time.sleep(10)
+        time.sleep(15)
         command = f"transientNamer search 2016fbz json -s {settingsFile}"
         args = docopt(doc, command.split(" ")[1:])
         cl_utils.main(args)
 
         # TEST CL-OPTIONS
-        time.sleep(10)
+        time.sleep(15)
         command = f"transientNamer search 2016fbz csv -s {settingsFile}"
         args = docopt(doc, command.split(" ")[1:])
         cl_utils.main(args)
 
         # TEST CL-OPTIONS
-        time.sleep(10)
+        time.sleep(15)
         command = f"transientNamer search 2016fbz table -s {settingsFile}"
         args = docopt(doc, command.split(" ")[1:])
         cl_utils.main(args)
 
         # TEST CL-OPTIONS
-        time.sleep(10)
+        time.sleep(15)
         command = f"transientNamer search 2016fbz yaml -s {settingsFile}"
         args = docopt(doc, command.split(" ")[1:])
         cl_utils.main(args)
 
         # TEST CL-OPTIONS
-        time.sleep(10)
+        time.sleep(15)
         command = f"transientNamer search 2016fbz markdown -s {settingsFile}"
         args = docopt(doc, command.split(" ")[1:])
         cl_utils.main(args)
@@ -169,7 +169,7 @@ class test_cl_utils(unittest.TestCase):
 
     def test_name_search_mysql(self):
         import time
-        time.sleep(10)
+        time.sleep(15)
         # TEST CL-OPTIONS
         command = f"transientNamer search 2016fbz mysql test_search -s {settingsFile}"
         args = docopt(doc, command.split(" ")[1:])
@@ -177,7 +177,7 @@ class test_cl_utils(unittest.TestCase):
 
     def test_name_search_output_to_file(self):
         import time
-        time.sleep(10)
+        time.sleep(15)
         # TEST CL-OPTIONS
         thisDir = pathToOutputDir
         command = f"transientNamer search 2016fbz markdown -o %(thisDir)s/cl_output -s {settingsFile}"
@@ -186,7 +186,7 @@ class test_cl_utils(unittest.TestCase):
 
     def test_name_new(self):
         import time
-        time.sleep(10)
+        time.sleep(15)
         # TEST CL-OPTIONS
         thisDir = pathToOutputDir
         command = f"transientNamer new 2 markdown -o %(thisDir)s/cl_output -s {settingsFile}"
@@ -195,7 +195,7 @@ class test_cl_utils(unittest.TestCase):
 
     def test_name_new_render(self):
         import time
-        time.sleep(10)
+        time.sleep(15)
         # TEST CL-OPTIONS
         thisDir = pathToOutputDir
         command = f"transientNamer new 2 markdown -o %(thisDir)s/cl_output -s {settingsFile}"
@@ -204,7 +204,7 @@ class test_cl_utils(unittest.TestCase):
 
     def test_name_new_mysql(self):
         import time
-        time.sleep(10)
+        time.sleep(15)
         # TEST CL-OPTIONS
         thisDir = pathToOutputDir
         command = f"transientNamer new 2 mysql test_new -s {settingsFile}"
@@ -213,7 +213,7 @@ class test_cl_utils(unittest.TestCase):
 
     def test_name_new_to_file(self):
         import time
-        time.sleep(10)
+        time.sleep(15)
         # TEST CL-OPTIONS
         thisDir = pathToOutputDir
         command = f"transientNamer new 2 markdown -o %(thisDir)s/cl_output -s {settingsFile}"
