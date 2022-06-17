@@ -54,6 +54,8 @@ except:
 class test_astronotes(unittest.TestCase):
 
     def test_astronotes_create_tables_function(self):
+        import time
+        time.sleep(10)
 
         from fundamentals.mysql import writequery
         sqlQueries = [
@@ -82,6 +84,8 @@ class test_astronotes(unittest.TestCase):
         # print(noteIds)
 
     def test_astronotes_function(self):
+        import time
+        time.sleep(10)
 
         from transientNamer import astronotes
         an = astronotes(
@@ -104,6 +108,8 @@ class test_astronotes(unittest.TestCase):
         an.notes_to_database()
 
     def test_astronotes_function_exception(self):
+        import time
+        time.sleep(10)
 
         from transientNamer import astronotes
         try:

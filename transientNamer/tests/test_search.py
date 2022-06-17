@@ -38,9 +38,12 @@ shutil.copytree(pathToInputDir, pathToOutputDir)
 if not os.path.exists(pathToOutputDir):
     os.makedirs(pathToOutputDir)
 
+
 class test_search(unittest.TestCase):
 
     def test_search_function01(self):
+        import time
+        time.sleep(10)
         kwargs = {}
         kwargs["log"] = log
         kwargs["settings"] = settings
@@ -78,6 +81,8 @@ class test_search(unittest.TestCase):
         tns.markdown(dirPath=pathToOutputDir)
 
     def test_search_function02(self):
+        import time
+        time.sleep(10)
         kwargs = {}
         kwargs["log"] = log
         kwargs["settings"] = settings
@@ -96,6 +101,8 @@ class test_search(unittest.TestCase):
         tns.markdown(dirPath=pathToOutputDir)
 
     def test_search_function03(self):
+        import time
+        time.sleep(10)
         # A TEST FOR MUPTIPLE RESULTS
         kwargs = {}
         kwargs["log"] = log
@@ -116,6 +123,8 @@ class test_search(unittest.TestCase):
         tns.markdown(dirPath=pathToOutputDir)
 
     def test_search_function04(self):
+        import time
+        time.sleep(10)
         # A TEST FOR MUPTIPLE RESULTS
         kwargs = {}
         kwargs["log"] = log
@@ -134,6 +143,8 @@ class test_search(unittest.TestCase):
         tns.markdown(dirPath=pathToOutputDir)
 
     def test_search_function05(self):
+        import time
+        time.sleep(10)
         # A TEST FOR MUPTIPLE RESULTS
         kwargs = {}
         kwargs["log"] = log
@@ -153,6 +164,8 @@ class test_search(unittest.TestCase):
         tns.markdown(dirPath=pathToOutputDir)
 
     def test_search_function06(self):
+        import time
+        time.sleep(10)
         # A TEST FOR MUPTIPLE RESULTS
         kwargs = {}
         kwargs["log"] = log
