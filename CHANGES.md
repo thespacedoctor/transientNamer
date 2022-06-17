@@ -1,6 +1,10 @@
 
 ## Release Notes
 
+**v0.4.4 - June 17, 2022**
+
+* **FIXED**: unit-tests failing due to throttling from TNS
+
 **v0.4.3 - January 25, 2021**
 
 * **FIXED**: call to settings file now explicit from command-line (was not required until tns-marker added)
