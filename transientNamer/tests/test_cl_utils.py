@@ -114,7 +114,7 @@ class test_cl_utils(unittest.TestCase):
         time.sleep(15)
         # TEST CL-OPTIONS
         thisDir = pathToOutputDir
-        command = f"transientNamer cone 06:45:03.36 +35:44:29.8 5. mysql test_table -o %(thisDir)s/cl_output/ -s {settingsFile}"
+        command = f"transientNamer cone 06:45:03.36 +35:44:29.8 5. mysql test_table -o {thisDir}/cl_output/ -s {settingsFile}"
         args = docopt(doc, command.split(" ")[1:])
         cl_utils.main(args)
         return
@@ -180,7 +180,7 @@ class test_cl_utils(unittest.TestCase):
         time.sleep(15)
         # TEST CL-OPTIONS
         thisDir = pathToOutputDir
-        command = f"transientNamer search 2016fbz markdown -o %(thisDir)s/cl_output -s {settingsFile}"
+        command = f"transientNamer search 2016fbz markdown -o {thisDir}/cl_output -s {settingsFile}"
         args = docopt(doc, command.split(" ")[1:])
         cl_utils.main(args)
 
@@ -189,7 +189,7 @@ class test_cl_utils(unittest.TestCase):
         time.sleep(15)
         # TEST CL-OPTIONS
         thisDir = pathToOutputDir
-        command = f"transientNamer new 2 markdown -o %(thisDir)s/cl_output -s {settingsFile}"
+        command = f"transientNamer new 2 markdown -o {thisDir}/cl_output -s {settingsFile}"
         args = docopt(doc, command.split(" ")[1:])
         cl_utils.main(args)
 
@@ -198,7 +198,7 @@ class test_cl_utils(unittest.TestCase):
         time.sleep(15)
         # TEST CL-OPTIONS
         thisDir = pathToOutputDir
-        command = f"transientNamer new 2 markdown -o %(thisDir)s/cl_output -s {settingsFile}"
+        command = f"transientNamer new 2 markdown -o {thisDir}/cl_output -s {settingsFile}"
         args = docopt(doc, command.split(" ")[1:])
         cl_utils.main(args)
 
@@ -216,7 +216,7 @@ class test_cl_utils(unittest.TestCase):
         time.sleep(15)
         # TEST CL-OPTIONS
         thisDir = pathToOutputDir
-        command = f"transientNamer new 2 markdown -o %(thisDir)s/cl_output -s {settingsFile}"
+        command = f"transientNamer new 2 markdown -o {thisDir}/cl_output -s {settingsFile}"
         args = docopt(doc, command.split(" ")[1:])
         cl_utils.main(args)
 
