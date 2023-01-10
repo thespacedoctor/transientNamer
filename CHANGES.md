@@ -1,6 +1,10 @@
 
 ## Release Notes
 
+**v0.4.5 - January 10, 2023**
+
+* **FIXED**: changes to search url to reflectv changes made on the TNS. All transients should now be reported again.
+
 **v0.4.4 - June 17, 2022**
 
 * **FIXED**: unit-tests failing due to throttling from TNS
