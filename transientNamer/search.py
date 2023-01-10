@@ -7,6 +7,16 @@
     David Young
 """
 from __future__ import print_function
+import time
+from astrocalc.coords import unit_conversion
+from fundamentals.renderer import list_of_dictionaries
+from fundamentals.files import list_of_dictionaries_to_mysql_inserts
+import time as timesleep
+from datetime import datetime, date, time, timedelta
+from fundamentals import tools
+from operator import itemgetter
+import collections
+import copy
 from builtins import str
 from builtins import object
 import sys
@@ -14,17 +24,7 @@ import os
 import re
 import requests
 requests.packages.urllib3.disable_warnings()
-import copy
-import collections
-from operator import itemgetter
 os.environ['TERM'] = 'vt100'
-from fundamentals import tools
-from datetime import datetime, date, time, timedelta
-import time as timesleep
-from fundamentals.files import list_of_dictionaries_to_mysql_inserts
-from fundamentals.renderer import list_of_dictionaries
-from astrocalc.coords import unit_conversion
-import time
 
 
 class search(object):
@@ -104,7 +104,7 @@ class search(object):
         self.internal_name = ""
         self.discInLastDays = discInLastDays
         self.page = 0
-        self.batchSize = 500
+        self.batchSize = 50
 
         # CREATE THE TIME-RANGE WINDOW TO SEARCH TNS
         if not discInLastDays:
