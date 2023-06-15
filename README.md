@@ -1,5 +1,10 @@
 # transientNamer
 
+
+
+[![](https://zenodo.org/badge/53676687.svg)](https://zenodo.org/badge/latestdoi/53676687) 
+
+
 <!-- INFO BADGES -->  
 
 [![](https://img.shields.io/pypi/pyversions/transientNamer)](https://pypi.org/project/transientNamer/)  
@@ -23,5 +28,19 @@ Documentation for transientNamer is hosted by [Read the Docs](https://transientN
 
 * 
 
+## How to cite transientNamer
+
+If you use `transientNamer` in your work, please cite using the following BibTeX entry: 
+
+```bibtex
+@software{Young_transientNamer,
+    author = {Young, David R.},
+    doi = {10.5281/zenodo.7970680},
+    license = {GPL-3.0-only},
+    title = {{transientNamer}},
+    url = {https://github.com/thespacedoctor/transientNamer}
+}
+```
+ 
 
 
