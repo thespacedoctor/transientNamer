@@ -1,0 +1,12 @@
+cff-version: 1.2.0
+title: transientNamer
+message: If you use this software, please cite it as below.
+authors:
+- family-names: "Young"
+  given-names: "David R."
+  orcid: "https://orcid.org/0000-0002-1229-2499"
+doi: 10.5281/zenodo.7970743
+url: "https://github.com/thespacedoctor/transientNamer"
+abstract: Python API for reading and caching TNS reports.
+keywords: [astronomy]
+license: GPL-3.0-only
