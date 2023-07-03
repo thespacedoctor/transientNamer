@@ -9,21 +9,21 @@
 :Date Created:
     January 15, 2021
 """
+from bs4 import BeautifulSoup
+import codecs
+import time
+from fundamentals.mysql import readquery
+from fundamentals.mysql import convert_dictionary_to_mysql_table
+from fundamentals.mysql import insert_list_of_dictionaries_into_database_tables
+from pprint import pprint
+import json
+import requests
+from fundamentals import tools
 from builtins import object
 import sys
 import re
 import os
 os.environ['TERM'] = 'vt100'
-from fundamentals import tools
-import requests
-import json
-from pprint import pprint
-from fundamentals.mysql import insert_list_of_dictionaries_into_database_tables
-from fundamentals.mysql import convert_dictionary_to_mysql_table
-from fundamentals.mysql import readquery
-import time
-import codecs
-from bs4 import BeautifulSoup
 
 
 class astronotes(object):
@@ -552,7 +552,7 @@ class astronotes(object):
                     dateCreated=True,
                     batchSize=2500,
                     replace=True,
-                    # dbSettings=self.settings["database settings"]
+                    dbSettings=self.settings["database settings"]
                 )
 
         self.log.debug('completed the ``_parse_html_to_database`` method')

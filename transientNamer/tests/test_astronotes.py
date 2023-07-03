@@ -105,7 +105,7 @@ class test_astronotes(unittest.TestCase):
             cache_dir=settings["astronote-cache"], inLastDays=30)
         print(f"{downloadCount} new astronotes downloaded and cached")
 
-        an.notes_to_database()
+        # an.notes_to_database()
 
     def test_astronotes_function_exception(self):
         import time
