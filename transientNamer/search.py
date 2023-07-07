@@ -8,7 +8,7 @@
 """
 from __future__ import print_function
 import time
-from astrocalc.coords import unit_conversion
+
 from fundamentals.renderer import list_of_dictionaries
 from fundamentals.files import list_of_dictionaries_to_mysql_inserts
 import time as timesleep
@@ -956,6 +956,7 @@ CREATE TABLE `%(tableNamePrefix)s_files` (
         self.log.debug('starting the ``_parse_discovery_information`` method')
 
         # ASTROCALC UNIT CONVERTER OBJECT
+        from astrocalc.coords import unit_conversion
         converter = unit_conversion(
             log=self.log
         )
