@@ -9,7 +9,7 @@
 :Date Created:
     January 15, 2021
 """
-from bs4 import BeautifulSoup
+
 import codecs
 import time
 from fundamentals.mysql import readquery
@@ -195,6 +195,8 @@ class astronotes(object):
         ```
         """
         self.log.debug('starting the ``get_all_noteids`` method')
+
+        from bs4 import BeautifulSoup
 
         paginationSets = 100
         page = 0
@@ -476,6 +478,8 @@ class astronotes(object):
             - `skipAstronoteIds` -- the astronote IDs already present in the database - do not reparse
         """
         self.log.debug('starting the ``_parse_html_to_database`` method')
+
+        from bs4 import BeautifulSoup
 
         # GENERATE A LIST OF FILE PATHS
         htmlNotes = []
