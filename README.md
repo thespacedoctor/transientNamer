@@ -34,11 +34,8 @@ If you use `transientNamer` in your work, please cite using the following BibTeX
 
 ```bibtex
 @software{Young_transientNamer,
-    author = {Young, David R.},
-    doi = {10.5281/zenodo.7970680},
-    license = {GPL-3.0-only},
-    title = {{transientNamer}},
-    url = {https://github.com/thespacedoctor/transientNamer}
+    
+    
 }
 ```
  
