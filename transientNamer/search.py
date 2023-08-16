@@ -7,12 +7,10 @@
     David Young
 """
 from __future__ import print_function
-import time
 
 from fundamentals.renderer import list_of_dictionaries
 from fundamentals.files import list_of_dictionaries_to_mysql_inserts
-import time as timesleep
-from datetime import datetime, date, time, timedelta
+from datetime import datetime, date, timedelta
 from fundamentals import tools
 from operator import itemgetter
 import collections
@@ -746,6 +744,8 @@ CREATE TABLE `%(tableNamePrefix)s_files` (
         """
         self.log.debug('starting the ``get`` method')
 
+        import time
+
         sourceTable = []
         photoTable = []
         specTable = []
@@ -769,8 +769,8 @@ CREATE TABLE `%(tableNamePrefix)s_files` (
                         'cound not get the search reuslts from the TNS, HTML error code %(status_code)s ' % locals())
                     return sourceTable, photoTable, specTable, relatedFilesTable
                 failedCount += 1
-
                 time.sleep(2)
+
                 continue
 
             if "No results found" in content:
@@ -786,7 +786,7 @@ CREATE TABLE `%(tableNamePrefix)s_files` (
                     "Downloaded %(thisPage)s page(s) from the TNS. %(sourceCount)s transients parsed so far." % locals())
                 sourceCount += self.batchSize
                 # print "\t" + self._searchURL
-                timesleep.sleep(1)
+                time.sleep(1)
 
             # PARSE ALL ROWS RETURNED
             for transientRow in self._parse_transient_rows(content):
