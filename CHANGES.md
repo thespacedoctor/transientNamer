@@ -1,6 +1,10 @@
 
 ## Release Notes
 
+**v0.4.7 - August 6, 2024**
+
+* **FIXED**: an issue with 'sleep' whenever the TNS does not respond 
+
 **v0.4.6 - July 3, 2023**
 
 * **FIXED**: small fixes to unit-tests
