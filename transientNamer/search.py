@@ -790,10 +790,12 @@ CREATE TABLE `%(tableNamePrefix)s_files` (
                 timesleep.sleep(1)
 
             # PARSE ALL ROWS RETURNED
+            index = 1
             for transientRow in self._parse_transient_rows(content):
 
                 # TOP LEVEL DISCOVERY CONTENT
                 sourceContent = transientRow.group()
+
                 discInfo, TNSId = self._parse_discovery_information(
                     sourceContent)
                 if 'survey' not in discInfo:
@@ -917,7 +919,7 @@ CREATE TABLE `%(tableNamePrefix)s_files` (
         """
         self.log.debug('starting the ``_parse_transient_rows`` method')
 
-        regexForRow = r"""\n([^\n]*?<a href="/object/.*?)(?=\n[^\n]*?<a href="/object/|<\!\-\- /\.section, /#content \-\->)"""
+        regexForRow = r"""\n([^\n]*?<td class=\"cell-id\" column=\"id\">.*?)(?=\n[^\n]*?<td class=\"cell-id\" column=\"id\">|<nav class=\"pager\")"""
 
         if count:
             # A SINGLE SOURCE BLOCK
@@ -963,13 +965,18 @@ CREATE TABLE `%(tableNamePrefix)s_files` (
         )
 
         matches = re.finditer(
-            r"""<tr class="row-.*?"><td class="cell-id">(?P<tnsId>\d*?)</td><td class="cell-name"><a href="(?P<objectUrl>.*?)">(?P<TNSName>.*?)</a></td><td class="cell-.*?<td class="cell-ra">(?P<raSex>.*?)</td><td class="cell-decl">(?P<decSex>.*?)</td><td class="cell-ot_name">(?P<specType>.*?)</td><td class="cell-redshift">(?P<transRedshift>.*?)</td><td class="cell-hostname">(?P<hostName>.*?)</td><td class="cell-host_redshift">(?P<hostRedshift>.*?)</td><td class="cell-reporting_group_name">(?P<reportingSurvey>.*?)</td><td class="cell-source_group_name">(?P<discSurvey>.*?)</td>.*?<td class="cell-internal_name">(<a.*?>)?(?P<discoveryName>.*?)(</a>)?</td>.*?<td class="cell-discoverymag">(?P<discMag>.*?)</td><td class="cell-disc_filter_name">(?P<discMagFilter>.*?)</td><td class="cell-discoverydate">(?P<discDate>.*?)</td><td class="cell-discoverer">(?P<sender>.*?)</td>.*?</tr>""",
+            r"""<td class=\"cell-id\" column=.*?>(?P<tnsId>\d*?)</td>\s*<td class=\"cell-name\"><a href=\"(?P<objectUrl>.*?)\">(?P<TNSName>.*?)</a></td>\s*?<td class=\"cell-.*?<td class=\"cell-ra\" column=.*?>(?P<raSex>.*?)</td>\s*<td class=\"cell-decl\" column=.*?>(?P<decSex>.*?)</td>\s*<td class=\"cell-objtype_name\" column=.*?>(?P<specType>.*?)\s*<td class=\"cell-redshift\">(?P<transRedshift>.*?)</td>\s*<td class=\"cell-hostname\" column=.*?>(?P<hostName>.*?)</td>\s*<td class=\"cell-host_redshift\" column=.*?>(?P<hostRedshift>.*?)</td>\s*<td class=\"cell-reporting_group_name\" column=.*?>(?P<reportingSurvey>.*?)</td>\s*<td class=\"cell-source_group_name\" column=.*?>(?P<discSurvey>.*?)</td>.*?<td class=\"cell-internal_name\" column=.*?>(<a.*?>)?(?P<discoveryName>.*?)(</a>)?</td>.*?<td class=\"cell-discoverymag\" column=.*?>(?P<discMag>.*?)</td>\s*<td class=\"cell-disc_filter_name\" column=.*?>(?P<discMagFilter>.*?)</td>\s*<td class=\"cell-discoverydate\" column=.*?>(?P<discDate>.*?)</td>\s*<td class=\"cell-discoverer\" column=.*?>(?P<sender>.*?)</td>.*?</tr>""",
             content,
-            flags=0  # re.S
+            flags=re.S  # re.S
         )
         discoveryData = []
+
+        # # COUNT THE NUMBER OF MATCHES
+        # number_of_matches = sum(1 for _ in matches)
+
         for match in matches:
             row = match.groupdict()
+
             for k, v in list(row.items()):
                 row[k] = v.strip()
                 if len(v) == 0:
@@ -1060,7 +1067,7 @@ CREATE TABLE `%(tableNamePrefix)s_files` (
 
         # AT REPORT BLOCK
         ATBlock = re.search(
-            r"""<tr class=[^\n]*?AT reports.*?(?=<tr class=[^\n]*?Classification reports|$)""",
+            r"""<td class=[^\n]*?AT reports.*?(?=<td class=[^\n]*?Classification reports|$)""",
             content,
             flags=re.S  # re.S
         )
@@ -1068,7 +1075,7 @@ CREATE TABLE `%(tableNamePrefix)s_files` (
         if ATBlock:
             ATBlock = ATBlock.group()
             reports = re.finditer(
-                r"""<tr class="row-[^"]*"><td class="cell-id">.*?</table>""",
+                r"""(<tbody>|</tr>)\s*<tr class=\"row-[^\"]*\">\s*<td class=\"cell-id\">.*?</tbody>""",
                 ATBlock,
                 flags=re.S  # re.S
             )
@@ -1076,15 +1083,17 @@ CREATE TABLE `%(tableNamePrefix)s_files` (
             relatedFiles = self._parse_related_files(ATBlock)
 
             for r in reports:
+
                 header = re.search(
-                    r"""<tr class="row[^"]*".*?time_received">(?P<reportAddedDate>[^<]*).*?user_name">(?P<sender>[^<]*).*?reporter_name">(?P<reporters>[^<]*).*?reporting_group_name">(?P<reportingGroup>[^<]*).*?source_group_name">(?P<surveyGroup>[^<]*).*?ra">(?P<ra>[^<]*).*?decl">(?P<dec>[^<]*).*?discovery_date">(?P<obsDate>[^<]*).*?flux">(?P<mag>[^<]*).*?filter_name">(?P<magFilter>[^<]*).*?related_files">(?P<relatedFiles>[^<]*).*?type_name">(?P<suggestedType>[^<]*).*?hostname">(?P<hostName>[^<]*).*?host_redshift">(?P<hostRedshift>[^<]*).*?internal_name">(?P<objectName>[^<]*).*?groups">(?P<survey>[^<]*).*?remarks">(?P<sourceComment>[^<]*)""",
+                    r"""<tr class=\"row[^\"]*\".*?time_received\">(?P<reportAddedDate>[^<]*).*?user_name\">(?P<sender>[^<]*).*?reporter_name\"( title=\".*?\")?>(?P<reporters>[^<]*).*?reporting_group_name\">(?P<reportingGroup>[^<]*).*?source_group_name\">(?P<surveyGroup>[^<]*).*?ra\">(?P<ra>[^<]*).*?decl\">(?P<dec>[^<]*).*?discovery_date\">(?P<obsDate>[^<]*).*?flux\">(?P<mag>[^<]*).*?filter_name\">(?P<magFilter>[^<]*).*?related_files\">(?P<relatedFiles>[^<]*).*?type_name\">(?P<suggestedType>[^<]*).*?hostName\">(?P<hostName>[^<]*).*?(host_redshift\">(?P<hostRedshift>[^<]*))?.*?internal_name\">(?P<objectName>[^<]*).*?groups\">(?P<survey>[^<]*).*?remarks\">(?P<sourceComment>[^<]*)""",
                     r.group(),
-                    flags=0  # re.S
+                    flags=re.S  # re.S
                 )
                 try:
                     header = header.groupdict()
                 except:
                     print(r.group())
+
                 header["TNSId"] = TNSId
 
                 del header["reporters"]
@@ -1109,14 +1118,17 @@ CREATE TABLE `%(tableNamePrefix)s_files` (
                         "sourceComment"].strip()[0:750]
 
                 phot = re.finditer(
-                    r"""<tr class="row\-[^"]*".*?obsdate">(?P<obsdate>[^<]*).*?flux">(?P<mag>[^<]*).*?fluxerr">(?P<magErr>[^<]*).*?limflux">(?P<limitingMag>[^<]*).*?unit_name">(?P<magUnit>[^<]*).*?filter_name">(?P<filter>[^<]*).*?tel_inst">(?P<telescope>[^<]*).*?exptime">(?P<exptime>[^<]*).*?observer">(?P<observer>[^<]*).*?-remarks">(?P<remarks>[^<]*)""",
+                    r"""<tr class=\"row\-[^\"]*\".*?obsdate\">(?P<obsdate>[^<]*).*?flux\">(?P<mag>[^<]*).*?fluxerr\">(?P<magErr>[^<]*).*?limflux\">(?P<limitingMag>[^<]*).*?unit_name\">(?P<magUnit>[^<]*).*?filter_name\">(?P<filter>[^<]*).*?tel_inst\">(?P<telescope>[^<]*).*?exptime\">(?P<exptime>[^<]*).*?observer\">(?P<observer>[^<]*).*?-remarks\">(?P<remarks>[^<]*)""",
                     r.group(),
-                    flags=0  # re.S
+                    flags=re.S  # re.S
                 )
                 filesAppended = False
                 for p in phot:
                     p = p.groupdict()
                     del p["observer"]
+
+                    if "date" in p["obsdate"]:
+                        continue
 
                     if p["limitingMag"] and not p["mag"]:
                         p["mag"] = p["limitingMag"]
@@ -1192,7 +1204,7 @@ CREATE TABLE `%(tableNamePrefix)s_files` (
         self.log.debug('starting the ``_parse_related_files`` method')
 
         relatedFilesList = re.finditer(
-            r"""<td class="cell-filename">.*?href="(?P<filepath>[^"]*).*?remarks">(?P<fileComment>[^<]*)""",
+            r"""<td class=\"cell-filename\">.*?href=\"(?P<filepath>[^\"]*).*?remarks\">(?P<fileComment>[^<]*)""",
             content,
             flags=0  # re.S
         )
@@ -1230,16 +1242,17 @@ CREATE TABLE `%(tableNamePrefix)s_files` (
 
         # CLASSIFICATION BLOCK
         classBlock = re.search(
-            r"""<tr class=[^\n]*?Classification reports.*$""",
+            r"""<div class=[^\n]*?Classification reports.*$""",
             content,
             flags=re.S  # re.S
         )
 
         if classBlock:
+
             classBlock = classBlock.group()
 
             reports = re.finditer(
-                r"""<tr class="row-[^"]*"><td class="cell-id">.*?</tbody>\s*</table>\s*</div></td> </tr>\s*</tbody>\s*</table>\s*</div></td> </tr>""",
+                r"""<tr class=\"row-[^\"]*\">\s*<td class=\"cell-id\">.*?</tbody>\s*</table>""",
                 classBlock,
                 flags=re.S  #
             )
@@ -1249,7 +1262,7 @@ CREATE TABLE `%(tableNamePrefix)s_files` (
             for r in reports:
 
                 header = re.search(
-                    r"""<tr class="row.*?time_received">(?P<reportAddedDate>[^<]*).*?user_name">(?P<TNSuser>[^<]*).*?classifier_name">(?P<reporters>[^<]*).*?source_group_name">(?P<survey>[^<]*).*?-type">(?P<specType>[^<]*).*?-redshift">(?P<transRedshift>[^<]*).*?-related_files">(?P<relatedFiles>[^<]*).*?-groups">(?P<surveyGroup>[^<]*).*?-remarks">(?P<sourceComment>[^<]*)</td>""",
+                    r"""<tr class=\"row.*?time_received\">(?P<reportAddedDate>[^<]*).*?user_name\">(?P<TNSuser>[^<]*).*?classifier_name\">(?P<reporters>[^<]*).*?source_group_name\">(?P<survey>[^<]*).*?-type\">(?P<specType>[^<]*).*?-redshift\">(?P<transRedshift>[^<]*).*?-related_files\">(?P<relatedFiles>[^<]*).*?-groups\">(?P<surveyGroup>[^<]*).*?-remarks\">(?P<sourceComment>[^<]*)</td>""",
                     r.group(),
                     flags=re.S  # re.S
                 )
@@ -1275,9 +1288,9 @@ CREATE TABLE `%(tableNamePrefix)s_files` (
                         "sourceComment"]
 
                 spec = re.finditer(
-                    r"""<tr class="row-.*?-obsdate">(?P<obsdate>[^<]*).*?-tel_inst">(?P<telescope>[^<]*).*?-exptime">(?P<exptime>[^<]*).*?-observer">(?P<sender>[^<]*).*?-reducer">(?P<reducer>[^<]*).*?-source_group_name">(?P<survey>[^<]*).*?-asciifile">(.*?<a href="(?P<filepath>[^"]*)".*?</a>)?.*?-fitsfile">(.*?<a href="(?P<fitsFilepath>[^"]*)".*?</a>)?.*?-groups">(?P<surveyGroup>[^<]*).*?-remarks">(?P<remarks>[^<]*)""",
+                    r"""<td class=\"cell-obsdate\">(?P<obsdate>[^<]*).*?-tel_inst\">(?P<telescope>[^<]*).*?-exptime\">(?P<exptime>[^<]*).*?-observer\">(?P<sender>[^<]*).*?-reducer\">(?P<reducer>[^<]*).*?-source_group_name\">(?P<survey>[^<]*).*?-asciifile\">(.*?<a href=\"(?P<filepath>[^\"]*)\".*?</a>)?.*?-fitsfile\">(.*?<a href=\"(?P<fitsFilepath>[^\"]*)\".*?</a>)?.*?-groups\">(?P<surveyGroup>[^<]*).*?-remarks\">(?P<remarks>[^<]*)""",
                     r.group(),
-                    flags=0  # re.S
+                    flags=re.S  # re.S
                 )
                 filesAppended = False
                 for s in spec:
