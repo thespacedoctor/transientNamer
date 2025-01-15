@@ -1,6 +1,10 @@
 
 ## Release Notes
 
+**v0.4.8 - January 15, 2025**
+
+* **FIXED**: fix TNS search after TNS API update
+
 **v0.4.7 - August 6, 2024**
 
 * **FIXED**: an issue with 'sleep' whenever the TNS does not respond 
