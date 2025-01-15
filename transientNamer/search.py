@@ -965,7 +965,7 @@ CREATE TABLE `%(tableNamePrefix)s_files` (
         )
 
         matches = re.finditer(
-            r"""<td class=\"cell-id\" column=.*?>(?P<tnsId>\d*?)</td>\s*<td class=\"cell-name\"><a href=\"(?P<objectUrl>.*?)\">(?P<TNSName>.*?)</a></td>\s*?<td class=\"cell-.*?<td class=\"cell-ra\" column=.*?>(?P<raSex>.*?)</td>\s*<td class=\"cell-decl\" column=.*?>(?P<decSex>.*?)</td>\s*<td class=\"cell-objtype_name\" column=.*?>(?P<specType>.*?)\s*<td class=\"cell-redshift\">(?P<transRedshift>.*?)</td>\s*<td class=\"cell-hostname\" column=.*?>(?P<hostName>.*?)</td>\s*<td class=\"cell-host_redshift\" column=.*?>(?P<hostRedshift>.*?)</td>\s*<td class=\"cell-reporting_group_name\" column=.*?>(?P<reportingSurvey>.*?)</td>\s*<td class=\"cell-source_group_name\" column=.*?>(?P<discSurvey>.*?)</td>.*?<td class=\"cell-internal_name\" column=.*?>(<a.*?>)?(?P<discoveryName>.*?)(</a>)?</td>.*?<td class=\"cell-discoverymag\" column=.*?>(?P<discMag>.*?)</td>\s*<td class=\"cell-disc_filter_name\" column=.*?>(?P<discMagFilter>.*?)</td>\s*<td class=\"cell-discoverydate\" column=.*?>(?P<discDate>.*?)</td>\s*<td class=\"cell-discoverer\" column=.*?>(?P<sender>.*?)</td>.*?</tr>""",
+            r"""<td class=\"cell-id\" column=.*?>(?P<tnsId>\d*?)</td>\s*<td class=\"cell-name\"><a href=\"(?P<objectUrl>.*?)\">(?P<TNSName>.*?)</a></td>\s*?<td class=\"cell-.*?<td class=\"cell-ra\" column=.*?>(?P<raSex>.*?)</td>\s*<td class=\"cell-decl\" column=.*?>(?P<decSex>.*?)</td>\s*<td class=\"cell-objtype_name\" column=.*?>(?P<specType>.*?)</td>\s*<td class=\"cell-redshift\">(?P<transRedshift>.*?)</td>\s*<td class=\"cell-hostname\" column=.*?>(?P<hostName>.*?)</td>\s*<td class=\"cell-host_redshift\" column=.*?>(?P<hostRedshift>.*?)</td>\s*<td class=\"cell-reporting_group_name\" column=.*?>(?P<reportingSurvey>.*?)</td>\s*<td class=\"cell-source_group_name\" column=.*?>(?P<discSurvey>.*?)</td>.*?<td class=\"cell-internal_name\" column=.*?>(<a.*?>)?(?P<discoveryName>.*?)(</a>)?</td>.*?<td class=\"cell-discoverymag\" column=.*?>(?P<discMag>.*?)</td>\s*<td class=\"cell-disc_filter_name\" column=.*?>(?P<discMagFilter>.*?)</td>\s*<td class=\"cell-discoverydate\" column=.*?>(?P<discDate>.*?)</td>\s*<td class=\"cell-discoverer\" column=.*?>(?P<sender>.*?)</td>.*?</tr>""",
             content,
             flags=re.S  # re.S
         )
@@ -985,8 +985,10 @@ CREATE TABLE `%(tableNamePrefix)s_files` (
                 row["transRedshift"] = None
             if row["TNSName"][0] in ["1", "2"]:
                 row["TNSName"] = "SN" + row["TNSName"]
-            row["objectUrl"] = "https://www.wis-tns.org" + \
-                row["objectUrl"]
+
+            if "https://" not in row["objectUrl"]:
+                row["objectUrl"] = "https://www.wis-tns.org" + \
+                    row["objectUrl"]
 
             # CONVERT COORDINATES TO DECIMAL DEGREES
             row["raDeg"] = converter.ra_sexegesimal_to_decimal(
