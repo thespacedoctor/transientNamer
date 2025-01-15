@@ -1,7 +1,7 @@
 
 ## Release Notes
 
-**v0.4.8 - January 15, 2025**
+**v0.4.9 - January 15, 2025**
 
 * **FIXED**: fix TNS search after TNS API update
 
