@@ -1,6 +1,10 @@
 
 ## Release Notes
 
+**v0.4.10 - January 15, 2025**
+
+* **FIXED**: fixed related files regex parsing issue that meant some files were not being reported
+
 **v0.4.9 - January 15, 2025**
 
 * **FIXED**: fix TNS search after TNS API update
