@@ -93,7 +93,7 @@ class test_astronotes(unittest.TestCase):
             settings=settings
         )
         noteIds = an.get_all_noteids(inLastDays=30)
-        # print(noteIds)
+        print(noteIds)
 
         from transientNamer import astronotes
         an = astronotes(

@@ -100,28 +100,6 @@ class test_search(unittest.TestCase):
         tns.yaml(dirPath=pathToOutputDir)
         tns.markdown(dirPath=pathToOutputDir)
 
-    def test_search_function03(self):
-        import time
-        time.sleep(15)
-        # A TEST FOR MUPTIPLE RESULTS
-        kwargs = {}
-        kwargs["log"] = log
-        kwargs["settings"] = settings
-        kwargs["ra"] = "00:00:00.00"
-        kwargs["dec"] = "+00:00:00.00"
-        kwargs["radiusArcsec"] = 5.0
-        # xt-kwarg_key_and_value
-        from transientNamer import search
-        tns = search(**kwargs)
-
-        print(tns.url)
-        tns.csv(dirPath=pathToOutputDir)
-        tns.table(dirPath=pathToOutputDir)
-        tns.mysql(tableNamePrefix="fs_tns", dirPath=pathToOutputDir)
-        tns.json(dirPath=pathToOutputDir)
-        tns.yaml(dirPath=pathToOutputDir)
-        tns.markdown(dirPath=pathToOutputDir)
-
     def test_search_function04(self):
         import time
         time.sleep(15)
