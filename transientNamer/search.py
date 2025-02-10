@@ -1208,7 +1208,7 @@ CREATE TABLE `%(tableNamePrefix)s_files` (
         relatedFilesList = re.finditer(
             r"""<td class=\"cell-filename\">.*?href=\"(?P<filepath>[^\"]*).*?remarks\">(?P<fileComment>[^<]*)""",
             content,
-            flags=0  # re.S
+            flags=re.S  # re.S
         )
 
         relatedFiles = []
